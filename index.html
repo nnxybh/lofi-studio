@@ -11,81 +11,45 @@
 :root{
   --f:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
   --fm:'SF Mono','Cascadia Mono','Consolas','Courier New',monospace;
-  --bg:#000000;
-  --bg2:#0d0d0d;
-  --bg3:#141414;
-  --bg4:#1c1c1c;
-  --bg5:#242424;
-  --br:rgba(255,255,255,0.08);
-  --br2:rgba(255,255,255,0.14);
-  --br3:rgba(255,255,255,0.24);
-  --tx:#ffffff;
-  --tx2:#c8c0b8;
-  --tx3:#6a6460;
-  /* Red accent system */
-  --r1:#ff2020;
-  --r2:#ff5040;
-  --r3:#ff8060;
-  --rd:rgba(255,32,32,0.10);
-  --rd2:rgba(255,32,32,0.20);
-  --rd3:rgba(255,32,32,0.32);
-  /* Support colours */
-  --gn:#20c060;
-  --gn2:#40e080;
-  --gnd:rgba(32,192,96,0.12);
-  --bl:#2080ff;
-  --bl2:#60a8ff;
-  --bld:rgba(32,128,255,0.14);
-  --ye:#ffc020;
-  --ye2:#ffd060;
-  --yed:rgba(255,192,32,0.14);
-  --pu:#a040ff;
-  --pu2:#c080ff;
-  --pud:rgba(160,64,255,0.14);
-  --rad:rgba(255,40,32,0.14);
-  --rad2:rgba(255,40,32,0.08);
-  --rsm:8px;
-  --rr:12px;
+  --bg:#000;--bg2:#0d0d0d;--bg3:#141414;--bg4:#1c1c1c;--bg5:#242424;
+  --br:rgba(255,255,255,0.08);--br2:rgba(255,255,255,0.14);--br3:rgba(255,255,255,0.26);
+  --tx:#fff;--tx2:#c8c0b8;--tx3:#6a6460;
+  --r1:#ff2020;--r2:#ff5040;--r3:#ff8060;
+  --rd:rgba(255,32,32,0.10);--rd2:rgba(255,32,32,0.20);--rd3:rgba(255,32,32,0.32);
+  --gn:#20c060;--gn2:#40e080;--gnd:rgba(32,192,96,0.12);
+  --bl:#2080ff;--bl2:#60a8ff;--bld:rgba(32,128,255,0.14);
+  --ye:#ffc020;--ye2:#ffd060;--yed:rgba(255,192,32,0.14);
+  --pu:#a040ff;--pu2:#c080ff;--pud:rgba(160,64,255,0.14);
+  --cy:#20d0c0;--cy2:#40f0e0;--cyd:rgba(32,208,192,0.14);
+  --rsm:8px;--rr:12px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden;font-size:16px;-webkit-text-size-adjust:100%}
 body{font-family:var(--f);font-weight:400;background:var(--bg);color:var(--tx)}
 #shell{position:fixed;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,20px);background:var(--bg)}
-
-/* TOP BAR */
 #topbar{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:12px 15px 10px;border-bottom:1px solid var(--br2);background:var(--bg)}
 #tb-title{font-size:1.2rem;font-weight:800;letter-spacing:-0.04em;color:var(--tx)}
 #tb-title span{color:var(--r1)}
 #tb-sub{font-size:0.57rem;color:var(--tx3);letter-spacing:0.1em;text-transform:uppercase;font-family:var(--fm);margin-top:3px}
 .hbadge{font-size:0.57rem;padding:4px 11px;background:var(--rd2);border:1px solid var(--r1);border-radius:20px;color:var(--r2);letter-spacing:0.07em;white-space:nowrap;font-family:var(--fm)}
-
-/* PAGES */
 .pg{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding:14px 13px 20px;display:none}
 .pg.on{display:block}
-
-/* NAV */
 #nav{flex-shrink:0;display:flex;background:var(--bg2);border-top:1px solid var(--br2);padding-bottom:env(safe-area-inset-bottom,0px)}
 .nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:9px 2px;background:none;border:none;cursor:pointer;color:var(--tx3);font-family:var(--fm);font-size:0.5rem;letter-spacing:0.05em;text-transform:uppercase;min-height:50px;touch-action:manipulation;transition:color 0.15s}
 .nb svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .nb.on{color:var(--r2)}
 .nb:active{opacity:0.6}
-
-/* SHARED */
 .lbl{font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--tx3);margin-bottom:8px;font-family:var(--fm)}
 .card{background:var(--bg2);border:1px solid var(--br);border-radius:var(--rr);padding:14px;margin-bottom:10px}
 .div{height:1px;background:var(--br);margin:12px 0}
 .hint{font-size:0.65rem;color:var(--tx3);line-height:1.6;margin-top:8px;font-family:var(--fm)}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-
-/* PILLS */
 .pills{display:flex;gap:7px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:3px;margin:0 -13px 12px;padding-left:13px;padding-right:13px}
 .pills::-webkit-scrollbar{display:none}
 .pill{flex-shrink:0;padding:7px 14px;font-size:0.72rem;font-family:var(--f);background:var(--bg3);border:1px solid var(--br);border-radius:20px;cursor:pointer;color:var(--tx2);white-space:nowrap;touch-action:manipulation;transition:all 0.15s}
 .pill:active{transform:scale(0.94)}
 .pill.on{background:var(--rd2);border-color:var(--r1);color:var(--r2)}
-
-/* FORM */
 textarea,input[type=text]{width:100%;padding:10px 12px;font-size:0.85rem;font-family:var(--f);line-height:1.5;background:var(--bg3);border:1px solid var(--br);border-radius:var(--rsm);color:var(--tx);-webkit-appearance:none;appearance:none;transition:border-color 0.15s}
 textarea{resize:none}
 textarea::placeholder,input::placeholder{color:var(--tx3)}
@@ -93,14 +57,11 @@ textarea:focus,input:focus{outline:none;border-color:var(--r1)}
 select{width:100%;padding:10px 28px 10px 12px;font-size:0.78rem;font-family:var(--f);background:var(--bg3);border:1px solid var(--br);border-radius:var(--rsm);color:var(--tx2);-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236a6460'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center}
 select:focus{outline:none;border-color:var(--r1)}
 option{background:var(--bg2);color:var(--tx)}
-
-/* BUTTONS */
 .btn{padding:12px 15px;font-size:0.8rem;font-family:var(--f);font-weight:700;border:none;border-radius:var(--rsm);cursor:pointer;touch-action:manipulation;transition:all 0.15s;letter-spacing:-0.01em}
 .btn:active{transform:scale(0.97);opacity:0.85}
 .btn-fill{background:var(--r1);color:#fff;width:100%;display:block;text-align:center}
 .btn-fill:active{background:var(--r2)}
 .btn-ghost{background:transparent;border:1px solid var(--br2);color:var(--tx2);font-weight:400;font-size:0.75rem;padding:9px 13px}
-.btn-red{background:var(--rd2);border:1px solid var(--r1);color:var(--r2);font-weight:600;font-size:0.75rem;padding:9px 13px}
 .btn-gn{background:var(--gnd);border:1px solid var(--gn2);color:var(--gn2);font-weight:600;font-size:0.78rem;padding:11px 14px;border-radius:var(--rsm);display:block;text-align:center;text-decoration:none;cursor:pointer;touch-action:manipulation;transition:all 0.15s;font-family:var(--f)}
 .btn-bl{background:var(--bld);border:1px solid var(--bl2);color:var(--bl2);font-weight:600;font-size:0.78rem;padding:11px 14px;border-radius:var(--rsm);display:block;text-align:center;text-decoration:none;cursor:pointer;touch-action:manipulation;transition:all 0.15s;font-family:var(--f)}
 .btn-ye{background:var(--yed);border:1px solid var(--ye2);color:var(--ye2);font-weight:600;font-size:0.78rem;padding:11px 14px;border-radius:var(--rsm);display:block;text-align:center;text-decoration:none;cursor:pointer;touch-action:manipulation;transition:all 0.15s;font-family:var(--f)}
@@ -117,7 +78,6 @@ option{background:var(--bg2);color:var(--tx)}
 .tdel:active{color:var(--r1);background:var(--rd)}
 .tplay{width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--rd);border:1px solid var(--r1);cursor:pointer;color:var(--r2);font-size:11px;border-radius:5px;flex-shrink:0;transition:all 0.12s}
 .tplay.playing{background:var(--rd2);border-color:var(--r1)}
-.tplay:active{background:var(--rd2)}
 
 /* PLAYER */
 .player-card{background:var(--bg2);border:1px solid var(--br2);border-radius:var(--rr);padding:13px;margin-bottom:10px}
@@ -131,36 +91,63 @@ option{background:var(--bg2);color:var(--tx)}
 .pctrl.main{width:46px;height:46px;background:var(--r1);border-color:var(--r1);color:#fff;font-size:17px}
 .pctrl.main:active{background:var(--r2)}
 .player-prog{flex:1;position:relative;height:5px;background:var(--bg4);border-radius:3px;cursor:pointer}
-.player-prog-fill{height:100%;background:var(--r2);border-radius:3px;pointer-events:none;transition:width 0.1s linear}
+.player-prog-fill{height:100%;background:var(--r2);border-radius:3px;pointer-events:none;transition:width 0.08s linear}
 .player-time{display:flex;justify-content:space-between;font-size:0.62rem;color:var(--tx3);font-family:var(--fm);margin-top:5px}
 .vol-row{display:flex;align-items:center;gap:8px;margin-top:8px}
 .vol-row label{font-size:0.62rem;color:var(--r3);white-space:nowrap;font-family:var(--fm);font-weight:700}
-.vol-row input[type=range]{flex:1;accent-color:var(--r1);height:4px}
+.vol-row input[type=range]{flex:1;accent-color:var(--r1)}
+
+/* WAVEFORM MINI */
+.waveform-wrap{height:36px;background:var(--bg4);border-radius:4px;overflow:hidden;margin-bottom:8px;position:relative;cursor:pointer}
+.waveform-canvas{width:100%;height:100%;display:block}
+.waveform-playhead{position:absolute;top:0;bottom:0;width:2px;background:var(--r1);pointer-events:none}
 
 /* SORT OPTIONS */
 .sort-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
-.sort-btn{padding:10px 8px;font-size:0.7rem;font-family:var(--fm);font-weight:700;border-radius:var(--rsm);cursor:pointer;touch-action:manipulation;transition:all 0.15s;text-align:center;border:1px solid;letter-spacing:0.03em}
+.sort-btn{padding:10px 8px;font-size:0.7rem;font-family:var(--fm);font-weight:700;border-radius:var(--rsm);cursor:pointer;touch-action:manipulation;transition:all 0.15s;text-align:center;border:1px solid;letter-spacing:0.03em;line-height:1.5}
 .sort-btn:active{transform:scale(0.96)}
 .sb-bpm{background:var(--gnd);border-color:var(--gn2);color:var(--gn2)}
-.sb-energy{background:var(--rd);border-color:var(--r2);color:var(--r2)}
-.sb-vibe{background:var(--pud);border-color:var(--pu2);color:var(--pu2)}
-.sb-random{background:var(--yed);border-color:var(--ye2);color:var(--ye2)}
+.sb-bpm-d{background:var(--rd);border-color:var(--r2);color:var(--r2)}
+.sb-dur{background:var(--pud);border-color:var(--pu2);color:var(--pu2)}
+.sb-rand{background:var(--yed);border-color:var(--ye2);color:var(--ye2)}
 .sb-all{background:var(--rd2);border-color:var(--r1);color:#fff;grid-column:1/-1;font-size:0.75rem;padding:12px}
+
+/* MIX CONTROLS — the heart */
+.mix-section{background:var(--bg2);border:1px solid var(--br2);border-radius:var(--rr);padding:14px;margin-bottom:10px}
+.mix-section-title{font-size:0.75rem;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.mix-section-title .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* Fade curve selector */
+.curve-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+.curve-btn{padding:8px 4px;font-size:0.62rem;font-family:var(--fm);font-weight:700;border-radius:6px;cursor:pointer;touch-action:manipulation;border:1px solid var(--br2);background:var(--bg3);color:var(--tx3);text-align:center;transition:all 0.15s;line-height:1.4}
+.curve-btn canvas{display:block;margin:0 auto 3px}
+.curve-btn.on{border-color:var(--r1);background:var(--rd);color:var(--r2)}
+.curve-btn:active{transform:scale(0.95)}
+
+/* Per-track fade rows */
+.track-fade-row{display:grid;grid-template-columns:100px 1fr 38px 1fr 38px;align-items:center;gap:6px;padding:7px 0;border-top:1px solid var(--br)}
+.tf-name{font-size:0.65rem;color:var(--tx2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tf-in{accent-color:var(--gn2)}
+.tf-out{accent-color:var(--r2)}
+.tf-val{font-size:0.62rem;font-family:var(--fm);font-weight:700;text-align:right}
+.tf-val.in{color:var(--gn2)}
+.tf-val.out{color:var(--r2)}
+
+/* Overlap/crossfade indicator */
+.xfade-preview{height:48px;background:var(--bg4);border-radius:6px;overflow:hidden;margin-bottom:10px;position:relative}
+.xfade-canvas{width:100%;height:100%;display:block}
+.xfade-label{position:absolute;top:4px;right:8px;font-size:0.58rem;color:var(--tx3);font-family:var(--fm)}
 
 /* EXPORT */
 .exp-prog{display:none;margin-bottom:10px}
 .exp-bar{height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;margin-bottom:6px}
-.exp-fill{height:100%;background:var(--r1);border-radius:3px;transition:width 0.3s;width:0%}
+.exp-fill{height:100%;background:var(--r1);border-radius:3px;transition:width 0.2s;width:0%}
 .exp-stat{font-size:0.7rem;color:var(--gn2);text-align:center;font-family:var(--fm);font-weight:700}
+.exp-stages{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:10px}
+.exp-stage{padding:6px 4px;font-size:0.58rem;font-family:var(--fm);text-align:center;border-radius:4px;border:1px solid var(--br);color:var(--tx3);transition:all 0.3s}
+.exp-stage.active{border-color:var(--r1);color:var(--r2);background:var(--rd)}
+.exp-stage.done{border-color:var(--gn2);color:var(--gn2);background:var(--gnd)}
 
-/* FADE EDITOR */
-.fade-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.fade-lbl{font-size:0.67rem;color:var(--tx2);min-width:88px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.fade-in-r{flex:1;accent-color:var(--gn2)}
-.fade-out-r{flex:1;accent-color:var(--r2)}
-.fade-v{font-size:0.62rem;color:var(--r3);font-family:var(--fm);min-width:26px;text-align:right;font-weight:700}
-
-/* EMPTY / PROGRESS */
 .empty{text-align:center;padding:28px 12px;color:var(--tx3);font-size:0.74rem;line-height:1.9}
 .empty span{color:var(--r3)}
 .pb{height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;margin:10px 0 6px}
@@ -187,8 +174,6 @@ option{background:var(--bg2);color:var(--tx)}
 .abtn.ok{background:var(--gnd);border-color:var(--gn);color:var(--gn2)}
 .abtn:active{transform:scale(0.96)}
 .olnk{padding:7px 12px;font-size:0.68rem;font-family:var(--f);background:var(--bg4);border:1px solid var(--br2);border-radius:var(--rsm);color:var(--bl2);text-decoration:none;font-weight:600}
-
-/* LENGTH CARD */
 .lenc{background:var(--rd);border:1px solid var(--r1);border-radius:var(--rsm);padding:12px 14px;margin-bottom:10px;display:flex;gap:11px}
 .lico{font-size:1.1rem;flex-shrink:0;margin-top:2px}
 .llbl{font-size:0.57rem;color:var(--r3);letter-spacing:0.1em;text-transform:uppercase;font-family:var(--fm);margin-bottom:3px;font-weight:700}
@@ -215,8 +200,6 @@ option{background:var(--bg2);color:var(--tx)}
 .step-n{width:20px;height:20px;border-radius:50%;background:var(--rd2);border:1px solid var(--r1);display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:var(--r2);flex-shrink:0;margin-top:1px;font-family:var(--fm);font-weight:800}
 .step-txt{font-size:0.72rem;color:var(--tx2);line-height:1.55;flex:1}
 .step-txt strong{color:var(--ye2);font-weight:700}
-
-/* GITHUB */
 .gh-step{display:flex;gap:10px;padding:10px 0;border-top:1px solid var(--br)}
 .gh-step:last-child{border-bottom:1px solid var(--br)}
 .gh-n{width:22px;height:22px;border-radius:50%;background:var(--rd2);border:1px solid var(--r1);display:flex;align-items:center;justify-content:center;font-size:0.62rem;color:var(--r2);flex-shrink:0;font-family:var(--fm);font-weight:800}
@@ -249,8 +232,6 @@ option{background:var(--bg2);color:var(--tx)}
 .upbadge{font-size:0.6rem;padding:3px 9px;border-radius:20px;border:1px solid;flex-shrink:0;font-family:var(--fm);letter-spacing:0.04em;font-weight:700}
 .upbadge.p{border-color:var(--br2);color:var(--tx3)}
 .upbadge.d{border-color:var(--gn);color:var(--gn2);background:var(--gnd)}
-
-/* TIPS */
 .tip{background:var(--bg2);border:1px solid var(--br);border-radius:var(--rr);margin-bottom:8px;overflow:hidden}
 .tiphead{display:flex;align-items:center;gap:11px;padding:12px 13px;cursor:pointer}
 .tipico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0}
@@ -265,9 +246,6 @@ option{background:var(--bg2);color:var(--tx)}
 .tipbody strong{color:var(--ye2);font-weight:700}
 .tipbody code{background:var(--bg4);padding:2px 6px;border-radius:4px;font-size:0.68rem;color:var(--gn2);font-family:var(--fm);font-weight:700}
 .tipbody em{color:var(--r3);font-style:italic}
-
-.addrow{display:flex;gap:7px;margin-top:11px}
-.addrow input{flex:1}
 #toast{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px)+62px);left:50%;transform:translateX(-50%) translateY(8px);background:var(--bg3);border:1px solid var(--r1);border-radius:20px;padding:8px 18px;font-size:0.74rem;color:var(--r2);z-index:9999;opacity:0;transition:all 0.22s;pointer-events:none;white-space:nowrap;font-weight:700}
 #toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
@@ -276,95 +254,12 @@ option{background:var(--bg2);color:var(--tx)}
 <div id="toast"></div>
 <div id="shell">
 <div id="topbar">
-  <div><div id="tb-title">lofi <span>studio</span></div><div id="tb-sub">hip-hop mix studio</div></div>
+  <div><div id="tb-title">lofi <span>studio</span></div><div id="tb-sub">prompt generator</div></div>
   <div class="hbadge">hip-hop</div>
 </div>
 
-<!-- ══ MIX STUDIO ══ -->
-<div class="pg on" id="pg-mix">
-
-  <div class="player-card">
-    <div class="player-info">
-      <div class="player-art" id="pArt">🎵</div>
-      <div style="flex:1;min-width:0">
-        <div class="player-name" id="pName">no track loaded</div>
-        <div class="player-meta" id="pMeta">load tracks below to begin</div>
-      </div>
-    </div>
-    <div class="player-controls">
-      <button class="pctrl" onclick="skipPrev()">&#9664;&#9664;</button>
-      <button class="pctrl main" id="playBtn" onclick="togglePlay()">&#9654;</button>
-      <button class="pctrl" onclick="skipNext()">&#9654;&#9654;</button>
-      <div class="player-prog" id="pProg" onclick="seekClick(event)">
-        <div class="player-prog-fill" id="pFill" style="width:0%"></div>
-      </div>
-    </div>
-    <div class="player-time"><span id="pNow">0:00</span><span id="pTot">0:00</span></div>
-    <div class="vol-row"><label>vol</label><input type="range" id="volR" min="0" max="1" step="0.01" value="0.85" oninput="setVol(this.value)"></div>
-  </div>
-
-  <div class="card">
-    <div class="lbl" style="color:var(--r3)">Load tracks — mp3 · wav · ogg · m4a · flac</div>
-    <div style="border:2px dashed var(--r1);border-radius:var(--rsm);padding:20px;text-align:center;cursor:pointer;margin-bottom:10px;background:var(--rd)" id="dropZone" onclick="document.getElementById('fInp').click()" ondragover="dzO(event)" ondragleave="dzL()" ondrop="dzD(event)">
-      <p style="font-size:0.8rem;color:var(--r3);line-height:1.8;font-weight:600">tap to select audio files<br><span style="color:var(--r2)">any audio format supported</span></p>
-    </div>
-    <input type="file" id="fInp" accept="audio/*" multiple style="display:none" onchange="filesAdded(this.files)">
-    <div id="trackList"><div class="empty">load tracks above<br><span>then smart sort your mix below</span></div></div>
-    <div id="trackMeta" style="display:none">
-      <div class="pr" style="margin-top:8px">
-        <span class="pt" id="trackMetaTxt" style="color:var(--ye2);font-weight:700"></span>
-      </div>
-    </div>
-  </div>
-
-  <!-- SMART SORT OPTIONS -->
-  <div class="card" id="sortCard" style="display:none">
-    <div class="lbl" style="color:var(--r3)">smart sort options</div>
-    <div class="sort-grid">
-      <button class="sort-btn sb-bpm" onclick="sortBy('bpm')">↑ BPM<br><span style="font-size:0.6rem;opacity:0.8">low → high energy</span></button>
-      <button class="sort-btn sb-energy" onclick="sortBy('bpm-desc')">↓ BPM<br><span style="font-size:0.6rem;opacity:0.8">high → low energy</span></button>
-      <button class="sort-btn sb-vibe" onclick="sortBy('duration')">⏱ Duration<br><span style="font-size:0.6rem;opacity:0.8">short → long</span></button>
-      <button class="sort-btn sb-random" onclick="sortBy('random')">⚄ Shuffle<br><span style="font-size:0.6rem;opacity:0.8">random order</span></button>
-      <button class="sort-btn sb-all" onclick="sortBy('all')">✦ Apply all sorts &amp; export each<br><span style="font-size:0.65rem;opacity:0.85">generates 4 mixes in one go</span></button>
-    </div>
-    <p class="hint" style="color:var(--tx3)">drag tracks above to reorder manually · BPM detected automatically</p>
-  </div>
-
-  <!-- FADE EDITOR -->
-  <div class="card" id="fadeCard" style="display:none">
-    <div class="lbl" style="color:var(--r3)">crossfade editor</div>
-    <div style="display:flex;gap:12px;margin-bottom:8px;font-size:0.63rem;color:var(--tx3);font-family:var(--fm)">
-      <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:10px;height:3px;border-radius:2px;background:var(--gn2)"></span><span style="color:var(--gn2);font-weight:700">fade in</span></span>
-      <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:10px;height:3px;border-radius:2px;background:var(--r2)"></span><span style="color:var(--r2);font-weight:700">fade out</span></span>
-    </div>
-    <div id="fadeRows"></div>
-    <div class="row" style="margin-top:8px;gap:6px">
-      <span style="font-size:0.68rem;color:var(--tx3)">set all:</span>
-      <button class="btn btn-ghost" style="padding:5px 10px;font-size:0.68rem" onclick="setAllFades(1)">1s</button>
-      <button class="btn btn-ghost" style="padding:5px 10px;font-size:0.68rem" onclick="setAllFades(2)">2s</button>
-      <button class="btn btn-ghost" style="padding:5px 10px;font-size:0.68rem" onclick="setAllFades(3)">3s</button>
-      <button class="btn btn-ghost" style="padding:5px 10px;font-size:0.68rem" onclick="setAllFades(5)">5s</button>
-    </div>
-  </div>
-
-  <!-- EXPORT -->
-  <div class="card" id="exportCard" style="display:none">
-    <div class="lbl" style="color:var(--gn2)">export mix</div>
-    <select id="exportSR" style="margin-bottom:10px">
-      <option value="44100">44.1 kHz — YouTube ready (recommended)</option>
-      <option value="48000">48 kHz — broadcast standard</option>
-    </select>
-    <div class="exp-prog" id="expProg">
-      <div class="exp-bar"><div class="exp-fill" id="expFill"></div></div>
-      <div class="exp-stat" id="expStat"></div>
-    </div>
-    <button class="btn btn-fill" onclick="exportMix()">render &amp; download mix</button>
-    <p class="hint">exports 16-bit stereo WAV · YouTube / DaVinci / Audacity ready</p>
-  </div>
-</div>
-
-<!-- ══ PROMPTS ══ -->
-<div class="pg" id="pg-prompts">
+<!-- ══ PROMPTS (opens first) ══ -->
+<div class="pg on" id="pg-prompts">
   <div class="card">
     <div class="lbl" style="color:var(--r3)">Vibe</div>
     <div class="pills" id="moodPills">
@@ -393,7 +288,7 @@ option{background:var(--bg2);color:var(--tx)}
     <div class="lbl" style="color:var(--r3)">Settings</div>
     <div class="g2" style="margin-bottom:10px">
       <select id="toolSel">
-        <option value="suno">Suno (free download)</option>
+        <option value="suno">Suno (free)</option>
         <option value="soundraw">Soundraw</option>
         <option value="musicful">Musicful</option>
         <option value="all">All three</option>
@@ -406,7 +301,7 @@ option{background:var(--bg2);color:var(--tx)}
       </select>
     </div>
     <button class="btn btn-fill" onclick="genPrompts()">generate prompts</button>
-    <p class="hint">offline · 10M+ unique combinations · fresh every time</p>
+    <p class="hint">offline · 10M+ combinations · fresh every time</p>
   </div>
   <div id="promptOut" style="display:none">
     <div class="lenc"><div class="lico">⏱</div><div><div class="llbl">suggested length</div><div class="lval" id="lenVal">—</div><div class="lwhy" id="lenWhy">—</div></div></div>
@@ -418,25 +313,155 @@ option{background:var(--bg2);color:var(--tx)}
   </div>
 </div>
 
+<!-- ══ MIX STUDIO ══ -->
+<div class="pg" id="pg-mix">
+
+  <!-- Player -->
+  <div class="player-card">
+    <div class="player-info">
+      <div class="player-art" id="pArt">🎵</div>
+      <div style="flex:1;min-width:0">
+        <div class="player-name" id="pName">no track loaded</div>
+        <div class="player-meta" id="pMeta">load tracks below</div>
+      </div>
+    </div>
+    <div class="waveform-wrap" id="waveWrap" onclick="seekWaveClick(event)">
+      <canvas id="waveCanvas" class="waveform-canvas"></canvas>
+      <div class="waveform-playhead" id="waveHead" style="left:0%"></div>
+    </div>
+    <div class="player-controls">
+      <button class="pctrl" onclick="skipPrev()">&#9664;&#9664;</button>
+      <button class="pctrl main" id="playBtn" onclick="togglePlay()">&#9654;</button>
+      <button class="pctrl" onclick="skipNext()">&#9654;&#9654;</button>
+      <div class="player-prog" id="pProg" onclick="seekClick(event)">
+        <div class="player-prog-fill" id="pFill" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="player-time"><span id="pNow">0:00</span><span id="pTot">0:00</span></div>
+    <div class="vol-row"><label>vol</label><input type="range" id="volR" min="0" max="1" step="0.01" value="0.85" oninput="setVol(this.value)"></div>
+  </div>
+
+  <!-- Load -->
+  <div class="card">
+    <div class="lbl" style="color:var(--r3)">load tracks — mp3 · wav · ogg · m4a · flac</div>
+    <div style="border:2px dashed var(--r1);border-radius:var(--rsm);padding:20px;text-align:center;cursor:pointer;margin-bottom:10px;background:var(--rd)" id="dropZone" onclick="document.getElementById('fInp').click()" ondragover="dzO(event)" ondragleave="dzL()" ondrop="dzD(event)">
+      <p style="font-size:0.8rem;color:var(--r3);line-height:1.8;font-weight:600">tap to select audio files<br><span style="color:var(--r2)">any audio format</span></p>
+    </div>
+    <input type="file" id="fInp" accept="audio/*" multiple style="display:none" onchange="filesAdded(this.files)">
+    <div id="trackList"><div class="empty">load tracks above<br><span>then sort and configure your mix</span></div></div>
+    <div id="trackMeta" style="display:none">
+      <div class="pr" style="margin-top:8px">
+        <span class="pt" id="trackMetaTxt" style="color:var(--ye2);font-weight:700"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Smart Sort -->
+  <div class="card" id="sortCard" style="display:none">
+    <div class="lbl" style="color:var(--ye2)">smart sort</div>
+    <div class="sort-grid">
+      <button class="sort-btn sb-bpm" onclick="sortBy('bpm')">↑ BPM<br><span style="font-size:0.58rem;opacity:0.8;font-weight:400">low → high energy</span></button>
+      <button class="sort-btn sb-bpm-d" onclick="sortBy('bpm-desc')">↓ BPM<br><span style="font-size:0.58rem;opacity:0.8;font-weight:400">high → low energy</span></button>
+      <button class="sort-btn sb-dur" onclick="sortBy('duration')">⏱ Duration<br><span style="font-size:0.58rem;opacity:0.8;font-weight:400">short → long</span></button>
+      <button class="sort-btn sb-rand" onclick="sortBy('random')">⚄ Shuffle<br><span style="font-size:0.58rem;opacity:0.8;font-weight:400">random order</span></button>
+      <button class="sort-btn sb-all" onclick="sortBy('all')">✦ Export all 4 sort orders as separate mixes<br><span style="font-size:0.62rem;opacity:0.85;font-weight:400">downloads 4 WAV files in one go</span></button>
+    </div>
+  </div>
+
+  <!-- Mix Engine -->
+  <div class="mix-section" id="mixCard" style="display:none">
+    <div class="mix-section-title"><div class="dot" style="background:var(--r1)"></div><span style="color:var(--r2)">mix engine</span></div>
+
+    <!-- Fade curve -->
+    <div style="font-size:0.68rem;color:var(--tx3);font-family:var(--fm);margin-bottom:8px;font-weight:700">FADE CURVE</div>
+    <div class="curve-grid" id="curveGrid"></div>
+
+    <!-- Crossfade overlap preview -->
+    <div style="font-size:0.68rem;color:var(--tx3);font-family:var(--fm);margin-bottom:6px;font-weight:700">CROSSFADE OVERLAP PREVIEW</div>
+    <div class="xfade-preview">
+      <canvas id="xfadeCanvas" class="xfade-canvas"></canvas>
+      <div class="xfade-label" id="xfadeLabel">select tracks to preview</div>
+    </div>
+
+    <!-- Global overlap -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <span style="font-size:0.68rem;color:var(--tx3);font-family:var(--fm);white-space:nowrap;font-weight:700">OVERLAP</span>
+      <input type="range" id="overlapR" min="0" max="12" step="0.5" value="3" style="flex:1;accent-color:var(--cy2)" oninput="onOverlapChange(this.value)">
+      <span style="font-size:0.68rem;color:var(--cy2);font-family:var(--fm);min-width:28px;text-align:right;font-weight:700" id="overlapV">3s</span>
+    </div>
+
+    <!-- Per-track fade controls -->
+    <div style="font-size:0.68rem;color:var(--tx3);font-family:var(--fm);margin-bottom:8px;font-weight:700">PER-TRACK FADES <span style="color:var(--gn2)">in</span> / <span style="color:var(--r2)">out</span></div>
+    <div id="fadeRows"></div>
+    <div class="row" style="margin-top:8px;gap:6px">
+      <span style="font-size:0.68rem;color:var(--tx3)">set all:</span>
+      <button class="btn btn-ghost" style="padding:5px 10px;font-size:0.68rem" onclick="setAllFades(1)">1s</button>
+      <button class="btn btn-ghost" style="padding:5px 10px;font-size:0.68rem" onclick="setAllFades(2)">2s</button>
+      <button class="btn btn-ghost" style="padding:5px 10px;font-size:0.68rem" onclick="setAllFades(3)">3s</button>
+      <button class="btn btn-ghost" style="padding:5px 10px;font-size:0.68rem" onclick="setAllFades(5)">5s</button>
+      <button class="btn btn-ghost" style="padding:5px 10px;font-size:0.68rem" onclick="setAllFades(8)">8s</button>
+    </div>
+
+    <!-- Gain / normalise -->
+    <div class="div"></div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <span style="font-size:0.68rem;color:var(--tx3);font-family:var(--fm);font-weight:700;white-space:nowrap">MASTER GAIN</span>
+      <input type="range" id="masterGainR" min="-12" max="6" step="0.5" value="0" style="flex:1;accent-color:var(--ye2)" oninput="document.getElementById('masterGainV').textContent=this.value+'dB'">
+      <span style="font-size:0.68rem;color:var(--ye2);font-family:var(--fm);min-width:40px;text-align:right;font-weight:700" id="masterGainV">0dB</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:0.68rem;color:var(--tx3);font-family:var(--fm);font-weight:700;white-space:nowrap">NORMALISE</span>
+      <select id="normaliseMode" style="flex:1;font-size:0.7rem">
+        <option value="off">off — render as-is</option>
+        <option value="peak" selected>peak — normalise to -1 dBFS</option>
+        <option value="lufs">perceived — match loudness across tracks</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Export -->
+  <div class="card" id="exportCard" style="display:none">
+    <div class="lbl" style="color:var(--gn2)">export mix</div>
+    <div class="g2" style="margin-bottom:10px">
+      <select id="exportSR">
+        <option value="44100">44.1 kHz — YouTube</option>
+        <option value="48000">48 kHz — broadcast</option>
+      </select>
+      <select id="exportBit">
+        <option value="16">16-bit</option>
+        <option value="24" selected>24-bit — studio quality</option>
+        <option value="32">32-bit float</option>
+      </select>
+    </div>
+    <div class="exp-stages" id="expStages">
+      <div class="exp-stage" id="es0">decode</div>
+      <div class="exp-stage" id="es1">mix</div>
+      <div class="exp-stage" id="es2">normalise</div>
+      <div class="exp-stage" id="es3">encode</div>
+    </div>
+    <div class="exp-prog" id="expProg">
+      <div class="exp-bar"><div class="exp-fill" id="expFill"></div></div>
+      <div class="exp-stat" id="expStat"></div>
+    </div>
+    <button class="btn btn-fill" onclick="exportMix()">render &amp; download mix</button>
+    <p class="hint">studio-grade WAV · overlapping crossfades · peak normalised · YouTube ready</p>
+  </div>
+</div>
+
 <!-- ══ TOOLS ══ -->
 <div class="pg" id="pg-tools">
   <div class="tool-card">
     <div class="tool-header">
       <div class="tool-logo" style="background:var(--rd2);color:var(--r2);border:1px solid var(--r1)">S</div>
-      <div><div class="tool-name" style="color:var(--r2)">Suno</div><div class="tool-tagline">free MP3 download · custom mode</div></div>
+      <div><div class="tool-name" style="color:var(--r2)">Suno</div><div class="tool-tagline">free MP3 · custom mode · 200 char limit</div></div>
     </div>
-    <div class="tool-badges">
-      <span class="tbadge tbadge-gn">free download</span>
-      <span class="tbadge tbadge-rd">200 char limit</span>
-      <span class="tbadge tbadge-bl">instrumental mode</span>
-    </div>
-    <div class="tool-desc">Free plan gives you MP3 downloads. Use Custom Mode, paste prompt into Style field. Leave lyrics blank or type [instrumental] to kill vocals.</div>
+    <div class="tool-badges"><span class="tbadge tbadge-gn">free download</span><span class="tbadge tbadge-rd">200 chars</span><span class="tbadge tbadge-bl">instrumental</span></div>
+    <div class="tool-desc">Free plan gives MP3 downloads. Custom Mode → Style field → paste prompt → [instrumental] in lyrics.</div>
     <div class="tool-steps">
-      <div class="tool-step"><div class="step-n">1</div><div class="step-txt">Create → <strong>Custom Mode</strong> on</div></div>
-      <div class="tool-step"><div class="step-n">2</div><div class="step-txt">Paste prompt into <strong>Style of Music</strong> field</div></div>
-      <div class="tool-step"><div class="step-n">3</div><div class="step-txt">Lyrics field: type <strong>[instrumental]</strong></div></div>
-      <div class="tool-step"><div class="step-n">4</div><div class="step-txt">Three-dot menu → <strong>Download MP3</strong></div></div>
-      <div class="tool-step"><div class="step-n">5</div><div class="step-txt">Load into <strong>Mix Studio</strong> tab</div></div>
+      <div class="tool-step"><div class="step-n">1</div><div class="step-txt">Create → <strong>Custom Mode</strong></div></div>
+      <div class="tool-step"><div class="step-n">2</div><div class="step-txt">Paste into <strong>Style of Music</strong></div></div>
+      <div class="tool-step"><div class="step-n">3</div><div class="step-txt">Lyrics: type <strong>[instrumental]</strong></div></div>
+      <div class="tool-step"><div class="step-n">4</div><div class="step-txt">⋯ menu → <strong>Download MP3</strong></div></div>
     </div>
     <a class="btn-ye" href="https://suno.com" target="_blank">open suno →</a>
   </div>
@@ -445,12 +470,8 @@ option{background:var(--bg2);color:var(--tx)}
       <div class="tool-logo" style="background:var(--bld);color:var(--bl2);border:1px solid var(--bl2)">SR</div>
       <div><div class="tool-name" style="color:var(--bl2)">Soundraw</div><div class="tool-tagline">lofi hip-hop genre · best quality</div></div>
     </div>
-    <div class="tool-badges">
-      <span class="tbadge tbadge-gn">lofi hip-hop mode</span>
-      <span class="tbadge tbadge-ye">royalty free</span>
-      <span class="tbadge tbadge-rd">paid download</span>
-    </div>
-    <div class="tool-desc">Dedicated Lofi Hip Hop genre with mood and energy controls. Preview free, download on paid plan (~$16/month).</div>
+    <div class="tool-badges"><span class="tbadge tbadge-gn">lofi hip-hop</span><span class="tbadge tbadge-rd">paid download</span></div>
+    <div class="tool-desc">Dedicated Lofi Hip Hop genre with mood + energy controls. Preview free, ~$16/month for downloads.</div>
     <a class="btn-bl" href="https://soundraw.io" target="_blank">open soundraw →</a>
   </div>
   <div class="tool-card">
@@ -458,26 +479,22 @@ option{background:var(--bg2);color:var(--tx)}
       <div class="tool-logo" style="background:var(--gnd);color:var(--gn2);border:1px solid var(--gn2)">MF</div>
       <div><div class="tool-name" style="color:var(--gn2)">Musicful</div><div class="tool-tagline">up to 8 min · WAV export</div></div>
     </div>
-    <div class="tool-badges">
-      <span class="tbadge tbadge-gn">up to 8 minutes</span>
-      <span class="tbadge tbadge-gn">wav export</span>
-      <span class="tbadge tbadge-bl">commercial use</span>
-    </div>
-    <div class="tool-desc">Up to 8-minute tracks — fewer needed per mix. Prompt mode, instrumental only. Free tier available.</div>
+    <div class="tool-badges"><span class="tbadge tbadge-gn">8 minutes</span><span class="tbadge tbadge-gn">wav</span><span class="tbadge tbadge-bl">commercial</span></div>
+    <div class="tool-desc">Up to 8-minute tracks — fewer needed per mix. Prompt mode, instrumental. Free tier available.</div>
     <a class="btn-gn" href="https://musicful.ai" target="_blank">open musicful →</a>
   </div>
   <div class="div"></div>
-  <div style="font-size:0.88rem;font-weight:800;color:var(--pu2);margin-bottom:11px;letter-spacing:-0.01em">update github pages</div>
+  <div style="font-size:0.88rem;font-weight:800;color:var(--pu2);margin-bottom:11px">update github pages</div>
   <div class="card">
     <div class="tool-steps" style="margin:0">
-      <div class="gh-step"><div class="gh-n">1</div><div class="gh-txt">Go to <strong>github.com</strong> → your <code>lofi-studio</code> repo</div></div>
-      <div class="gh-step"><div class="gh-n">2</div><div class="gh-txt">Click <strong>Add file</strong> → <strong>Upload files</strong></div></div>
-      <div class="gh-step"><div class="gh-n">3</div><div class="gh-txt">Drag the new <code>index.html</code> onto the upload box — same filename replaces automatically</div></div>
-      <div class="gh-step"><div class="gh-n">4</div><div class="gh-txt">Scroll down → click <strong>Commit changes</strong></div></div>
-      <div class="gh-step"><div class="gh-n">5</div><div class="gh-txt">Wait 60s → check <strong>Actions</strong> tab for green tick</div></div>
-      <div class="gh-step"><div class="gh-n">6</div><div class="gh-txt">iPhone: Settings → Safari → <strong>Clear History and Website Data</strong> → reload URL</div></div>
+      <div class="gh-step"><div class="gh-n">1</div><div class="gh-txt">Go to <strong>github.com</strong> → <code>lofi-studio</code> repo</div></div>
+      <div class="gh-step"><div class="gh-n">2</div><div class="gh-txt"><strong>Add file</strong> → <strong>Upload files</strong></div></div>
+      <div class="gh-step"><div class="gh-n">3</div><div class="gh-txt">Drag new <code>index.html</code> → same filename replaces automatically</div></div>
+      <div class="gh-step"><div class="gh-n">4</div><div class="gh-txt">Scroll down → <strong>Commit changes</strong></div></div>
+      <div class="gh-step"><div class="gh-n">5</div><div class="gh-txt">Wait 60s → <strong>Actions</strong> tab → green tick</div></div>
+      <div class="gh-step"><div class="gh-n">6</div><div class="gh-txt">iPhone: Settings → Safari → <strong>Clear History and Website Data</strong> → reload</div></div>
     </div>
-    <p class="hint" style="margin-top:10px">if old version still shows add <code>?v=4</code> to your URL</p>
+    <p class="hint" style="margin-top:10px">if old version persists add <code>?v=5</code> to your URL</p>
   </div>
 </div>
 
@@ -507,11 +524,11 @@ option{background:var(--bg2);color:var(--tx)}
 </div>
 
 <nav id="nav">
-  <button class="nb on" onclick="goPage('mix',this,'mix studio')">
-    <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>mix
-  </button>
-  <button class="nb" onclick="goPage('prompts',this,'prompt generator')">
+  <button class="nb on" onclick="goPage('prompts',this,'prompt generator')">
     <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>prompts
+  </button>
+  <button class="nb" onclick="goPage('mix',this,'mix studio')">
+    <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>mix
   </button>
   <button class="nb" onclick="goPage('tools',this,'tools + github')">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>tools
@@ -527,99 +544,291 @@ option{background:var(--bg2);color:var(--tx)}
 
 <script>
 'use strict';
-function goPage(id,btn,sub){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));document.getElementById('pg-'+id).classList.add('on');btn.classList.add('on');document.getElementById('tb-sub').textContent=sub;document.getElementById('pg-'+id).scrollTop=0;}
-function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),2400);}
 
-// ══ MIX STUDIO ══════════════════════════════════════════════════════════
-let tracks=[];
-let aCtx=null;
-let pSrc=null,pGain=null,pStart=0,pOff=0,pPlaying=false,pIdx=0;
+// ── NAV ──────────────────────────────────────────────────────────────────────
+function goPage(id,btn,sub){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('pg-'+id).classList.add('on');
+  btn.classList.add('on');
+  document.getElementById('tb-sub').textContent=sub;
+  document.getElementById('pg-'+id).scrollTop=0;
+}
+function toast(msg,dur=2400){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('on');
+  clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),dur);
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// FADE CURVES — the core of seamless mixing
+// ══════════════════════════════════════════════════════════════════════════════
+const CURVES = {
+  linear:    {name:'Linear',    fn: t => t},
+  equalPow:  {name:'Eq.Power',  fn: t => Math.sin(t * Math.PI / 2)},
+  log:       {name:'Log',       fn: t => Math.log(1 + t * (Math.E - 1))},
+  sCurve:    {name:'S-Curve',   fn: t => t < 0.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2},
+};
+let activeCurve = 'equalPow'; // Equal power is the gold standard for seamless crossfades
+
+function buildCurveGrid(){
+  const grid = document.getElementById('curveGrid');
+  grid.innerHTML = Object.entries(CURVES).map(([key, c]) => {
+    const W=80, H=32;
+    return `<button class="curve-btn${key===activeCurve?' on':''}" onclick="setCurve('${key}')" id="cb_${key}">
+      <canvas width="${W}" height="${H}" id="cc_${key}"></canvas>
+      ${c.name}
+    </button>`;
+  }).join('');
+  Object.entries(CURVES).forEach(([key,c])=>drawCurveThumb(key,c));
+}
+
+function drawCurveThumb(key, c){
+  const canvas=document.getElementById('cc_'+key);
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width, H=canvas.height;
+  ctx.clearRect(0,0,W,H);
+  const isOn=key===activeCurve;
+  ctx.strokeStyle=isOn?'#ff5040':'#6a6460';
+  ctx.lineWidth=1.5;
+  ctx.beginPath();
+  for(let i=0;i<=W;i++){
+    const t=i/W;
+    const y=H-(c.fn(t)*(H-4)+2);
+    i===0?ctx.moveTo(i,y):ctx.lineTo(i,y);
+  }
+  ctx.stroke();
+}
+
+function setCurve(key){
+  activeCurve=key;
+  buildCurveGrid();
+  drawXfadePreview();
+  toast(CURVES[key].name+' fade curve');
+}
+
+// Apply fade curve to a sample array in-place
+function applyFadeCurve(samples, fadeIn, fadeOut, sr){
+  const fiS=Math.floor(fadeIn*sr);
+  const foS=Math.floor(fadeOut*sr);
+  const fn=CURVES[activeCurve].fn;
+  const len=samples.length;
+  for(let i=0;i<fiS && i<len;i++) samples[i]*=fn(i/fiS);
+  for(let i=0;i<foS && i<len;i++){
+    const idx=len-1-i;
+    if(idx>=0) samples[idx]*=fn(i/foS);
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// TRACK STATE
+// ══════════════════════════════════════════════════════════════════════════════
+let tracks = [];
+let aCtx = null;
+let pSrc=null, pGain=null, pStart=0, pOff=0, pPlaying=false, pIdx=0;
 let dragSrc=null;
 const TCOLORS=['#ff2020','#20c060','#2080ff','#ffc020','#a040ff','#ff8040','#40e0c0','#ff40a0'];
+
+function getCtx(){
+  if(!aCtx) aCtx=new(window.AudioContext||window.webkitAudioContext)();
+  if(aCtx.state==='suspended') aCtx.resume();
+  return aCtx;
+}
 
 function dzO(e){e.preventDefault();document.getElementById('dropZone').style.borderColor='#fff';}
 function dzL(){document.getElementById('dropZone').style.borderColor='var(--r1)';}
 function dzD(e){e.preventDefault();dzL();filesAdded(e.dataTransfer.files);}
 
 async function filesAdded(files){
-  if(!aCtx) aCtx=new(window.AudioContext||window.webkitAudioContext)();
+  const ctx=getCtx();
   for(const f of files){
     if(!f.type.startsWith('audio/')&&!f.name.match(/\.(mp3|wav|ogg|m4a|flac|aac|opus)$/i)) continue;
-    toast('loading '+f.name.substring(0,22)+'...');
+    toast('decoding '+f.name.substring(0,20)+'...',3000);
     try{
       const ab=await f.arrayBuffer();
-      const buf=await aCtx.decodeAudioData(ab.slice(0));
+      const buf=await ctx.decodeAudioData(ab.slice(0));
       const bpm=detectBPM(buf);
-      tracks.push({file:f,name:f.name.replace(/\.[^.]+$/,''),buf,duration:buf.duration,bpm,fadeIn:2,fadeOut:2,color:TCOLORS[tracks.length%TCOLORS.length]});
+      const waveData=buildWaveformData(buf,200);
+      tracks.push({
+        file:f, name:f.name.replace(/\.[^.]+$/,''),
+        buf, duration:buf.duration,
+        bpm, fadeIn:3, fadeOut:3,
+        color:TCOLORS[tracks.length%TCOLORS.length],
+        waveData
+      });
       renderAll();
-    }catch(err){toast('could not load '+f.name.substring(0,20));}
+      toast('loaded: '+f.name.replace(/\.[^.]+$/,'').substring(0,22));
+    }catch(err){toast('error: '+f.name.substring(0,20));}
   }
 }
 
+// ── BPM Detection ─────────────────────────────────────────────────────────────
 function detectBPM(buf){
   try{
-    const sr=buf.sampleRate,ch=buf.getChannelData(0);
-    const hop=Math.floor(sr*0.01),win=Math.floor(sr*0.05);
-    let prev=0,onsets=[];
-    for(let i=0;i<Math.min(ch.length-win,sr*60);i+=hop){
-      let e=0;for(let j=0;j<win;j++) e+=ch[i+j]*ch[i+j];e/=win;
-      if(e>prev*1.3&&e>0.001) onsets.push(i/sr);prev=e;
+    const sr=buf.sampleRate, ch=buf.getChannelData(0);
+    const hop=Math.floor(sr*0.01), win=Math.floor(sr*0.05);
+    let prev=0, onsets=[];
+    for(let i=0;i<Math.min(ch.length-win,sr*90);i+=hop){
+      let e=0; for(let j=0;j<win;j++) e+=ch[i+j]*ch[i+j]; e/=win;
+      if(e>prev*1.35&&e>0.0008) onsets.push(i/sr);
+      prev=e;
     }
-    if(onsets.length<4) return 0;
-    const gaps=[];for(let i=1;i<Math.min(onsets.length,50);i++) gaps.push(onsets[i]-onsets[i-1]);
+    if(onsets.length<6) return 0;
+    const gaps=[];
+    for(let i=1;i<Math.min(onsets.length,80);i++) gaps.push(onsets[i]-onsets[i-1]);
     gaps.sort((a,b)=>a-b);
     const med=gaps[Math.floor(gaps.length/2)];
-    const bpm=Math.round(60/med);
-    if(bpm<50||bpm>200) return 0;
+    const raw=Math.round(60/med);
+    if(raw<50||raw>200) return 0;
     const common=[62,64,66,68,70,72,74,76,78,80,82,84,86,88,90,92,94,96];
-    return common.reduce((a,b)=>Math.abs(b-bpm)<Math.abs(a-bpm)?b:a);
+    return common.reduce((a,b)=>Math.abs(b-raw)<Math.abs(a-raw)?b:a);
   }catch(e){return 0;}
 }
 
+// ── Waveform thumbnail ────────────────────────────────────────────────────────
+function buildWaveformData(buf, points){
+  const ch=buf.getChannelData(0);
+  const step=Math.floor(ch.length/points);
+  const data=new Float32Array(points);
+  for(let i=0;i<points;i++){
+    let peak=0;
+    for(let j=0;j<step;j++) peak=Math.max(peak,Math.abs(ch[i*step+j]||0));
+    data[i]=peak;
+  }
+  return data;
+}
+
+function drawWaveform(canvas, waveData, color, playPct=0){
+  if(!canvas||!waveData) return;
+  const ctx=canvas.getContext('2d');
+  const W=canvas.offsetWidth||canvas.width;
+  const H=canvas.offsetHeight||canvas.height;
+  canvas.width=W; canvas.height=H;
+  ctx.clearRect(0,0,W,H);
+  // background
+  ctx.fillStyle='#1c1c1c'; ctx.fillRect(0,0,W,H);
+  // played region
+  const px=Math.floor(playPct*W);
+  ctx.fillStyle='rgba(255,80,64,0.15)'; ctx.fillRect(0,0,px,H);
+  // waveform bars
+  const bw=W/waveData.length;
+  for(let i=0;i<waveData.length;i++){
+    const x=i*bw;
+    const h=Math.max(1,waveData[i]*(H-4));
+    const y=(H-h)/2;
+    const pct=(i*bw)/W;
+    ctx.fillStyle=pct<playPct?color:'rgba(255,255,255,0.25)';
+    ctx.fillRect(x+0.5,y,Math.max(1,bw-1),h);
+  }
+}
+
+// ── Crossfade Overlap Visualiser ─────────────────────────────────────────────
+function drawXfadePreview(){
+  const canvas=document.getElementById('xfadeCanvas');
+  if(!canvas) return;
+  const W=canvas.offsetWidth||300, H=canvas.offsetHeight||48;
+  canvas.width=W; canvas.height=H;
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  if(tracks.length<2){
+    ctx.fillStyle='#2a2a2a'; ctx.fillRect(0,0,W,H);
+    return;
+  }
+  const t1=tracks[Math.max(0,pIdx)], t2=tracks[Math.min(tracks.length-1,pIdx+1)];
+  const fo=t1.fadeOut, fi=t2.fadeIn;
+  const overlap=parseFloat(document.getElementById('overlapR').value);
+  const fn=CURVES[activeCurve].fn;
+
+  ctx.fillStyle='#1c1c1c'; ctx.fillRect(0,0,W,H);
+
+  // draw track A fade-out (right side)
+  const aColor='#ff5040', bColor='#40e080';
+  ctx.strokeStyle=aColor; ctx.lineWidth=2;
+  ctx.beginPath();
+  for(let i=0;i<=W/2;i++){
+    const t=1-(i/(W/2));
+    const g=i<(fo/overlap)*(W/2)?fn(i/((fo/Math.max(overlap,0.1))*(W/2))):1;
+    const y=H-g*(H-4)-2;
+    i===0?ctx.moveTo(W/2-i,y):ctx.lineTo(W/2-i,y);
+  }
+  ctx.stroke();
+
+  // draw track B fade-in (right side)
+  ctx.strokeStyle=bColor; ctx.lineWidth=2;
+  ctx.beginPath();
+  for(let i=0;i<=W/2;i++){
+    const g=i<(fi/Math.max(overlap,0.1))*(W/2)?fn(i/((fi/Math.max(overlap,0.1))*(W/2))):1;
+    const y=H-g*(H-4)-2;
+    i===0?ctx.moveTo(W/2,y):ctx.lineTo(W/2+i,y);
+  }
+  ctx.stroke();
+
+  // overlap zone indicator
+  const ozW=Math.min(overlap/Math.max(t1.duration,1),0.8)*W;
+  ctx.fillStyle='rgba(255,80,64,0.06)';
+  ctx.fillRect(W/2-ozW/2,0,ozW,H);
+  ctx.strokeStyle='rgba(255,80,64,0.3)'; ctx.lineWidth=1;
+  ctx.setLineDash([3,3]);
+  ctx.beginPath(); ctx.moveTo(W/2,0); ctx.lineTo(W/2,H); ctx.stroke();
+  ctx.setLineDash([]);
+
+  document.getElementById('xfadeLabel').textContent=
+    `${t1.name.substring(0,12)} → ${t2.name.substring(0,12)} · overlap ${overlap}s`;
+}
+
+// ── Sort ──────────────────────────────────────────────────────────────────────
 function sortBy(mode){
   if(!tracks.length){toast('load tracks first');return;}
   if(mode==='all'){
-    // Export 4 versions sequentially
     const orders=[
-      {name:'BPM-low-high',fn:(a,b)=>(a.bpm||70)-(b.bpm||70)},
-      {name:'BPM-high-low',fn:(a,b)=>(b.bpm||70)-(a.bpm||70)},
-      {name:'duration',fn:(a,b)=>a.duration-b.duration},
-      {name:'random',fn:()=>Math.random()-0.5}
+      {label:'BPM ↑',  fn:(a,b)=>(a.bpm||70)-(b.bpm||70)},
+      {label:'BPM ↓',  fn:(a,b)=>(b.bpm||70)-(a.bpm||70)},
+      {label:'Dur',    fn:(a,b)=>a.duration-b.duration},
+      {label:'Random', fn:()=>Math.random()-0.5},
     ];
     let i=0;
-    function doNext(){
-      if(i>=orders.length){toast('all 4 mixes exported!');return;}
+    function next(){
+      if(i>=orders.length){toast('✓ 4 mixes exported!',3000);return;}
       const o=orders[i++];
-      tracks.sort(o.fn);
-      renderAll();
-      setTimeout(()=>exportMixNamed('lofi-mix-'+o.name+'-'+Date.now()+'.wav',doNext),200);
+      tracks.sort(o.fn); renderAll();
+      setTimeout(()=>exportMixNamed('lofi-mix-'+o.label.replace(/[^a-z0-9]/gi,'')+'-'+Date.now()+'.wav',next),300);
     }
-    toast('generating 4 mixes...');
-    doNext();
-    return;
+    toast('generating 4 mixes...',8000); next(); return;
   }
-  if(mode==='bpm') tracks.sort((a,b)=>(a.bpm||70)-(b.bpm||70));
+  if(mode==='bpm')      tracks.sort((a,b)=>(a.bpm||70)-(b.bpm||70));
   else if(mode==='bpm-desc') tracks.sort((a,b)=>(b.bpm||70)-(a.bpm||70));
   else if(mode==='duration') tracks.sort((a,b)=>a.duration-b.duration);
   else if(mode==='random'){for(let i=tracks.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[tracks[i],tracks[j]]=[tracks[j],tracks[i]];}}
-  const labels={bpm:'↑ BPM: low → high energy','bpm-desc':'↓ BPM: high → low energy',duration:'⏱ Duration: short → long',random:'⚄ Shuffled randomly'};
-  toast(labels[mode]||'sorted');
+  const msgs={bpm:'↑ BPM: gradual energy build','bpm-desc':'↓ BPM: wind-down mix',duration:'⏱ Short to long',random:'⚄ Shuffled'};
+  toast(msgs[mode]||'sorted');
   renderAll();
 }
 
-function removeTrack(i){if(pPlaying&&pIdx===i) stopP();tracks.splice(i,1);if(pIdx>=tracks.length) pIdx=Math.max(0,tracks.length-1);renderAll();}
+function removeTrack(i){
+  if(pPlaying&&pIdx===i) stopP();
+  tracks.splice(i,1);
+  if(pIdx>=tracks.length) pIdx=Math.max(0,tracks.length-1);
+  renderAll();
+}
+
 function fmtT(s){return Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');}
 
 function renderAll(){
-  renderTrackList();renderFadeEditor();
+  renderTrackList(); renderFadeRows(); drawXfadePreview();
   const show=tracks.length>0;
-  ['sortCard','fadeCard','exportCard','trackMeta'].forEach(id=>document.getElementById(id).style.display=show?'block':'none');
-  if(show){const total=tracks.reduce((a,t)=>a+t.duration,0);document.getElementById('trackMetaTxt').textContent=tracks.length+' tracks · '+fmtT(total)+' total';}
+  ['sortCard','mixCard','exportCard','trackMeta'].forEach(id=>
+    document.getElementById(id).style.display=show?'block':'none');
+  if(show){
+    const total=tracks.reduce((a,t)=>a+t.duration,0);
+    document.getElementById('trackMetaTxt').textContent=
+      tracks.length+' tracks · '+fmtT(total)+' · avg '+Math.round(tracks.filter(t=>t.bpm).reduce((a,t)=>a+t.bpm,0)/Math.max(1,tracks.filter(t=>t.bpm).length))+' bpm';
+  }
 }
 
 function renderTrackList(){
   const el=document.getElementById('trackList');
-  if(!tracks.length){el.innerHTML='<div class="empty">load tracks above<br><span>then smart sort your mix below</span></div>';return;}
+  if(!tracks.length){el.innerHTML='<div class="empty">load tracks above<br><span>then sort and configure your mix</span></div>';return;}
   el.innerHTML=tracks.map((t,i)=>`
     <div class="trow" draggable="true" id="tr${i}"
       ondragstart="dragSrc=${i}"
@@ -627,7 +836,7 @@ function renderTrackList(){
       ondrop="doDrop(event,${i})"
       ondragend="document.querySelectorAll('.trow').forEach(r=>r.classList.remove('drag-over'))">
       <span class="tn">${String(i+1).padStart(2,'0')}</span>
-      <button class="tplay" id="tp${i}" onclick="playTrack(${i})">&#9654;</button>
+      <button class="tplay${pIdx===i&&pPlaying?' playing':''}" id="tp${i}" onclick="playTrack(${i})">&#9654;</button>
       <span class="tl" title="${t.name}">${t.name}</span>
       ${t.bpm?`<span class="tbpm">${t.bpm}</span>`:''}
       <span class="tdur">${fmtT(t.duration)}</span>
@@ -635,93 +844,295 @@ function renderTrackList(){
     </div>`).join('');
 }
 
-function doDrop(e,i){e.preventDefault();if(dragSrc===null||dragSrc===i)return;const m=tracks.splice(dragSrc,1)[0];tracks.splice(i,0,m);dragSrc=null;renderAll();}
+function doDrop(e,i){
+  e.preventDefault();
+  if(dragSrc===null||dragSrc===i) return;
+  const m=tracks.splice(dragSrc,1)[0]; tracks.splice(i,0,m); dragSrc=null; renderAll();
+}
 
-function renderFadeEditor(){
+function renderFadeRows(){
   const el=document.getElementById('fadeRows');
   if(!tracks.length){el.innerHTML='';return;}
   el.innerHTML=tracks.map((t,i)=>`
-    <div class="fade-row">
-      <div class="fade-lbl" title="${t.name}">${t.name.substring(0,11)}</div>
-      <input type="range" class="fade-in-r" min="0" max="${Math.min(10,t.duration/2).toFixed(1)}" step="0.5" value="${t.fadeIn}" oninput="setFade(${i},'in',this.value)">
-      <span class="fade-v" id="fi${i}">${t.fadeIn}s</span>
-      <input type="range" class="fade-out-r" min="0" max="${Math.min(10,t.duration/2).toFixed(1)}" step="0.5" value="${t.fadeOut}" oninput="setFade(${i},'out',this.value)">
-      <span class="fade-v" id="fo${i}">${t.fadeOut}s</span>
+    <div class="track-fade-row">
+      <div class="tf-name" title="${t.name}">${t.name.substring(0,12)}</div>
+      <input type="range" class="tf-in" min="0" max="${Math.min(15,t.duration/2).toFixed(1)}" step="0.25" value="${t.fadeIn}"
+        oninput="setFade(${i},'in',this.value)">
+      <span class="tf-val in" id="fi${i}">${t.fadeIn}s</span>
+      <input type="range" class="tf-out" min="0" max="${Math.min(15,t.duration/2).toFixed(1)}" step="0.25" value="${t.fadeOut}"
+        oninput="setFade(${i},'out',this.value)">
+      <span class="tf-val out" id="fo${i}">${t.fadeOut}s</span>
     </div>`).join('');
 }
-function setFade(i,type,val){const v=parseFloat(val);if(type==='in'){tracks[i].fadeIn=v;document.getElementById('fi'+i).textContent=v+'s';}else{tracks[i].fadeOut=v;document.getElementById('fo'+i).textContent=v+'s';}}
-function setAllFades(s){tracks.forEach((t,i)=>{t.fadeIn=s;t.fadeOut=s;});renderFadeEditor();toast('all fades → '+s+'s');}
 
-// Player
+function setFade(i,type,val){
+  const v=parseFloat(val);
+  if(type==='in'){tracks[i].fadeIn=v;document.getElementById('fi'+i).textContent=v+'s';}
+  else{tracks[i].fadeOut=v;document.getElementById('fo'+i).textContent=v+'s';}
+  drawXfadePreview();
+}
+
+function setAllFades(s){
+  tracks.forEach((t,i)=>{t.fadeIn=s;t.fadeOut=s;});
+  renderFadeRows(); drawXfadePreview(); toast('all fades → '+s+'s');
+}
+
+function onOverlapChange(v){
+  document.getElementById('overlapV').textContent=v+'s';
+  drawXfadePreview();
+}
+
+// ── Player ────────────────────────────────────────────────────────────────────
 function playTrack(i){if(!tracks[i])return;stopP();pIdx=i;startP(0);}
 function startP(off){
-  if(!aCtx)return;if(aCtx.state==='suspended')aCtx.resume();
-  const t=tracks[pIdx];if(!t)return;
-  pSrc=aCtx.createBufferSource();pSrc.buffer=t.buf;
-  pGain=aCtx.createGain();pGain.gain.value=parseFloat(document.getElementById('volR').value);
-  pSrc.connect(pGain);pGain.connect(aCtx.destination);
-  pOff=off;pStart=aCtx.currentTime-off;pSrc.start(0,off);
+  const ctx=getCtx();
+  const t=tracks[pIdx]; if(!t) return;
+  pSrc=ctx.createBufferSource(); pSrc.buffer=t.buf;
+  pGain=ctx.createGain(); pGain.gain.value=parseFloat(document.getElementById('volR').value);
+  pSrc.connect(pGain); pGain.connect(ctx.destination);
+  pOff=off; pStart=ctx.currentTime-off;
+  pSrc.start(0,off);
   pSrc.onended=()=>{if(pPlaying){pPlaying=false;updatePBtn();}};
-  pPlaying=true;updatePBtn();updatePMeta();raf();
+  pPlaying=true; updatePBtn(); updatePMeta(); raf();
 }
 function stopP(){if(pSrc){try{pSrc.stop();}catch(e){}pSrc=null;}pPlaying=false;updatePBtn();}
 function togglePlay(){if(!tracks.length)return;if(pPlaying){pOff=aCtx.currentTime-pStart;stopP();}else{if(pIdx>=tracks.length)pIdx=0;startP(pOff||0);}}
 function skipPrev(){pIdx=Math.max(0,pIdx-1);pOff=0;if(pPlaying){stopP();startP(0);}else updatePMeta();}
 function skipNext(){pIdx=Math.min(tracks.length-1,pIdx+1);pOff=0;if(pPlaying){stopP();startP(0);}else updatePMeta();}
 function setVol(v){if(pGain)pGain.gain.value=parseFloat(v);}
-function seekClick(e){if(!tracks[pIdx])return;const rect=e.currentTarget.getBoundingClientRect();const no=(e.clientX-rect.left)/rect.width*tracks[pIdx].duration;if(pPlaying){stopP();startP(no);}else{pOff=no;updatePUI(no,tracks[pIdx].duration);}}
+function seekClick(e){
+  if(!tracks[pIdx])return;
+  const rect=e.currentTarget.getBoundingClientRect();
+  const no=(e.clientX-rect.left)/rect.width*tracks[pIdx].duration;
+  if(pPlaying){stopP();startP(no);}else{pOff=no;updatePUI(no,tracks[pIdx].duration);}
+}
+function seekWaveClick(e){
+  if(!tracks[pIdx])return;
+  const rect=e.currentTarget.getBoundingClientRect();
+  const no=(e.clientX-rect.left)/rect.width*tracks[pIdx].duration;
+  if(pPlaying){stopP();startP(no);}else{pOff=no;updatePUI(no,tracks[pIdx].duration);}
+}
 function updatePBtn(){document.getElementById('playBtn').innerHTML=pPlaying?'&#9646;&#9646;':'&#9654;';}
-function updatePMeta(){const t=tracks[pIdx];if(!t)return;const icons=['🎵','🥁','🎸','🎹','🎷','🎺','🎻','🪗'];document.getElementById('pArt').textContent=icons[pIdx%icons.length];document.getElementById('pName').textContent=t.name;document.getElementById('pMeta').textContent=(t.bpm?t.bpm+' bpm · ':'')+fmtT(t.duration);document.getElementById('pTot').textContent=fmtT(t.duration);document.querySelectorAll('.tplay').forEach((b,i)=>b.classList.toggle('playing',i===pIdx));}
-function updatePUI(now,dur){document.getElementById('pFill').style.width=Math.min(100,(now/dur)*100)+'%';document.getElementById('pNow').textContent=fmtT(now);}
+function updatePMeta(){
+  const t=tracks[pIdx]; if(!t) return;
+  const icons=['🎵','🥁','🎸','🎹','🎷','🎺','🎻','🪗'];
+  document.getElementById('pArt').textContent=icons[pIdx%icons.length];
+  document.getElementById('pName').textContent=t.name;
+  document.getElementById('pMeta').textContent=(t.bpm?t.bpm+' bpm · ':'')+fmtT(t.duration);
+  document.getElementById('pTot').textContent=fmtT(t.duration);
+  document.querySelectorAll('.tplay').forEach((b,i)=>b.classList.toggle('playing',i===pIdx));
+  // draw waveform
+  const canvas=document.getElementById('waveCanvas');
+  drawWaveform(canvas, t.waveData, t.color, 0);
+}
+function updatePUI(now,dur){
+  const pct=Math.min(1,now/dur);
+  document.getElementById('pFill').style.width=(pct*100)+'%';
+  document.getElementById('pNow').textContent=fmtT(now);
+  document.getElementById('waveHead').style.left=(pct*100)+'%';
+  // redraw waveform with playhead
+  if(tracks[pIdx]){
+    const canvas=document.getElementById('waveCanvas');
+    drawWaveform(canvas,tracks[pIdx].waveData,tracks[pIdx].color,pct);
+  }
+}
 let rafId=null;
-function raf(){if(!pPlaying){rafId=null;return;}const t=tracks[pIdx];if(t){const now=aCtx.currentTime-pStart;if(now>=t.duration){stopP();return;}updatePUI(now,t.duration);}rafId=requestAnimationFrame(raf);}
+function raf(){
+  if(!pPlaying){rafId=null;return;}
+  const t=tracks[pIdx];
+  if(t){const now=aCtx.currentTime-pStart;if(now>=t.duration){stopP();return;}updatePUI(now,t.duration);}
+  rafId=requestAnimationFrame(raf);
+}
 
-// Export
+// ══════════════════════════════════════════════════════════════════════════════
+// PROFESSIONAL EXPORT ENGINE
+// True overlapping crossfade — tracks are placed on a shared timeline
+// with overlapping regions where the fade-out of track N and fade-in
+// of track N+1 play simultaneously, just like a real DJ mix.
+// ══════════════════════════════════════════════════════════════════════════════
 function exportMix(){
   if(!tracks.length){toast('no tracks to export');return;}
-  exportMixNamed('lofi-mix-'+Date.now()+'.wav',null);
+  exportMixNamed('lofi-mix-'+Date.now()+'.wav', null);
 }
-async function exportMixNamed(name,cb){
-  const prog=document.getElementById('expProg'),fill=document.getElementById('expFill'),stat=document.getElementById('expStat');
-  prog.style.display='block';fill.style.width='0%';stat.textContent='preparing...';
+
+async function exportMixNamed(filename, cb){
+  if(!tracks.length) return;
+
+  const prog=document.getElementById('expProg');
+  const fill=document.getElementById('expFill');
+  const stat=document.getElementById('expStat');
+  const stages=[document.getElementById('es0'),document.getElementById('es1'),
+                document.getElementById('es2'),document.getElementById('es3')];
+
+  function setStage(i,msg){
+    stages.forEach((s,j)=>{s.className='exp-stage'+(j<i?' done':j===i?' active':'');});
+    if(stat) stat.textContent=msg;
+  }
+
+  prog.style.display='block'; fill.style.width='0%';
+
   try{
-    let totalSamples=0;tracks.forEach(t=>totalSamples+=t.buf.length);
+    const ctx=getCtx();
     const nativeSR=tracks[0].buf.sampleRate;
-    const out=new Float32Array(totalSamples*2);
-    let pos=0;
+    const overlap=parseFloat(document.getElementById('overlapR').value);
+    const masterGainDB=parseFloat(document.getElementById('masterGainR').value);
+    const masterGainLin=Math.pow(10,masterGainDB/20);
+    const normMode=document.getElementById('normaliseMode').value;
+    const fn=CURVES[activeCurve].fn;
+
+    // ── Stage 0: Decode / prepare ────────────────────────────────────────────
+    setStage(0,'preparing tracks...');
+    fill.style.width='5%';
+    await yieldTick();
+
+    // ── Stage 1: Mix onto shared timeline ────────────────────────────────────
+    setStage(1,'mixing with overlapping crossfades...');
+
+    // Calculate total output length
+    // Each track contributes (duration - overlap) except the last which contributes full duration
+    let totalSamples=0;
     tracks.forEach((t,i)=>{
-      stat.textContent='rendering '+(i+1)+'/'+tracks.length+'...';
-      fill.style.width=(10+Math.round((i/tracks.length)*75))+'%';
+      const effectiveDur = i<tracks.length-1
+        ? Math.max(0, t.duration - overlap)
+        : t.duration;
+      totalSamples += Math.floor(effectiveDur * nativeSR);
+    });
+    // Add a little extra for the final track's tail
+    totalSamples += Math.floor(overlap * nativeSR);
+    totalSamples = Math.max(totalSamples, 1);
+
+    // Interleaved stereo buffer (L,R,L,R...)
+    const out = new Float32Array(totalSamples * 2);
+
+    let writePos = 0; // in samples
+
+    for(let i=0;i<tracks.length;i++){
+      const t=tracks[i];
       const b=t.buf;
-      const fiS=Math.floor(t.fadeIn*nativeSR),foS=Math.floor(t.fadeOut*nativeSR);
+      const sr=nativeSR;
       const ch0=b.numberOfChannels>0?b.getChannelData(0):new Float32Array(b.length);
       const ch1=b.numberOfChannels>1?b.getChannelData(1):ch0;
-      for(let s=0;s<b.length;s++){
-        let g=1;if(s<fiS)g=s/fiS;if(s>b.length-foS)g=Math.min(g,(b.length-s)/foS);
-        out[(pos+s)*2]=ch0[s]*g;out[(pos+s)*2+1]=ch1[s]*g;
+
+      const fiS=Math.floor(t.fadeIn*sr);
+      const foS=Math.floor(t.fadeOut*sr);
+      const totalSamp=b.length;
+
+      // Write this track sample-by-sample into the output buffer
+      // using ADD so overlapping regions accumulate (true crossfade mix)
+      for(let s=0;s<totalSamp;s++){
+        const outIdx=writePos+s;
+        if(outIdx>=totalSamples) break;
+
+        // Fade in gain
+        let gIn=1;
+        if(s<fiS) gIn=fn(s/fiS);
+
+        // Fade out gain
+        let gOut=1;
+        if(s>totalSamp-foS-1){
+          const dist=totalSamp-1-s;
+          if(dist<foS) gOut=fn(dist/Math.max(foS,1));
+        }
+
+        const g=gIn*gOut;
+        out[outIdx*2]   += ch0[s]*g;
+        out[outIdx*2+1] += ch1[s]*g;
       }
-      pos+=b.length;
-    });
-    stat.textContent='encoding WAV...';fill.style.width='90%';
-    const blob=encWAV(out,nativeSR,2);
-    fill.style.width='100%';stat.textContent='downloading...';
+
+      // Advance write position (overlap means we stay back by overlap samples)
+      if(i<tracks.length-1){
+        writePos += Math.floor(Math.max(0, t.duration - overlap) * sr);
+      }
+
+      fill.style.width=(5+Math.round((i+1)/tracks.length*55))+'%';
+      await yieldTick();
+    }
+
+    // ── Stage 2: Normalise ────────────────────────────────────────────────────
+    setStage(2,'normalising...');
+    fill.style.width='65%';
+    await yieldTick();
+
+    // Find peak
+    let peak=0;
+    for(let i=0;i<out.length;i++) peak=Math.max(peak,Math.abs(out[i]));
+
+    let normGain=masterGainLin;
+    if(normMode==='peak'&&peak>0){
+      normGain=Math.min(masterGainLin, (0.891/peak)*masterGainLin); // -1 dBFS
+    } else if(normMode==='lufs'&&peak>0){
+      // Simplified loudness matching: target RMS -23 LUFS approx
+      let rms=0;
+      for(let i=0;i<out.length;i++) rms+=out[i]*out[i];
+      rms=Math.sqrt(rms/out.length);
+      const targetRMS=0.1; // approx -20 dBFS RMS
+      normGain=Math.min(4, (targetRMS/Math.max(rms,0.0001))*masterGainLin);
+    }
+
+    for(let i=0;i<out.length;i++) out[i]=Math.max(-1,Math.min(1,out[i]*normGain));
+
+    fill.style.width='80%';
+
+    // ── Stage 3: Encode WAV ───────────────────────────────────────────────────
+    setStage(3,'encoding WAV...');
+    fill.style.width='88%';
+    await yieldTick();
+
+    const bitDepth=parseInt(document.getElementById('exportBit').value);
+    const blob=encodeWAV(out, nativeSR, 2, bitDepth);
+    fill.style.width='100%';
+    setStage(4,'done!');
+
     const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();document.body.removeChild(a);
-    setTimeout(()=>{URL.revokeObjectURL(url);prog.style.display='none';toast('downloaded: '+name.substring(0,30));if(cb)cb();},800);
-  }catch(err){stat.textContent='error: '+err.message;}
+    const a=document.createElement('a'); a.href=url; a.download=filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(()=>{
+      URL.revokeObjectURL(url);
+      prog.style.display='none';
+      stages.forEach(s=>s.className='exp-stage');
+      toast('✓ '+filename.substring(0,30));
+      if(cb) cb();
+    },800);
+
+  }catch(err){
+    stat.textContent='error: '+err.message;
+    console.error(err);
+  }
 }
-function encWAV(interleaved,sr,nc){
-  const n=interleaved.length;const ab=new ArrayBuffer(44+n*2);const v=new DataView(ab);
-  const ws=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i));};
-  ws(0,'RIFF');v.setUint32(4,36+n*2,true);ws(8,'WAVE');ws(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);
-  v.setUint16(22,nc,true);v.setUint32(24,sr,true);v.setUint32(28,sr*nc*2,true);v.setUint16(32,nc*2,true);
-  v.setUint16(34,16,true);ws(36,'data');v.setUint32(40,n*2,true);
-  let off=44;for(let i=0;i<n;i++){const x=Math.max(-1,Math.min(1,interleaved[i]));v.setInt16(off,x<0?x*0x8000:x*0x7FFF,true);off+=2;}
+
+// Yield to keep UI responsive during heavy computation
+function yieldTick(){return new Promise(r=>setTimeout(r,0));}
+
+function encodeWAV(interleaved, sr, nc, bitDepth){
+  const n=interleaved.length;
+  const bytesPerSample=bitDepth===32?4:bitDepth===24?3:2;
+  const ab=new ArrayBuffer(44+n*bytesPerSample);
+  const v=new DataView(ab);
+  const ws=(o,s)=>{for(let i=0;i<s.length;i++) v.setUint8(o+i,s.charCodeAt(i));};
+  const audioFmt=bitDepth===32?3:1; // IEEE float vs PCM
+  ws(0,'RIFF'); v.setUint32(4,36+n*bytesPerSample,true); ws(8,'WAVE');
+  ws(12,'fmt '); v.setUint32(16,16,true); v.setUint16(20,audioFmt,true);
+  v.setUint16(22,nc,true); v.setUint32(24,sr,true);
+  v.setUint32(28,sr*nc*bytesPerSample,true); v.setUint16(32,nc*bytesPerSample,true);
+  v.setUint16(34,bitDepth,true); ws(36,'data'); v.setUint32(40,n*bytesPerSample,true);
+  let off=44;
+  for(let i=0;i<n;i++){
+    const x=Math.max(-1,Math.min(1,interleaved[i]));
+    if(bitDepth===32){v.setFloat32(off,x,true);off+=4;}
+    else if(bitDepth===24){
+      const s=Math.round(x<0?x*0x800000:x*0x7FFFFF);
+      v.setUint8(off,s&0xff); v.setUint8(off+1,(s>>8)&0xff); v.setUint8(off+2,(s>>16)&0xff); off+=3;
+    } else {
+      v.setInt16(off,Math.round(x<0?x*0x8000:x*0x7FFF),true); off+=2;
+    }
+  }
   return new Blob([ab],{type:'audio/wav'});
 }
 
-// ══ PROMPT ENGINE ════════════════════════════════════════════════════════════
-const DRUMS=[{n:'boom bap classic',d:'heavy classic boom bap — punchy 808 kick with deep sub-bass thump, cracking snare on 2 and 4, tight shuffling hi-hats, vinyl drum chops, loose human timing'},{n:'dusty break groove',d:'chopped breakbeat — dusty sampled kick with heavy low-end, rimshot snare with snap, swinging hi-hat interplay, slight timing imperfection, feels like a flipped 70s sample'},{n:'808 pocket beat',d:'slow hip-hop beat — deep 808 sub kick with long punchy decay, snappy layered snare, lazy hi-hat groove, heavy swing quantisation, makes you nod without thinking'},{n:'jazz-hop swing',d:'jazz-influenced hip-hop — warm round kick with low-end punch, brushed snare with ghost notes, syncopated hi-hat with triplet swing, live human drum feel'},{n:'head-nod groove',d:'classic head-nod — deep kick with low-end weight, sharp snare on 2 and 4, swinging closed hi-hats that open on the upbeat, sampled soul-record drum feel'},{n:'slow trap-lofi',d:'slow trap-influenced lofi — 808 sub kick with extended low decay, clapping snare, rolling triplet hi-hats with open hat accents, dark thumping groove'},{n:'neo-soul pocket',d:'neo-soul hip-hop — warm live kick with rounded low end, snare with wooden crack, subtle hi-hat with ghost notes and rim taps, natural swing throughout'},{n:'MPC chop beat',d:'MPC-style chopped drums — punchy sampled kick with vinyl distortion, tight snare stab, fast hi-hat with programmed swing, sounds made at 2am on hardware'},{n:'soul break flip',d:'flipped soul breakbeat — deep warm kick from a 70s record, thick snare with room tone, swinging cymbal with brush feel, slight pitch variation'},{n:'lo-fi drum machine',d:'vintage drum machine — TR-style kick with punchy low end, clap snare, 16th-note hi-hat with velocity variation, slight bit-crush and low-pass filter'},{n:'half-time heavy',d:'half-time hip-hop — kick on 1, heavy snare on 3 only, slow hypnotic feel, syncopated hi-hat, sub bass reinforcing kick, the groove breathes slowly'},{n:'dusty jazz break',d:'dusty jazz breakbeat — live drummer feel with brushes and rods, kick and snare in syncopated places, hi-hat rides with cymbal swells, recorded 1968 and sampled'}];
+// ══════════════════════════════════════════════════════════════════════════════
+// PROMPT ENGINE
+// ══════════════════════════════════════════════════════════════════════════════
+const DRUMS=[{n:'boom bap classic',d:'heavy classic boom bap — punchy 808 kick with deep sub-bass thump, cracking snare on 2 and 4, tight shuffling hi-hats, vinyl drum chops, loose human timing'},{n:'dusty break groove',d:'chopped breakbeat — dusty sampled kick with heavy low-end, rimshot snare with snap, swinging hi-hat interplay, slight timing imperfection, feels like a flipped 70s sample'},{n:'808 pocket beat',d:'slow hip-hop beat — deep 808 sub kick with long punchy decay, snappy layered snare, lazy hi-hat groove, heavy swing quantisation, makes you nod without thinking'},{n:'jazz-hop swing',d:'jazz-influenced hip-hop — warm round kick with low-end punch, brushed snare with ghost notes, syncopated hi-hat with triplet swing, live human drum feel'},{n:'head-nod groove',d:'classic head-nod — deep kick with low-end weight, sharp snare on 2 and 4, swinging closed hi-hats opening on the upbeat, sampled soul-record drum feel'},{n:'slow trap-lofi',d:'slow trap-influenced lofi — 808 sub kick with extended low decay, clapping snare, rolling triplet hi-hats with open hat accents, dark thumping groove'},{n:'neo-soul pocket',d:'neo-soul hip-hop — warm live kick with rounded low end, snare with wooden crack, subtle hi-hat with ghost notes and rim taps, natural swing throughout'},{n:'MPC chop beat',d:'MPC-style chopped drums — punchy sampled kick with vinyl distortion, tight snare stab, fast hi-hat with programmed swing, sounds made at 2am on hardware'},{n:'soul break flip',d:'flipped soul breakbeat — deep warm kick from a 70s record, thick snare with room tone, swinging cymbal with brush feel, slight pitch variation'},{n:'lo-fi drum machine',d:'vintage drum machine — TR-style kick with punchy low end, clap snare, 16th-note hi-hat with velocity variation, bit-crush and low-pass filter throughout'},{n:'half-time heavy',d:'half-time hip-hop — kick on 1, heavy snare on 3 only, slow hypnotic feel, syncopated hi-hat, sub bass reinforcing the kick, the groove breathes slowly'},{n:'dusty jazz break',d:'dusty jazz breakbeat — live drummer feel with brushes and rods, kick and snare in syncopated places, hi-hat rides with cymbal swells, recorded 1968 and sampled'}];
 const MELS=[{i:'warm Rhodes electric piano',c:'slow soulful chord voicings with gentle tremolo, mellow and introspective'},{i:'chopped jazz guitar sample',c:'lazy fingerpicked jazz riff cut and rearranged, slightly muffled, vintage low-fidelity tone'},{i:'dusty Fender Rhodes',c:'soulful chord stabs with key noise and pedal buzz, warm and slightly detuned, nostalgic quality'},{i:'muted jazz piano',c:'minimal jazz piano, sparse single notes with generous space between, late-night intimate feel'},{i:'vintage saxophone sample',c:'short breathy tenor saxophone phrases looped and filtered, warm and nostalgic, old Blue Note record quality'},{i:'Hammond organ chords',c:'slow Hammond B3 chord swells with rotary speaker, thick warm tone, faintly gospel-soul influenced'},{i:'mellotron string pad',c:'slow evolving mellotron strings, slightly haunted and cinematic, warm analogue tape texture'},{i:'electric piano tape echo',c:'dreamy Wurlitzer with subtle tape delay trails, floating warm and introspective'},{i:'sampled soul guitar loop',c:'chopped and filtered soul guitar from a 70s record, warm pick attack, relaxed and groovy'},{i:'vibraphone melody',c:'warm vibraphone with long sustain and gentle vibrato, jazz-influenced, delicate and intimate'},{i:'upright piano with room',c:'upright piano recorded with room mics, slightly out of tune, warm woody tone, intimate and imperfect'},{i:'clavinet chops',c:'funky clavinet chord chops filtered through wah and low-pass, staccato rhythmic feel, old-school soul'},{i:'breathy flute sample',c:'breathy jazz flute phrase sampled and looped, airy and intimate, slight breath noise between notes'},{i:'steel string fingerpick',c:'gentle fingerpicked steel-string acoustic, warm mid-range, slow melodic pattern with slight finger squeak'}];
 const BASS=['warm upright bass walking slowly underneath, round woody tone locked to the kick','deep electric bass groove fat in the low end, smooth warm tone, locked to kick and slightly behind the beat','sub bass undertone felt more than heard — physical low-end foundation under everything','slow thumb-pluck bass guitar with muted attack and warm mid-range, groove-focused','fretless bass sliding between notes, warm vocal quality, melodic but always supporting the groove','sampled bass loop from a vintage soul record, slightly distorted and warm, punchy attack'];
 const TEX=['heavy vinyl crackle and surface noise layered throughout, like a record played a thousand times','tape hiss and subtle saturation, analogue warmth, like recorded to a 4-track cassette','light rain ambience underneath — not intrusive, like looking out a fogged window','distant coffee shop ambience — espresso hiss, soft voices, occasional cup placed down','dusty tape warble and subtle pitch drift, slightly worn cassette, vintage sampler imperfection','subtle room tone and gentle reverb decay, small warm room with wood floors'];
@@ -729,7 +1140,7 @@ const MOOD_COLS=['deeply introspective and still, time slows down, the room feel
 const SCENES=['dust motes in afternoon light, the room very quiet, the clock stopped mattering','the city audible but distant, you are inside and separate from all of it','a single lamp on, everything outside the pool of warm light dark and soft','rain falling for hours, nobody in a hurry, the day has no agenda','coffee going cold on the desk, time passing without anyone noticing','headphones on, the world outside cancelled for the rest of the evening'];
 const BPM_POOLS=[[62,64,65],[66,68,69],[70,72,73],[74,76,77],[78,80,81],[82,84,85],[86,88,90],[92,94,96]];
 const MOOD_BPM={coffee:3,late:1,rainy:0,city:4,midnight:2,autumn:1,bedroom:5,tokyo:2,early:2,deep:1,jazz:2,snow:0,sunday:1,harbour:1,library:0,train:3,candle:1,nostalg:1};
-const LENGTH_DB={coffee:{v:'45–60 min',w:'ideal for a coffee shop sitting or focused work block.'},late:{v:'59–90 min',w:'matches a full study session.'},rainy:{v:'60–90 min',w:'rainy day listening is long.'},city:{v:'45–59 min',w:'suits a rooftop session or evening unwind.'},midnight:{v:'30–45 min',w:'matches a late-night drive.'},autumn:{v:'59 min',w:'classic album length.'},bedroom:{v:'59–90 min',w:'bedroom producers work in hour blocks.'},tokyo:{v:'59 min',w:'cinematic length.'},early:{v:'30–45 min',w:'covers first coffee and slow ramp-up.'},deep:{v:'90 min–2 hours',w:'matches a full deep-work block.'}};
+const LENGTH_DB={coffee:{v:'45–60 min',w:'ideal for a coffee shop sitting or focused work block.'},late:{v:'59–90 min',w:'matches a full study session.'},rainy:{v:'60–90 min',w:'rainy day listening is long.'},city:{v:'45–59 min',w:'suits a rooftop session.'},midnight:{v:'30–45 min',w:'matches a late-night drive.'},autumn:{v:'59 min',w:'classic album length.'},bedroom:{v:'59–90 min',w:'bedroom producers work in hour blocks.'},tokyo:{v:'59 min',w:'cinematic length.'},early:{v:'30–45 min',w:'covers first coffee and ramp-up.'},deep:{v:'90 min–2 hours',w:'matches a full deep-work block.'}};
 const TOTAL=DRUMS.length*MELS.length*BASS.length*TEX.length*MOOD_COLS.length*SCENES.length;
 function shuf(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
 function pick(a){return a[Math.floor(Math.random()*a.length)];}
@@ -775,11 +1186,11 @@ function genPrompts(){
   setTimeout(()=>document.getElementById('promptOut').scrollIntoView({behavior:'smooth',block:'start'}),80);
 }
 function doCopy(btn,id){const el=document.getElementById(id);if(!el)return;navigator.clipboard.writeText(el.innerText).then(()=>{const o=btn.textContent;btn.textContent='copied!';btn.classList.add('ok');setTimeout(()=>{btn.textContent=o;btn.classList.remove('ok');},2000);});}
-let sess=[];try{sess=JSON.parse(localStorage.getItem('lfs11_sess')||'[]');}catch(e){}
-function pSAdd(label,btn){if(btn){btn.textContent='added!';btn.classList.add('ok');btn.disabled=true;}sess.push({id:Date.now(),label});localStorage.setItem('lfs11_sess',JSON.stringify(sess));toast('added to session');}
+let sess=[];try{sess=JSON.parse(localStorage.getItem('lfs12_sess')||'[]');}catch(e){}
+function pSAdd(label,btn){if(btn){btn.textContent='added!';btn.classList.add('ok');btn.disabled=true;}sess.push({id:Date.now(),label});localStorage.setItem('lfs12_sess',JSON.stringify(sess));toast('added to session');}
 
 // ══ PLANNER ══════════════════════════════════════════════════════════════════
-let calOff=0,planD={};try{planD=JSON.parse(localStorage.getItem('lfs11_plan')||'{}');}catch(e){}
+let calOff=0,planD={};try{planD=JSON.parse(localStorage.getItem('lfs12_plan')||'{}');}catch(e){}
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DOW=['Su','Mo','Tu','We','Th','Fr','Sa'];
 const VIBES=['late night lofi hip-hop · rain & focus','cosy coffee shop beats · boom bap & soul','deep focus · 808 & minimal piano','midnight city lofi · bass & atmosphere','rainy day study mix · dusty and warm','slow morning lofi · jazz-hop & Rhodes','bedroom beats · chopped samples & soul','head-nod mix · vinyl & groove','jazz-hop · upright bass & piano','2am drive · slow trap & neon','sunday afternoon · warm and slow','library session · minimal and clean'];
@@ -804,22 +1215,25 @@ function renderCal(){
   }
   document.getElementById('upList').innerHTML=uHtml||'<div class="empty">no uploads this month</div>';
 }
-function toggleDay(key){planD[key]=planD[key]==='done'?'':'done';localStorage.setItem('lfs11_plan',JSON.stringify(planD));renderCal();}
+function toggleDay(key){planD[key]=planD[key]==='done'?'':'done';localStorage.setItem('lfs12_plan',JSON.stringify(planD));renderCal();}
 function calShift(d){calOff+=d;renderCal();}
 renderCal();
 
 // ══ GROWTH TIPS ══════════════════════════════════════════════════════════════
 const TIPS=[
-  {ico:'📺',bg:'var(--rd)',title:'how lofi channels actually grow',body:`<p>Growth comes from <strong>suggested videos</strong> and <strong>browse features</strong>. The algorithm puts your videos beside Lofi Girl when it detects overlapping audiences. Make content those viewers would enjoy too.</p>`},
-  {ico:'⏱',bg:'var(--gnd)',title:'what makes viewers stay',body:`<p>Audio quality is the single biggest retention factor. Thin AI music loses viewers in 90 seconds. <strong>The first 60–90 seconds decide everything</strong> — start with your warmest, most satisfying track. The 808 should hit immediately.</p>`},
-  {ico:'🔁',bg:'var(--pud)',title:'what makes them return',body:`<p>Consistency of upload + consistency of mood. Upload every 2 days. Pick one world and stay in it. <em>"if you made it this far, thank you. same time thursday."</em> — pin that on every video.</p>`},
-  {ico:'📋',bg:'var(--rd)',title:'title formula',body:`<p>Format: <code>[mood] lofi hip hop · [scene] · [duration]</code></p><ul><li><em>late night lofi hip hop · rain on the window · 1 hour</em></li><li><em>cosy coffee shop beats · boom bap and soul · 59 minutes</em></li></ul><p>Always include "lofi hip hop". Keep under 70 characters.</p>`},
-  {ico:'🎵',bg:'var(--yed)',title:'playlist strategy',body:`<p>Build playlists by <strong>season</strong>, <strong>mood</strong>, and <strong>activity</strong>. YouTube uses these as recommendation signals — a viewer who watches one mix gets suggested another from your playlist.</p>`},
-  {ico:'⚠️',bg:'var(--rd2)',title:'mistakes to avoid',body:`<ul><li><strong>Inconsistent uploads</strong> — three then silence kills momentum.</li><li><strong>Thin music with no low end</strong> — the 808 must hit physically.</li><li><strong>Copying Lofi Girl's aesthetic</strong> — own a different world.</li><li><strong>Suno free plan for monetisation</strong> — free plan is non-commercial. Need paid plan for YouTube revenue.</li></ul>`},
+  {ico:'📺',bg:'var(--rd)',title:'how lofi channels actually grow',body:`<p>Growth comes from <strong>suggested videos</strong> and <strong>browse features</strong>. The algorithm puts your videos beside Lofi Girl when it detects overlapping audiences.</p>`},
+  {ico:'⏱',bg:'var(--gnd)',title:'what makes viewers stay',body:`<p>Audio quality is the single biggest retention factor. <strong>The first 60–90 seconds decide everything</strong> — start with your warmest track. The 808 should hit immediately.</p>`},
+  {ico:'🔁',bg:'var(--pud)',title:'what makes them return',body:`<p>Upload every 2 days without fail. <em>"if you made it this far, thank you. same time thursday."</em> — pin that on every video.</p>`},
+  {ico:'📋',bg:'var(--rd)',title:'title formula',body:`<p><code>[mood] lofi hip hop · [scene] · [duration]</code></p><ul><li><em>late night lofi hip hop · rain on the window · 1 hour</em></li></ul>`},
+  {ico:'🎵',bg:'var(--yed)',title:'playlist strategy',body:`<p>Build playlists by <strong>season</strong>, <strong>mood</strong>, and <strong>activity</strong>. YouTube uses these as recommendation signals automatically.</p>`},
+  {ico:'⚠️',bg:'var(--rd2)',title:'mistakes to avoid',body:`<ul><li><strong>Inconsistent uploads</strong> — three then silence kills momentum.</li><li><strong>Thin music with no low end</strong> — the 808 must hit physically.</li><li><strong>Suno free plan</strong> — non-commercial only. Need paid plan for YouTube revenue.</li></ul>`},
 ];
 function renderTips(){document.getElementById('tipList').innerHTML=TIPS.map(t=>`<div class="tip"><div class="tiphead" onclick="togT(this)"><div class="tipico" style="background:${t.bg}">${t.ico}</div><div class="tiptitle">${t.title}</div><span class="tipchev">›</span></div><div class="tipbody">${t.body}</div></div>`).join('');}
 function togT(h){const b=h.nextElementSibling,c=h.querySelector('.tipchev'),o=b.classList.toggle('o');c.classList.toggle('o',o);}
 renderTips();
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+buildCurveGrid();
 </script>
 </body>
 </html>
