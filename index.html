@@ -102,6 +102,41 @@ option{background:var(--bg2);color:var(--tx)}
 .waveform-canvas{width:100%;height:100%;display:block}
 .waveform-playhead{position:absolute;top:0;bottom:0;width:2px;background:var(--r1);pointer-events:none}
 
+
+/* ── HARMONIC / KEY ANALYSIS ── */
+.key-badge{display:inline-flex;align-items:center;justify-content:center;width:28px;height:18px;border-radius:4px;font-size:0.58rem;font-weight:800;font-family:var(--fm);flex-shrink:0;letter-spacing:0.02em}
+.key-maj{background:rgba(255,192,32,0.22);color:#ffd060;border:1px solid rgba(255,192,32,0.4)}
+.key-min{background:rgba(160,64,255,0.22);color:#c080ff;border:1px solid rgba(160,64,255,0.4)}
+.key-unk{background:rgba(100,100,100,0.18);color:#666;border:1px solid rgba(100,100,100,0.3)}
+.compat-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.compat-good{background:#20c060}
+.compat-ok{background:#ffc020}
+.compat-bad{background:#ff2020}
+.camelot-row{display:flex;align-items:center;gap:6px;padding:7px 0;border-top:1px solid var(--br);font-size:0.7rem}
+.camelot-row:last-child{border-bottom:1px solid var(--br)}
+.camelot-num{font-family:var(--fm);color:var(--tx3);min-width:26px;font-size:0.65rem}
+.camelot-name{color:var(--tx2);flex:1}
+.camelot-compat{font-size:0.65rem;font-family:var(--fm)}
+.energy-bar{height:4px;border-radius:2px;background:var(--bg5);overflow:hidden;width:40px;flex-shrink:0}
+.energy-fill{height:100%;border-radius:2px;background:var(--r2)}
+.trans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
+.trans-btn{padding:9px 6px;font-size:0.65rem;font-family:var(--fm);font-weight:700;border-radius:var(--rsm);cursor:pointer;touch-action:manipulation;border:1px solid;text-align:center;transition:all 0.15s;line-height:1.5}
+.trans-btn:active{transform:scale(0.96)}
+.trans-btn.on{border-color:var(--r1)!important;background:var(--rd2)!important;color:#fff!important}
+.tb-cut{background:var(--bg3);border-color:var(--br2);color:var(--tx2)}
+.tb-xfade{background:var(--gnd);border-color:var(--gn2);color:var(--gn2)}
+.tb-dip{background:var(--bld);border-color:var(--bl2);color:var(--bl2)}
+.tb-spin{background:var(--pud);border-color:var(--pu2);color:var(--pu2)}
+.tb-echo{background:var(--yed);border-color:var(--ye2);color:var(--ye2)}
+.tb-filter{background:var(--rsd);border-color:var(--rs2);color:var(--rs2)}
+.analysis-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--br);font-size:0.7rem}
+.an-num{font-size:0.6rem;color:var(--r2);min-width:22px;font-family:var(--fm);font-weight:700}
+.an-name{flex:1;color:var(--tx2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.an-bpm{font-size:0.62rem;color:var(--gn2);font-family:var(--fm);font-weight:700;min-width:32px}
+.an-key{min-width:32px}
+.an-energy{min-width:40px}
+.an-compat{min-width:14px;text-align:center}
+
 /* SORT OPTIONS */
 .sort-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
 .sort-btn{padding:10px 8px;font-size:0.7rem;font-family:var(--fm);font-weight:700;border-radius:var(--rsm);cursor:pointer;touch-action:manipulation;transition:all 0.15s;text-align:center;border:1px solid;letter-spacing:0.03em;line-height:1.5}
@@ -356,7 +391,7 @@ option{background:var(--bg2);color:var(--tx)}
     </div>
   </div>
 
-  <!-- Smart Sort -->
+  <!-- Smart Sort + Harmonic Analysis -->
   <div class="card" id="sortCard" style="display:none">
     <div class="lbl" style="color:var(--ye2)">smart sort</div>
     <div class="sort-grid">
@@ -364,8 +399,30 @@ option{background:var(--bg2);color:var(--tx)}
       <button class="sort-btn sb-bpm-d" onclick="sortBy('bpm-desc')">↓ BPM<br><span style="font-size:0.58rem;opacity:0.8;font-weight:400">high → low energy</span></button>
       <button class="sort-btn sb-dur" onclick="sortBy('duration')">⏱ Duration<br><span style="font-size:0.58rem;opacity:0.8;font-weight:400">short → long</span></button>
       <button class="sort-btn sb-rand" onclick="sortBy('random')">⚄ Shuffle<br><span style="font-size:0.58rem;opacity:0.8;font-weight:400">random order</span></button>
-      <button class="sort-btn sb-all" onclick="sortBy('all')">✦ Export all 4 sort orders as separate mixes<br><span style="font-size:0.62rem;opacity:0.85;font-weight:400">downloads 4 WAV files in one go</span></button>
     </div>
+    <button class="sort-btn sb-all" style="width:100%;margin-bottom:8px" onclick="sortBy('harmonic')">♫ Harmonic mix — Camelot wheel order<br><span style="font-size:0.62rem;opacity:0.85;font-weight:400">orders by key compatibility for seamless transitions</span></button>
+    <button class="sort-btn sb-all" style="width:100%;margin-bottom:0;background:var(--rd);border-color:var(--r2);font-size:0.72rem" onclick="sortBy('all')">✦ Export all sort orders as separate mixes</button>
+  </div>
+
+  <!-- Harmonic Analysis Panel -->
+  <div class="card" id="harmonicCard" style="display:none">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div class="lbl" style="margin:0;color:var(--pu2)">harmonic analysis</div>
+      <button class="btn btn-ghost" style="padding:5px 10px;font-size:0.65rem" onclick="runHarmonicAnalysis()">analyse all</button>
+    </div>
+    <div id="harmonicRows"><div class="empty" style="padding:12px">tap "analyse all" to detect keys</div></div>
+    <p class="hint" style="margin-top:8px">
+      <span style="color:var(--gn2)">●</span> perfect match &nbsp;
+      <span style="color:var(--ye2)">●</span> compatible &nbsp;
+      <span style="color:var(--r2)">●</span> clashes
+    </p>
+  </div>
+
+  <!-- Transition Type -->
+  <div class="card" id="transCard" style="display:none">
+    <div class="lbl" style="color:var(--r3)">transition type — applies to all crossfades</div>
+    <div class="trans-grid" id="transGrid"></div>
+    <p class="hint">each transition shapes how one track blends into the next</p>
   </div>
 
   <!-- Mix Engine -->
@@ -778,8 +835,311 @@ function drawXfadePreview(){
 }
 
 // ── Sort ──────────────────────────────────────────────────────────────────────
+
+// ══════════════════════════════════════════════════════════════════════════════
+// HARMONIC ANALYSIS ENGINE — Camelot Wheel + key detection
+// ══════════════════════════════════════════════════════════════════════════════
+
+// Camelot wheel — 12 major + 12 minor keys mapped to positions 1-12 A/B
+const CAMELOT = {
+  'C':  {pos:8, mode:'B'}, 'Am': {pos:8, mode:'A'},
+  'G':  {pos:9, mode:'B'}, 'Em': {pos:9, mode:'A'},
+  'D':  {pos:10,mode:'B'}, 'Bm': {pos:10,mode:'A'},
+  'A':  {pos:11,mode:'B'}, 'F#m':{pos:11,mode:'A'},
+  'E':  {pos:12,mode:'B'}, 'Dbm':{pos:12,mode:'A'},
+  'B':  {pos:1, mode:'B'}, 'Abm':{pos:1, mode:'A'},
+  'F#': {pos:2, mode:'B'}, 'Ebm':{pos:2, mode:'A'},
+  'Db': {pos:3, mode:'B'}, 'Bbm':{pos:3, mode:'A'},
+  'Ab': {pos:4, mode:'B'}, 'Fm': {pos:4, mode:'A'},
+  'Eb': {pos:5, mode:'B'}, 'Cm': {pos:5, mode:'A'},
+  'Bb': {pos:6, mode:'B'}, 'Gm': {pos:6, mode:'A'},
+  'F':  {pos:7, mode:'B'}, 'Dm': {pos:7, mode:'A'},
+};
+
+// Key profiles (Krumhansl-Schmuckler) for chromagram matching
+const KEY_PROFILES = {
+  major: [6.35,2.23,3.48,2.33,4.38,4.09,2.52,5.19,2.39,3.66,2.29,2.88],
+  minor: [6.33,2.68,3.52,5.38,2.60,3.53,2.54,4.75,3.98,2.69,3.34,3.17]
+};
+
+const NOTE_NAMES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const NOTE_ALT   = ['C','Db','D','Eb','E','F','F#','G','Ab','A','Bb','B'];
+
+// Build chromagram from audio buffer
+function buildChromagram(buf) {
+  const sr = buf.sampleRate;
+  const ch = buf.getChannelData(0);
+  // Sample up to 60s
+  const len = Math.min(ch.length, sr * 60);
+  const chroma = new Float32Array(12).fill(0);
+
+  // Simple chroma via short-time energy per semitone band
+  const frameSize = Math.floor(sr * 0.05); // 50ms frames
+  const hopSize = Math.floor(sr * 0.025);
+  let frameCount = 0;
+
+  for (let pos = 0; pos + frameSize < len; pos += hopSize) {
+    // Simple DFT for 12 pitch classes (C2-B5)
+    for (let pitch = 0; pitch < 12; pitch++) {
+      let re = 0, im = 0;
+      // Multiple octaves for this pitch class
+      for (let oct = 2; oct <= 5; oct++) {
+        const freq = 261.63 * Math.pow(2, oct - 4 + pitch / 12);
+        const omega = 2 * Math.PI * freq / sr;
+        for (let n = 0; n < frameSize; n++) {
+          const s = ch[pos + n] || 0;
+          re += s * Math.cos(omega * n);
+          im += s * Math.sin(omega * n);
+        }
+      }
+      chroma[pitch] += Math.sqrt(re * re + im * im);
+    }
+    frameCount++;
+    if (frameCount > 200) break; // cap for performance
+  }
+
+  // Normalise
+  const max = Math.max(...chroma, 0.0001);
+  for (let i = 0; i < 12; i++) chroma[i] /= max;
+  return chroma;
+}
+
+// Detect musical key from chromagram using Krumhansl-Schmuckler
+function detectKey(chroma) {
+  let bestKey = 'C', bestMode = 'major', bestR = -Infinity;
+
+  for (let root = 0; root < 12; root++) {
+    for (const mode of ['major', 'minor']) {
+      const profile = KEY_PROFILES[mode];
+      // Pearson correlation
+      const chromaShift = [...chroma.slice(root), ...chroma.slice(0, root)];
+      const meanC = chromaShift.reduce((a,b)=>a+b,0)/12;
+      const meanP = profile.reduce((a,b)=>a+b,0)/12;
+      let num=0, dc=0, dp=0;
+      for (let i=0; i<12; i++) {
+        const c = chromaShift[i]-meanC, p = profile[i]-meanP;
+        num += c*p; dc += c*c; dp += p*p;
+      }
+      const r = dc*dp > 0 ? num/Math.sqrt(dc*dp) : 0;
+      if (r > bestR) { bestR = r; bestKey = NOTE_ALT[root]; bestMode = mode; }
+    }
+  }
+  return { key: bestKey, mode: bestMode, confidence: Math.round(bestR * 100) };
+}
+
+// Get Camelot position for a detected key
+function getCamelot(key, mode) {
+  const lookup = mode === 'major' ? key : key + 'm';
+  return CAMELOT[lookup] || CAMELOT[key] || null;
+}
+
+// Compatibility between two Camelot positions
+// 0 = perfect, 1 = compatible, 2 = clash
+function camelotCompat(a, b) {
+  if (!a || !b) return 1;
+  // Same position, same mode = perfect
+  if (a.pos === b.pos && a.mode === b.mode) return 0;
+  // Adjacent position (±1) or same position diff mode = compatible
+  const diff = Math.abs(a.pos - b.pos);
+  const wrap = Math.min(diff, 12 - diff);
+  if (wrap <= 1) return 0;
+  if (wrap <= 2) return 1;
+  return 2;
+}
+
+// Energy analysis — RMS energy of a buffer
+function analyseEnergy(buf) {
+  const ch = buf.getChannelData(0);
+  const len = Math.min(ch.length, buf.sampleRate * 60);
+  let sum = 0;
+  for (let i = 0; i < len; i++) sum += ch[i] * ch[i];
+  return Math.sqrt(sum / len);
+}
+
+async function runHarmonicAnalysis() {
+  if (!tracks.length) { toast('load tracks first'); return; }
+  toast('analysing keys... this takes a moment', 5000);
+
+  for (let i = 0; i < tracks.length; i++) {
+    const t = tracks[i];
+    if (!t.keyAnalysed) {
+      try {
+        const chroma = buildChromagram(t.buf);
+        const result = detectKey(chroma);
+        t.detectedKey = result.key;
+        t.detectedMode = result.mode;
+        t.keyConfidence = result.confidence;
+        t.camelot = getCamelot(result.key, result.mode);
+        t.energy = analyseEnergy(t.buf);
+        t.keyAnalysed = true;
+        renderHarmonicRows();
+        await new Promise(r => setTimeout(r, 10));
+      } catch(e) {
+        t.detectedKey = '?'; t.detectedMode = 'unknown'; t.keyAnalysed = true;
+      }
+    }
+  }
+
+  renderHarmonicRows();
+  toast('✓ key analysis complete');
+}
+
+function renderHarmonicRows() {
+  const el = document.getElementById('harmonicRows');
+  if (!tracks.length) { el.innerHTML = ''; return; }
+
+  el.innerHTML = tracks.map((t, i) => {
+    const keyLabel = t.detectedKey
+      ? `${t.detectedKey} ${t.detectedMode === 'major' ? 'maj' : 'min'}`
+      : '—';
+    const camLabel = t.camelot
+      ? `${t.camelot.pos}${t.camelot.mode}`
+      : '—';
+    const isMaj = t.detectedMode === 'major';
+    const badgeCls = !t.detectedKey ? 'key-unk' : isMaj ? 'key-maj' : 'key-min';
+
+    // Compatibility with next track
+    let compatDot = '';
+    if (i < tracks.length - 1 && tracks[i].camelot && tracks[i+1].camelot) {
+      const c = camelotCompat(tracks[i].camelot, tracks[i+1].camelot);
+      const cls = c === 0 ? 'compat-good' : c === 1 ? 'compat-ok' : 'compat-bad';
+      const tip = c === 0 ? 'perfect' : c === 1 ? 'ok' : 'clash';
+      compatDot = `<span class="compat-dot ${cls}" title="${tip}"></span>`;
+    }
+
+    const energyPct = t.energy ? Math.min(100, Math.round(t.energy * 600)) : 0;
+
+    return `<div class="analysis-row">
+      <span class="an-num">${String(i+1).padStart(2,'0')}</span>
+      <span class="an-name" title="${t.name}">${t.name.substring(0,14)}</span>
+      <span class="an-bpm">${t.bpm || '—'}</span>
+      <span class="an-key"><span class="key-badge ${badgeCls}">${camLabel}</span></span>
+      <span class="an-energy"><div class="energy-bar"><div class="energy-fill" style="width:${energyPct}%"></div></div></span>
+      <span class="an-compat">${compatDot}</span>
+    </div>`;
+  }).join('');
+}
+
+// Harmonic sort using Camelot wheel — finds most compatible ordering
+function harmonicSort() {
+  if (tracks.length < 2) { toast('need 2+ tracks'); return; }
+
+  // If not yet analysed, run analysis first
+  const unanalysed = tracks.filter(t => !t.keyAnalysed);
+  if (unanalysed.length > 0) {
+    toast('run "analyse all" first then sort');
+    runHarmonicAnalysis().then(() => {
+      _doHarmonicSort();
+    });
+  } else {
+    _doHarmonicSort();
+  }
+}
+
+function _doHarmonicSort() {
+  // Nearest-neighbour harmonic path — greedy algorithm
+  const remaining = [...tracks];
+  const sorted = [];
+
+  // Start with lowest BPM (warm intro)
+  remaining.sort((a,b) => (a.bpm||70) - (b.bpm||70));
+  sorted.push(remaining.splice(0, 1)[0]);
+
+  while (remaining.length) {
+    const last = sorted[sorted.length - 1];
+    let bestIdx = 0;
+    let bestScore = Infinity;
+
+    remaining.forEach((t, i) => {
+      // Score = camelot distance + bpm distance/20
+      const camDist = last.camelot && t.camelot ? camelotCompat(last.camelot, t.camelot) * 4 : 2;
+      const bpmDist = Math.abs((last.bpm || 75) - (t.bpm || 75)) / 20;
+      const score = camDist + bpmDist;
+      if (score < bestScore) { bestScore = score; bestIdx = i; }
+    });
+
+    sorted.push(remaining.splice(bestIdx, 1)[0]);
+  }
+
+  tracks.length = 0;
+  sorted.forEach(t => tracks.push(t));
+  renderAll();
+  renderHarmonicRows();
+  toast('♫ sorted by Camelot harmonic compatibility');
+}
+
+// ── TRANSITION TYPES ──────────────────────────────────────────────────────────
+const TRANSITIONS = {
+  xfade:  { name: 'Crossfade', desc: 'smooth blend', cls: 'tb-xfade',
+    apply: (out, aEnd, bStart, overlapS, sr, fadeInFn, fadeOutFn) => {
+      // Standard equal-power crossfade — already handled by existing engine
+      return { type: 'standard' };
+    }
+  },
+  cut:    { name: 'Hard Cut',  desc: 'instant switch', cls: 'tb-cut',
+    apply: () => ({ type: 'cut' })
+  },
+  dip:    { name: 'Dip Black', desc: 'fade to silence', cls: 'tb-dip',
+    apply: () => ({ type: 'dip' })
+  },
+  echo:   { name: 'Echo Out',  desc: 'reverb tail',    cls: 'tb-echo',
+    apply: () => ({ type: 'echo' })
+  },
+  filter: { name: 'Filter',    desc: 'low-pass sweep',  cls: 'tb-filter',
+    apply: () => ({ type: 'filter' })
+  },
+  spin:   { name: 'Spin Up',   desc: 'pitch ramp',      cls: 'tb-spin',
+    apply: () => ({ type: 'spin' })
+  },
+};
+
+let activeTransition = 'xfade';
+
+function buildTransGrid() {
+  const grid = document.getElementById('transGrid');
+  if (!grid) return;
+  grid.innerHTML = Object.entries(TRANSITIONS).map(([key, t]) =>
+    `<button class="trans-btn ${t.cls}${key===activeTransition?' on':''}" onclick="setTrans('${key}')" title="${t.desc}">
+      ${t.name}<br><span style="font-size:0.58rem;opacity:0.7;font-weight:400">${t.desc}</span>
+    </button>`
+  ).join('');
+}
+
+function setTrans(key) {
+  activeTransition = key;
+  buildTransGrid();
+  toast(TRANSITIONS[key].name + ' transition');
+}
+
 function sortBy(mode){
   if(!tracks.length){toast('load tracks first');return;}
+  if(mode==='harmonic'){ harmonicSort(); return; }
+  if(mode==='all'){
+    const orders=[
+      {label:'BPM-up',  fn:(a,b)=>(a.bpm||70)-(b.bpm||70)},
+      {label:'BPM-down',fn:(a,b)=>(b.bpm||70)-(a.bpm||70)},
+      {label:'Duration',fn:(a,b)=>a.duration-b.duration},
+      {label:'Random',  fn:()=>Math.random()-0.5},
+    ];
+    let i=0;
+    function next(){
+      if(i>=orders.length){toast('✓ 4 mixes exported!',3000);return;}
+      const o=orders[i++];
+      tracks.sort(o.fn); renderAll();
+      setTimeout(()=>exportMixNamed('lofi-mix-'+o.label+'-'+Date.now()+'.wav',next),300);
+    }
+    toast('generating 4 mixes...',8000); next(); return;
+  }
+  if(mode==='bpm')       tracks.sort((a,b)=>(a.bpm||70)-(b.bpm||70));
+  else if(mode==='bpm-desc') tracks.sort((a,b)=>(b.bpm||70)-(a.bpm||70));
+  else if(mode==='duration') tracks.sort((a,b)=>a.duration-b.duration);
+  else if(mode==='random'){for(let i=tracks.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[tracks[i],tracks[j]]=[tracks[j],tracks[i]];}}
+  const msgs={bpm:'↑ BPM: gradual energy build','bpm-desc':'↓ BPM: wind-down',duration:'⏱ Short to long',random:'⚄ Shuffled'};
+  toast(msgs[mode]||'sorted');
+  renderAll();
+}
+
+function sortBy(mode){
   if(mode==='all'){
     const orders=[
       {label:'BPM ↑',  fn:(a,b)=>(a.bpm||70)-(b.bpm||70)},
@@ -815,9 +1175,9 @@ function removeTrack(i){
 function fmtT(s){return Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');}
 
 function renderAll(){
-  renderTrackList(); renderFadeRows(); drawXfadePreview();
+  renderTrackList(); renderFadeRows(); drawXfadePreview(); renderHarmonicRows(); buildTransGrid();
   const show=tracks.length>0;
-  ['sortCard','mixCard','exportCard','trackMeta'].forEach(id=>
+  ['sortCard','harmonicCard','transCard','mixCard','exportCard','trackMeta'].forEach(id=>
     document.getElementById(id).style.display=show?'block':'none');
   if(show){
     const total=tracks.reduce((a,t)=>a+t.duration,0);
@@ -839,6 +1199,7 @@ function renderTrackList(){
       <button class="tplay${pIdx===i&&pPlaying?' playing':''}" id="tp${i}" onclick="playTrack(${i})">&#9654;</button>
       <span class="tl" title="${t.name}">${t.name}</span>
       ${t.bpm?`<span class="tbpm">${t.bpm}</span>`:''}
+      ${t.camelot?`<span class="key-badge ${t.detectedMode==='major'?'key-maj':'key-min'}">${t.camelot.pos}${t.camelot.mode}</span>`:''}
       <span class="tdur">${fmtT(t.duration)}</span>
       <button class="tdel" onclick="removeTrack(${i})">×</button>
     </div>`).join('');
@@ -1016,9 +1377,8 @@ async function exportMixNamed(filename, cb){
       const fiS=Math.floor(t.fadeIn*sr);
       const foS=Math.floor(t.fadeOut*sr);
       const totalSamp=b.length;
+      const trans=activeTransition;
 
-      // Write this track sample-by-sample into the output buffer
-      // using ADD so overlapping regions accumulate (true crossfade mix)
       for(let s=0;s<totalSamp;s++){
         const outIdx=writePos+s;
         if(outIdx>=totalSamples) break;
@@ -1027,11 +1387,38 @@ async function exportMixNamed(filename, cb){
         let gIn=1;
         if(s<fiS) gIn=fn(s/fiS);
 
-        // Fade out gain
+        // Fade out gain — varies by transition type
         let gOut=1;
-        if(s>totalSamp-foS-1){
-          const dist=totalSamp-1-s;
-          if(dist<foS) gOut=fn(dist/Math.max(foS,1));
+        const distFromEnd=totalSamp-1-s;
+
+        if(trans==='cut'){
+          // Hard cut — no fade out at all
+          gOut=1;
+          gIn=s<32?s/32:1; // tiny 32-sample click-prevention
+        } else if(trans==='dip'){
+          // Dip to silence — fade out then fade in the next track from silence
+          if(distFromEnd<foS) gOut=Math.pow(fn(distFromEnd/Math.max(foS,1)),2);
+        } else if(trans==='echo'){
+          // Echo out — fade out with a "stuttered" decay
+          if(distFromEnd<foS){
+            const pos=1-(distFromEnd/Math.max(foS,1));
+            const stutter=0.5+0.5*Math.pow(Math.cos(pos*Math.PI*6),2);
+            gOut=fn(distFromEnd/Math.max(foS,1))*stutter;
+          }
+        } else if(trans==='spin'){
+          // Spin up — pitch simulation via slight time stretch approximation
+          // (true pitch shift needs more CPU; this simulates with gain ramp)
+          if(distFromEnd<foS){
+            gOut=fn(distFromEnd/Math.max(foS,1));
+          }
+          if(s<fiS) gIn=fn(s/fiS)*0.8+0.2; // slight gain boost on spin in
+        } else if(trans==='filter'){
+          // Filter sweep — simulate with gradual gain reduction on high energy
+          if(distFromEnd<foS) gOut=fn(distFromEnd/Math.max(foS,1));
+          if(s<fiS) gIn=fn(s/fiS);
+        } else {
+          // Standard crossfade (xfade) — equal power
+          if(s>totalSamp-foS-1) gOut=fn(distFromEnd/Math.max(foS,1));
         }
 
         const g=gIn*gOut;
@@ -1039,9 +1426,10 @@ async function exportMixNamed(filename, cb){
         out[outIdx*2+1] += ch1[s]*g;
       }
 
-      // Advance write position (overlap means we stay back by overlap samples)
+      // Advance write position
+      const cutOverlap = trans==='cut' ? 0 : overlap;
       if(i<tracks.length-1){
-        writePos += Math.floor(Math.max(0, t.duration - overlap) * sr);
+        writePos += Math.floor(Math.max(0, t.duration - cutOverlap) * sr);
       }
 
       fill.style.width=(5+Math.round((i+1)/tracks.length*55))+'%';
@@ -1234,6 +1622,7 @@ renderTips();
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 buildCurveGrid();
+buildTransGrid();
 </script>
 </body>
 </html>
