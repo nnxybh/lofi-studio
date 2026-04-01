@@ -2052,7 +2052,7 @@ canvas { -webkit-transform: translateZ(0); transform: translateZ(0); }
     <div class="render-summary" id="renderSummary">
       <div class="rs-row"><span class="rs-lbl">Tracks</span><span class="rs-val" id="rsSumTracks">—</span></div>
       <div class="rs-row"><span class="rs-lbl">Est. Duration</span><span class="rs-val" id="rsSumDur">—</span></div>
-      <div class="rs-row"><span class="rs-lbl">Format</span><span class="rs-val">44.1 kHz · 16-bit WAV</span></div>
+      <div class="rs-row"><span class="rs-lbl">Format</span><span class="rs-val">48 kHz · 24-bit WAV</span></div>
     </div>
     <div class="export-stages">
       <div class="export-stage" id="es1"></div>
@@ -2065,15 +2065,15 @@ canvas { -webkit-transform: translateZ(0); transform: translateZ(0); }
       <div class="export-format-field">
         <label>Sample rate</label>
         <select id="exportSampleRate" class="select-field full">
-          <option value="44100" selected>44.1 kHz — Standard</option>
-          <option value="48000">48 kHz — YouTube &amp; Video ✓</option>
+          <option value="44100">44.1 kHz — Standard</option>
+          <option value="48000" selected>48 kHz — YouTube &amp; Video ✓</option>
         </select>
       </div>
       <div class="export-format-field">
         <label>Bit depth</label>
         <select id="exportBitDepth" class="select-field full">
-          <option value="16" selected>16-bit — CD quality</option>
-          <option value="24">24-bit — Studio / YouTube ✓</option>
+          <option value="16">16-bit — CD quality</option>
+          <option value="24" selected>24-bit — Studio / YouTube ✓</option>
         </select>
       </div>
     </div>
@@ -3637,9 +3637,19 @@ async function exportWAV() {
       const localCueOut = i < APP.tracks.length-1 ? Math.max(0, cueOut-(i===0?0:cueIn)) : playDur;
       gn.gain.setValueAtTime(i === 0 ? tGain : 0.0001, offset);
       if (i > 0) gn.gain.linearRampToValueAtTime(tGain, offset + fadeInLen);
+      /* Final track: dramatic medium outro — 4s fade starting 4s before end */
+      const isLastTrack = (i === APP.tracks.length - 1);
+      const outroDur    = isLastTrack ? Math.min(4.0, playDur * 0.5) : 0;
+      const outroStart  = isLastTrack ? offset + Math.max(fadeInLen, playDur - outroDur) : 0;
       const foStart = offset + Math.max(fadeInLen, Math.min(playDur, localCueOut));
-      gn.gain.setValueAtTime(tGain, foStart);
-      gn.gain.linearRampToValueAtTime(0.0001, offset + playDur);
+      if (isLastTrack) {
+        /* Hold at full volume until outro begins, then sweep to silence */
+        gn.gain.setValueAtTime(tGain, outroStart);
+        gn.gain.linearRampToValueAtTime(0.0001, offset + playDur);
+      } else {
+        gn.gain.setValueAtTime(tGain, foStart);
+        gn.gain.linearRampToValueAtTime(0.0001, offset + playDur);
+      }
       src.connect(gn); gn.connect(renderCtx.destination);
       src.start(offset, sourceStart, playDur);
       offset += Math.max(0.1, i < APP.tracks.length-1 ? Math.min(playDur, localCueOut) : playDur);
