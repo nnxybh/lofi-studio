@@ -1587,6 +1587,59 @@ canvas { -webkit-transform: translateZ(0); transform: translateZ(0); }
 
 /* Advanced section open/close */
 #tlCard { transition: none; } /* Instant show/hide for clarity */
+
+/* ── Mobile export download sheet ── */
+#mobileExportLink {
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; align-items: flex-end; justify-content: center;
+  transition: opacity 0.25s ease;
+}
+.mobile-dl-backdrop {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.mobile-dl-sheet {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 480px;
+  background: rgba(18,16,20,0.98);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 20px 20px 0 0;
+  padding: 24px 20px 36px;
+  display: flex; flex-direction: column; gap: 10px;
+  animation: sheetUp 0.28s cubic-bezier(0.34,1.3,0.64,1);
+}
+@keyframes sheetUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+.mobile-dl-title {
+  font-size: 16px; font-weight: 700; color: var(--text);
+  letter-spacing: -0.3px;
+}
+.mobile-dl-sub { font-size: 11px; color: var(--text3); }
+.mobile-dl-btn {
+  display: block; text-align: center; text-decoration: none;
+  background: linear-gradient(155deg, rgba(215,24,36,0.95), rgba(140,10,16,0.98));
+  color: #fff4f4; font-size: 15px; font-weight: 700;
+  padding: 14px; border-radius: var(--r); margin: 4px 0;
+  box-shadow: 0 4px 20px rgba(199,22,31,0.40);
+  border: 1px solid rgba(255,100,110,0.20);
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.mobile-dl-btn:active { transform: scale(0.97); }
+.mobile-dl-hint {
+  font-size: 10px; color: var(--text4); line-height: 1.65;
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--r-sm); padding: 8px 10px;
+}
+.mobile-dl-close {
+  align-self: center; background: none; border: none;
+  color: var(--text3); font-size: 12px; cursor: pointer;
+  padding: 4px 12px; margin-top: 2px;
+}
 </style>
 </head>
 <body>
@@ -3598,26 +3651,20 @@ async function exportWAV() {
     setStage(2, 'done'); setStage(3, 'active'); setStat('Encoding WAV…');
     const wavBlob = encodeWAV(rendered, bitDepth);
     const url     = URL.createObjectURL(wavBlob);
-    /* iOS Safari-compatible download */
-    const isMobileSafari = /iP(hone|ad|od)/.test(navigator.userAgent) ||
-      (navigator.userAgent.includes('Mac') && 'ontouchend' in document);
-    if (isMobileSafari && navigator.share) {
-      /* Use Web Share API on iOS — lets user save to Files or share */
-      try {
-        const file = new File([wavBlob], 'lofi-mix.wav', { type: 'audio/wav' });
-        await navigator.share({ files: [file], title: 'Lofi Mix' });
-        URL.revokeObjectURL(url);
-      } catch (shareErr) {
-        /* Fallback: open in new tab so user can long-press to save */
-        window.open(url, '_blank');
-        setTimeout(() => URL.revokeObjectURL(url), 60000);
-      }
-    } else {
+    const isMobile = /iP(hone|ad|od)|Android|Mobile/i.test(navigator.userAgent) ||
+                     ('ontouchend' in document);
+    if (!isMobile) {
+      /* Desktop: standard anchor click download */
       const a = document.createElement('a');
       a.href = url; a.download = 'lofi-mix.wav';
       a.style.display = 'none';
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(url), 5000);
+      setTimeout(() => URL.revokeObjectURL(url), 8000);
+    } else {
+      /* Mobile: navigator.share and a.click() both fail after async render
+         because the original user gesture has expired by then.
+         Solution: surface a visible tap-to-save link the user taps directly. */
+      showMobileDownloadLink(url, wavBlob, bitDepth);
     }
     setStage(3, 'done'); setStat('Mix exported ✓');
     toast('WAV exported!');
@@ -3627,6 +3674,49 @@ async function exportWAV() {
   } finally {
     if (btn) btn.disabled = false;
   }
+}
+
+
+/* ── Mobile export helper ──────────────────────────────────
+   Called after async render — user gesture is gone by now,
+   so we show a visible link the user taps directly.        */
+function showMobileDownloadLink(url, blob, bitDepth) {
+  /* Remove any previous link */
+  const old = document.getElementById('mobileExportLink');
+  if (old) old.remove();
+
+  const sizeMB = (blob.size / 1024 / 1024).toFixed(1);
+  const label  = bitDepth === 24 ? '24-bit WAV' : '16-bit WAV';
+
+  const wrap = document.createElement('div');
+  wrap.id = 'mobileExportLink';
+  wrap.innerHTML = `
+    <div class="mobile-dl-backdrop" onclick="dismissMobileDownload()"></div>
+    <div class="mobile-dl-sheet">
+      <div class="mobile-dl-title">Mix ready — ${sizeMB} MB</div>
+      <div class="mobile-dl-sub">${label} · Tap the button below to save</div>
+      <a href="${url}" download="lofi-mix.wav" class="mobile-dl-btn"
+         onclick="setTimeout(dismissMobileDownload, 1500)">
+        ⬇ Save Mix to Device
+      </a>
+      <div class="mobile-dl-hint">
+        On iPhone: tap Save to Files or Share → Save to Files<br>
+        On Android: the file saves to your Downloads folder
+      </div>
+      <button class="mobile-dl-close" onclick="dismissMobileDownload()">✕ Close</button>
+    </div>`;
+  document.body.appendChild(wrap);
+
+  /* Revoke after 5 minutes */
+  setTimeout(() => {
+    URL.revokeObjectURL(url);
+    dismissMobileDownload();
+  }, 300000);
+}
+
+function dismissMobileDownload() {
+  const el = document.getElementById('mobileExportLink');
+  if (el) { el.style.opacity = '0'; setTimeout(() => el.remove(), 250); }
 }
 
 function encodeWAV(audioBuffer, bitDepth = 16) {
