@@ -1223,6 +1223,138 @@ select option {
 /* Removed cards — stub references that might still be in JS */
 #sortCard, #autoMixHero, #mixCard, #qcCard, #cueSection,
 #teCard, #nextCard, #transCard { display: none !important; }
+
+/* ═══════════════════════════════════════════════════
+   v20 REFINEMENTS
+═══════════════════════════════════════════════════ */
+
+/* ── Copy buttons — fully themed glass ── */
+.copy-btn {
+  font-size: 10px; padding: 4px 10px; border-radius: 5px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.10);
+  color: var(--text3); cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.4,0,0.2,1);
+  backdrop-filter: blur(8px);
+  flex-shrink: 0;
+}
+.copy-btn:hover {
+  border-color: rgba(199,22,31,0.35);
+  color: var(--accent);
+  background: rgba(199,22,31,0.06);
+}
+.copy-btn.copied {
+  border-color: var(--green);
+  color: var(--green);
+  background: rgba(76,175,125,0.08);
+}
+
+/* ── TL save button ── */
+.tl-save-btn {
+  background: linear-gradient(160deg, rgba(199,22,31,0.80), rgba(140,10,16,0.90)) !important;
+  border: 1px solid rgba(255,110,120,0.22) !important;
+  color: #fff4f4 !important; font-weight: 600;
+}
+.tl-save-btn.saved { background: rgba(76,175,125,0.25) !important; border-color: var(--green) !important; color: var(--green) !important; }
+
+/* ── TL saved badge ── */
+.tl-saved-badge {
+  font-size: 11px; color: var(--green); text-align: center;
+  padding: 6px; margin-bottom: 4px;
+  background: rgba(76,175,125,0.08); border: 1px solid rgba(76,175,125,0.25);
+  border-radius: var(--r-sm); opacity: 0;
+  transition: opacity 0.3s ease; pointer-events: none;
+}
+.tl-saved-badge.show { opacity: 1; }
+
+/* ── BPM badge in TL meta ── */
+.tl-bpm-badge {
+  font-size: 10px; color: var(--accent); margin-top: 3px;
+  font-weight: 600; letter-spacing: 0.04em;
+}
+
+/* ── Lane hint (tempo match feedback) ── */
+.tl-lane-hint {
+  font-size: 9px; font-weight: 600; margin-left: 6px;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+
+/* ── Export format row ── */
+.export-format-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  margin-bottom: 10px;
+}
+.export-format-field label {
+  display: block; font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.09em;
+  color: var(--text3); margin-bottom: 5px;
+}
+
+/* ── Enhanced TL overlap band — more visible ── */
+.tl-overlap-band {
+  background: linear-gradient(90deg,
+    rgba(212,145,74,0.18),
+    rgba(199,22,31,0.20),
+    rgba(76,175,125,0.18)) !important;
+  border-left: 2px solid rgba(212,145,74,0.55) !important;
+  border-right: 2px solid rgba(76,175,125,0.55) !important;
+}
+
+/* ── Premium animation polish ── */
+/* Regen button spin */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.regen-btn.spinning span { display: inline-block; animation: spin 0.5s cubic-bezier(0.4,0,0.6,1); }
+
+/* Slide-in for generated cards */
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.prompt-card, .growth-output-section {
+  animation: slideIn 0.28s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* Smooth toast */
+#toast {
+  transition: all 0.26s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+#toast.show { transform: translateX(-50%) translateY(0) !important; }
+
+/* Scene chip selection */
+.scene-chip {
+  transition: all 0.16s cubic-bezier(0.4,0,0.2,1) !important;
+}
+.scene-chip.on { transform: scale(1.02); }
+
+/* Card hover lift */
+.growth-item, .publish-card, .prompt-card {
+  transition: box-shadow 0.20s ease, transform 0.20s ease;
+}
+.growth-header:hover { background: rgba(255,255,255,0.025) !important; }
+
+/* Progress fills */
+.analysis-strip-fill, .progress-fill, .lufs-bar-fill {
+  transition: width 0.45s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* Plan tab type buttons */
+.plan-type-btn { transition: all 0.15s cubic-bezier(0.4,0,0.2,1); }
+
+/* Nav active underline animation */
+.nav-btn { transition: color 0.18s ease; }
+
+/* Export stage fill */
+.export-stage { transition: background 0.40s ease; }
+
+/* TL clip drag */
+.tl-clip { transition: box-shadow 0.15s ease; }
+.tl-clip:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.12) !important; }
+
+/* Regen button hover */
+.regen-btn { transition: all 0.16s cubic-bezier(0.4,0,0.2,1); }
 </style>
 </head>
 <body>
@@ -1547,16 +1679,26 @@ select option {
           <button class="tl-mini-btn" onclick="tlPlayTransition()">▶ Crossfade</button>
           <button class="tl-mini-btn" onclick="stopPreviewAudio()">■ Stop</button>
           <button class="tl-mini-btn" onclick="tlReset()">Reset</button>
+          <button class="tl-mini-btn tl-save-btn" id="tlSaveBtn" onclick="tlSaveTransition()">✓ Save</button>
         </div>
       </div>
+      <div class="tl-saved-badge" id="tlSavedBadge">Transition saved ✓</div>
       <div class="tl-meta">
-        <div class="tl-meta-cell"><div class="tl-meta-label">Outgoing (Track A)</div><div class="tl-meta-value" id="tlOutName">—</div></div>
-        <div class="tl-meta-cell"><div class="tl-meta-label">Incoming (Track B)</div><div class="tl-meta-value" id="tlInName">—</div></div>
+        <div class="tl-meta-cell">
+          <div class="tl-meta-label">Track A — fading out</div>
+          <div class="tl-meta-value" id="tlOutName">—</div>
+          <div class="tl-bpm-badge" id="tlOutBpm"></div>
+        </div>
+        <div class="tl-meta-cell">
+          <div class="tl-meta-label">Track B — coming in</div>
+          <div class="tl-meta-value" id="tlInName">—</div>
+          <div class="tl-bpm-badge" id="tlInBpm"></div>
+        </div>
       </div>
       <div class="tl-stage" id="tlStage">
         <div class="tl-ruler" id="tlRuler"></div>
         <div class="tl-lane" id="tlLaneOut">
-          <div class="tl-lane-label">Track A — fade out</div>
+          <div class="tl-lane-label">Track A — fade out zone <span class="tl-lane-hint" id="tlOutHint"></span></div>
           <canvas class="tl-wave" id="tlWaveOut"></canvas>
           <div class="tl-overlap-band" id="tlOverlapBand"></div>
           <div class="tl-clip tail" id="tlClipOut">
@@ -1566,7 +1708,7 @@ select option {
           </div>
         </div>
         <div class="tl-lane" id="tlLaneIn">
-          <div class="tl-lane-label">Track B — fade in</div>
+          <div class="tl-lane-label">Track B — entry zone <span class="tl-lane-hint" id="tlInHint"></span></div>
           <canvas class="tl-wave" id="tlWaveIn"></canvas>
           <div class="tl-clip intro" id="tlClipIn">
             <div class="tl-clip-title">intro</div>
@@ -1634,6 +1776,22 @@ select option {
       <div class="export-stage" id="es4"></div>
     </div>
     <div class="export-stat" id="exportStat"></div>
+    <div class="export-format-row">
+      <div class="export-format-field">
+        <label>Sample rate</label>
+        <select id="exportSampleRate" class="select-field full">
+          <option value="44100" selected>44.1 kHz (standard)</option>
+          <option value="48000">48 kHz (YouTube / video)</option>
+        </select>
+      </div>
+      <div class="export-format-field">
+        <label>Bit depth</label>
+        <select id="exportBitDepth" class="select-field full">
+          <option value="16" selected>16-bit (CD quality)</option>
+          <option value="24">24-bit (studio / YouTube)</option>
+        </select>
+      </div>
+    </div>
     <button class="btn btn-primary" style="margin-top:10px;" id="exportBtn" onclick="exportWAV()">⬇ Export WAV</button>
   </div>
 
@@ -2618,17 +2776,24 @@ function removeTrack(idx) {
   try { URL.revokeObjectURL(APP.tracks[idx].url); } catch {}
   APP.tracks.splice(idx, 1);
   if (player.currentIdx >= APP.tracks.length) player.currentIdx = APP.tracks.length - 1;
+  APP.te.activeIdx = clamp(APP.te.activeIdx, 0, Math.max(0, APP.tracks.length - 2));
   renderTrackList();
   if (!APP.tracks.length) clearAllTracks();
+  else { updatePairNavUI(); tlRefresh(); }
 }
 
 function moveTrack(from, to) {
   const t = APP.tracks.splice(from, 1)[0];
   APP.tracks.splice(to, 0, t);
-  if      (player.currentIdx === from)                                    player.currentIdx = to;
-  else if (player.currentIdx > from && player.currentIdx <= to)           player.currentIdx--;
-  else if (player.currentIdx < from && player.currentIdx >= to)           player.currentIdx++;
+  if      (player.currentIdx === from)                          player.currentIdx = to;
+  else if (player.currentIdx > from && player.currentIdx <= to) player.currentIdx--;
+  else if (player.currentIdx < from && player.currentIdx >= to) player.currentIdx++;
+  /* Clamp activeIdx to valid range */
+  APP.te.activeIdx = clamp(APP.te.activeIdx, 0, Math.max(0, APP.tracks.length - 2));
   renderTrackList();
+  /* Immediately refresh advanced section pair data */
+  updatePairNavUI();
+  tlRefresh();
 }
 
 function updateRuntimeDisplay() {
@@ -2641,7 +2806,16 @@ function updateRuntimeDisplay() {
 function autoArrange(mode) {
   if (APP.tracks.length < 2) { toast('Need at least 2 tracks'); return; }
   const T = APP.tracks;
-  if      (mode === 'harmonic') T.sort((a,b) => (a.estBpm||85) - (b.estBpm||85));
+  if      (mode === 'harmonic') {
+    const keyOrder=['C major','G major','D major','A major','E major','B major',
+      'A minor','E minor','B minor','F# minor','C# minor','G# minor',
+      'F major','Bb major','Eb major','Ab major','D minor','G minor','C minor','F minor'];
+    T.sort((a,b)=>{
+      const ai=a.estKey?keyOrder.indexOf(a.estKey):99;
+      const bi=b.estKey?keyOrder.indexOf(b.estKey):99;
+      return ai!==bi ? ai-bi : (a.estBpm||85)-(b.estBpm||85);
+    });
+  }
   else if (mode === 'energy')   T.sort((a,b) => (a.estEnergy||5) - (b.estEnergy||5));
   else if (mode === 'bpm')      T.sort((a,b) => (a.estBpm||85) - (b.estBpm||85));
   else if (mode === 'vibe')     T.sort((a,b) => inferGenre(a).localeCompare(inferGenre(b)));
@@ -3098,6 +3272,8 @@ async function exportWAV() {
 
   try {
     setStage(0, 'active'); setStat('Decoding audio…');
+    const targetSR = parseInt(safeEl('exportSampleRate')?.value || '44100', 10);
+    const bitDepth  = parseInt(safeEl('exportBitDepth')?.value   || '16', 10);
     const buffers = await Promise.all(APP.tracks.map(async t => {
       const res = await fetch(t.url);
       const arr = await res.arrayBuffer();
@@ -3121,7 +3297,7 @@ async function exportWAV() {
     });
     total = Math.max(1, total);
 
-    const renderCtx = new OfflineAudioContext(2, Math.ceil(total * 44100), 44100);
+    const renderCtx = new OfflineAudioContext(2, Math.ceil(total * targetSR), targetSR);
     let offset = 0;
 
     buffers.forEach((buf, i) => {
@@ -3153,7 +3329,7 @@ async function exportWAV() {
     const rendered = await renderCtx.startRendering();
 
     setStage(2, 'done'); setStage(3, 'active'); setStat('Encoding WAV…');
-    const wavBlob = encodeWAV(rendered);
+    const wavBlob = encodeWAV(rendered, bitDepth);
     const url     = URL.createObjectURL(wavBlob);
     const a       = document.createElement('a');
     a.href = url; a.download = 'lofi-mix.wav';
@@ -3169,26 +3345,41 @@ async function exportWAV() {
   }
 }
 
-function encodeWAV(audioBuffer) {
-  const numCh     = audioBuffer.numberOfChannels;
-  const sr        = audioBuffer.sampleRate;
-  const numSamp   = audioBuffer.length;
-  const dataLen   = numSamp * numCh * 2;
-  const buf       = new ArrayBuffer(44 + dataLen);
-  const view      = new DataView(buf);
+function encodeWAV(audioBuffer, bitDepth = 16) {
+  const numCh   = audioBuffer.numberOfChannels;
+  const sr      = audioBuffer.sampleRate;
+  const numSamp = audioBuffer.length;
+  const bps     = bitDepth === 24 ? 3 : 2;  /* bytes per sample */
+  const dataLen = numSamp * numCh * bps;
+  const buf     = new ArrayBuffer(44 + dataLen);
+  const view    = new DataView(buf);
   const str = (off, s) => { for (let i=0;i<s.length;i++) view.setUint8(off+i, s.charCodeAt(i)); };
   str(0,'RIFF'); view.setUint32(4, 36+dataLen, true);
   str(8,'WAVE'); str(12,'fmt ');
-  view.setUint32(16,16,true); view.setUint16(20,1,true);
-  view.setUint16(22,numCh,true); view.setUint32(24,sr,true);
-  view.setUint32(28,sr*numCh*2,true); view.setUint16(32,numCh*2,true);
-  view.setUint16(34,16,true); str(36,'data'); view.setUint32(40,dataLen,true);
+  view.setUint32(16, 16, true);
+  view.setUint16(20, bitDepth === 24 ? 1 : 1, true); /* PCM */
+  view.setUint16(22, numCh, true);
+  view.setUint32(24, sr, true);
+  view.setUint32(28, sr*numCh*bps, true);
+  view.setUint16(32, numCh*bps, true);
+  view.setUint16(34, bitDepth, true);
+  str(36,'data'); view.setUint32(40, dataLen, true);
   const channels = Array.from({length:numCh}, (_,c) => audioBuffer.getChannelData(c));
   let off = 44;
-  for (let i=0;i<numSamp;i++) {
-    for (let c=0;c<numCh;c++) {
+  for (let i = 0; i < numSamp; i++) {
+    for (let c = 0; c < numCh; c++) {
       const s = Math.max(-1, Math.min(1, channels[c][i]));
-      view.setInt16(off, s < 0 ? s*0x8000 : s*0x7FFF, true); off+=2;
+      if (bitDepth === 24) {
+        const val = s < 0 ? s * 0x800000 : s * 0x7FFFFF;
+        const iv  = Math.round(val);
+        view.setUint8(off,   iv & 0xFF);
+        view.setUint8(off+1, (iv >> 8) & 0xFF);
+        view.setUint8(off+2, (iv >> 16) & 0xFF);
+        off += 3;
+      } else {
+        view.setInt16(off, s < 0 ? s*0x8000 : s*0x7FFF, true);
+        off += 2;
+      }
     }
   }
   return new Blob([buf], { type:'audio/wav' });
@@ -3640,8 +3831,23 @@ function tlRefresh() {
   const state = tlInitState();
   if (!state) { card.style.display = 'none'; return; }
   card.style.display = 'block';
-  safeSet('tlOutName', state.pair.outT.name);
-  safeSet('tlInName',  state.pair.inT.name);
+  const outT = state.pair.outT, inT = state.pair.inT;
+  safeSet('tlOutName', outT.name);
+  safeSet('tlInName',  inT.name);
+  /* BPM badges */
+  const outBpmEl = safeEl('tlOutBpm'), inBpmEl = safeEl('tlInBpm');
+  if (outBpmEl) outBpmEl.textContent = outT.estBpm ? '~' + outT.estBpm + ' bpm' : '';
+  if (inBpmEl)  inBpmEl.textContent  = inT.estBpm  ? '~' + inT.estBpm  + ' bpm' : '';
+  /* BPM match hint */
+  if (outT.estBpm && inT.estBpm) {
+    const diff = Math.abs(outT.estBpm - inT.estBpm);
+    const hint = diff <= 3 ? '✓ tempo match' : diff <= 8 ? '~ close tempo' : '⚠ tempo gap ' + diff;
+    const hintCol = diff <= 3 ? 'var(--green)' : diff <= 8 ? 'var(--amber)' : 'var(--red)';
+    ['tlOutHint','tlInHint'].forEach(id => {
+      const el = safeEl(id);
+      if (el) { el.textContent = hint; el.style.color = hintCol; }
+    });
+  }
   const fo = safeEl('tlFadeOut'), fi = safeEl('tlFadeIn');
   if (fo) { fo.value = state.fadeOut; safeSet('tlFadeOutVal', Number(state.fadeOut).toFixed(1)+'s'); }
   if (fi) { fi.value = state.fadeIn;  safeSet('tlFadeInVal',  Number(state.fadeIn).toFixed(1)+'s'); }
@@ -4591,6 +4797,22 @@ function toggleAdvanced() {
   if (arrow) arrow.classList.toggle('open', !isOpen);
   if (tl) tl.style.display = isOpen ? 'none' : 'block';
   if (!isOpen) tlRefresh();
+}
+
+/* ── Timeline save ─────────────────────────────────── */
+function tlSaveTransition() {
+  const pair = tlGetPair();
+  if (!pair) { toast('No pair to save'); return; }
+  /* tlRenderBlocks already wrote back to track model — persist to localStorage */
+  teSaveMarkers();
+  const badge = safeEl('tlSavedBadge');
+  if (badge) { badge.classList.add('show'); setTimeout(() => badge.classList.remove('show'), 2400); }
+  const btn = safeEl('tlSaveBtn');
+  if (btn) {
+    btn.textContent = '✓ Saved!';
+    btn.classList.add('saved');
+    setTimeout(() => { btn.textContent = '✓ Save'; btn.classList.remove('saved'); }, 2000);
+  }
 }
 </script>
 </body>
