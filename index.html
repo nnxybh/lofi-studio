@@ -5,39 +5,51 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Lofi Studio v3</title>
 <style>
+:root {
+  --bg: #050505;
+  --surface: #0d0d0d;
+  --surface2: #131313;
+  --surface3: #1a1a1a;
+  --border: #232323;
+  --border2: #2a1114;
+  --border3: #401a1e;
+  --accent: #c7161f;
+  --accent-dim: #7e1117;
+  --accent-glow: rgba(199,22,31,0.15);
+  --text: #f2f2f2;
+  --text2: #b3b3b3;
+  --text3: #737373;
+  --text4: #2a2a2a;
+  --green: #4caf7d;
+  --green-dim: rgba(76,175,125,0.12);
+  --amber: #d4914a;
+  --red: #c45a5a;
+  --red-dim: rgba(199,22,31,0.10);
+  --blue: #5a8fc4;
+  --blue-dim: rgba(90,143,196,0.12);
+  --amber-dim: rgba(212,145,74,0.10);
+  --purple: #9a7ac4;
+  --nav-h: 60px;
+  --topbar-h: 54px;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --radius-lg: 14px;
+  --glass-bg: rgba(255,255,255,0.04);
+  --glass-border: rgba(255,255,255,0.09);
+  --glass-shine: rgba(255,255,255,0.13);
+  --glass-shadow: 0 10px 30px rgba(0,0,0,0.50), 0 2px 6px rgba(0,0,0,0.35);
+  --glass-blur: blur(18px) saturate(1.6);
+  --glass-red-tint: rgba(199,22,31,0.06);
+  --glass-surface: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  --glass-panel: rgba(14,14,16,0.64);
+  --glass-stroke: rgba(255,255,255,0.10);
+  --glass-inner-red: rgba(199,22,31,0.07);
+}
+
 /* ═══════════════════════════════════════
    DESIGN TOKENS
 ═══════════════════════════════════════ */
-:root {
-  --bg:          #050505;
-  --surface:     #0d0d0d;
-  --surface2:    #131313;
-  --surface3:    #1a1a1a;
-  --border:      #232323;
-  --border2:     #2a1114;
-  --border3:     #401a1e;
-  --accent:      #c7161f;
-  --accent-dim:  #7e1117;
-  --accent-glow: rgba(199,22,31,0.15);
-  --text:        #f2f2f2;
-  --text2:       #b3b3b3;
-  --text3:       #737373;
-  --text4:       #2a2a2a;
-  --green:       #4caf7d;
-  --green-dim:   rgba(76,175,125,0.12);
-  --amber:       #d4914a;
-  --red:         #c45a5a;
-  --red-dim:     rgba(199,22,31,0.10);
-  --blue:        #5a8fc4;
-  --blue-dim:    rgba(90,143,196,0.12);
-  --amber-dim:   rgba(212,145,74,0.10);
-  --purple:      #9a7ac4;
-  --nav-h:       60px;
-  --topbar-h:    54px;
-  --radius:      10px;
-  --radius-sm:   6px;
-  --radius-lg:   14px;
-}
+
 
 /* ═══════════════════════════════════════
    RESET & BASE
@@ -1595,14 +1607,7 @@ input[type="range"]::-moz-range-thumb {
    Apple-style: frosted translucency, specular highlight,
    refraction edge, soft shadow stack
 ══════════════════════════════════════════════════════ */
-:root {
-  --glass-bg:      rgba(255,255,255,0.04);
-  --glass-border:  rgba(255,255,255,0.09);
-  --glass-shine:   rgba(255,255,255,0.13);
-  --glass-shadow:  0 4px 24px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.4);
-  --glass-blur:    blur(18px) saturate(1.6);
-  --glass-red-tint:rgba(199,22,31,0.06);
-}
+
 
 /* Base liquid glass mixin — applied to specific elements */
 .glass {
@@ -2032,13 +2037,7 @@ input[type="date"], textarea {
    softer mixed border (cool white + faint red inner),
    red glow reserved for active/primary states only
 ══════════════════════════════════════════════════════ */
-:root {
-  --glass-surface: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-  --glass-panel:   rgba(18,18,20,0.72);
-  --glass-stroke:  rgba(255,255,255,0.09);
-  --glass-inner-red: rgba(199,22,31,0.06);
-  --glass-shadow:  0 10px 30px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.35);
-}
+
 
 /* Cards — smoked glass: darker fill, top edge only, subtle inner red ring */
 .card, .player-wrap, .tool-card, .metric-card,
@@ -2163,13 +2162,7 @@ input[type="date"]:focus, textarea:focus {
    Replaces flat-dark-with-red-borders look with proper smoked glass:
    darker translucent fill · top-edge highlight only · soft dual border
 ════════════════════════════════════════════════════════════════════════ */
-:root {
-  --glass-surface:   linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-  --glass-panel:     rgba(14,14,16,0.64);
-  --glass-stroke:    rgba(255,255,255,0.10);
-  --glass-inner-red: rgba(199,22,31,0.07);
-  --glass-shadow:    0 10px 30px rgba(0,0,0,0.50), 0 2px 6px rgba(0,0,0,0.35);
-}
+
 
 /* Cards — smoked glass, top-edge highlight, faint red inner ring */
 .card, .player-wrap, .tool-card, .metric-card, .publish-card,
@@ -2770,7 +2763,7 @@ input[type="text"]:focus, textarea:focus {
     </div>
   </div>
   <div class="tb-center">NANA</div>
-  <div class="tb-badge">v14</div>
+  <div class="tb-badge">v15</div>
 </header>
 
 <!-- PAGES -->
@@ -4619,6 +4612,21 @@ function loadTrack(idx) {
   if (isPlaying) audio.play().catch(()=>{});
   renderTrackList();
   setTimeout(drawTopTransitionOverlay, 60);
+
+  // Apply saved transition edits and refresh editors
+  const _ltOutIdx = currentIdx;
+  const _ltInIdx  = currentIdx + 1;
+  if (_ltOutIdx >= 0 && _ltInIdx < tracks.length) {
+    if (typeof teApplySavedEdits === 'function') teApplySavedEdits(_ltOutIdx, _ltInIdx);
+  }
+  if (typeof activeTransitionIdx !== 'undefined') activeTransitionIdx = Math.min(currentIdx, Math.max(0, tracks.length - 2));
+  setTimeout(() => {
+    if (typeof teRefresh === 'function') teRefresh();
+    if (typeof updateDualWave === 'function') updateDualWave();
+    if (typeof updateBestNext === 'function') updateBestNext();
+    if (typeof tlRefresh === 'function') tlRefresh();
+    if (typeof updatePairNavUI === 'function') updatePairNavUI();
+  }, 120);
 }
 
 function prevTrack() { if (currentIdx > 0) loadTrack(currentIdx - 1); }
@@ -4778,25 +4786,9 @@ function _startCrossfade(outTrack, overlapSec, cueInSec = 0, curve = 'equal', is
 }
 
 /* Override togglePlay to arm mix crossfade on play */
-const _v6_origTogglePlay = togglePlay;
-/* V6: override togglePlay to arm mix-crossfade on play */
-togglePlay = function() {
-  _v6_origTogglePlay();
-  if (isPlaying) scheduleMixCrossfade();
-  else { _clearXfadeTimer(); _fadingOut = false; }
-}
+
 
 /* Override loadTrack to re-arm crossfade timer after track change */
-const _v6_origLoadTrack = loadTrack;
-loadTrack = function(idx) {
-  _clearXfadeTimer();
-  _fadingOut = false;
-  if (_nextAudio) { _nextAudio.pause(); _nextAudio = null; }
-  _v6_origLoadTrack(idx);
-  if (isPlaying) setTimeout(scheduleMixCrossfade, 120);
-};
-
-
 function seekAudio(e) {
   const r = e.currentTarget.getBoundingClientRect();
   audio.currentTime = ((e.clientX - r.left) / r.width) * audio.duration;
@@ -4877,6 +4869,11 @@ function handleFiles(files) {
   document.getElementById('exportCard').style.display = 'block';
   if (currentIdx < 0) loadTrack(0);
   toast(`${arr.length} track${arr.length>1?'s':''} imported`);
+
+  // Show auto mix hero if tracks loaded
+  const heroEl = document.getElementById('autoMixHero');
+  if (heroEl && tracks.length) heroEl.style.display = 'block';
+  setTimeout(() => { if (typeof teRefresh==='function') teRefresh(); if (typeof tlRefresh==='function') tlRefresh(); }, 350);
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -5566,34 +5563,6 @@ audio.addEventListener('timeupdate', () => {
 });
 
 /* ─ Transition Preview ─ */
-function previewTransition() {
-  stopSecondaryAudio();   // V11: kill any lingering audio before new preview
-  const data = syncTransitionModelFromMarkers();
-  if (!data) { toast('Select a track with a next track'); return; }
-
-  const { outT, inT, cueOut, cueIn, overlap, curve } = data;
-  const previewStart = Math.max(0, cueOut - Math.min(2, cueOut));
-
-  if (audio.src !== outT.url) loadTrack(currentIdx);
-  audio.currentTime = previewStart;
-  if (!isPlaying) {
-    audio.play().catch(() => {});
-    isPlaying = true;
-    document.getElementById('playBtn').textContent = '⏸';
-  }
-
-  _clearXfadeTimer();
-  _fadingOut = false;
-
-  const delayMs = Math.max(50, (cueOut - audio.currentTime) * 1000);
-  _xfadeTimer = setTimeout(() => {
-    if (!isPlaying || _fadingOut) return;
-    _fadingOut = true;
-    _startCrossfade(outT, overlap, cueIn, curve, true);
-  }, delayMs);
-
-  toast('Previewing ' + fmt(data.cueOut) + ' → ' + fmt(data.cueIn) + ' · ' + data.overlap + 's overlap');
-}
 
 /* ═══════════════════════════════════════════════════════
    V3 — PHASE BARS (heuristic)
@@ -5811,8 +5780,8 @@ document.getElementById('gainR').addEventListener('input', function() {
 
 /* Master presets */
 const PRESETS = {
-  youtube:   { gain: -1, norm: 'peak',      note: 'Target: −14 LUFS · −1 dBFS peak · peak normalise' },
-  streaming: { gain: -2, norm: 'perceived', note: 'Target: −14 LUFS · −2 dBFS · perceived normalise' },
+  youtube:   { gain: -1, norm: 'peak',      note: 'Target: -14 LUFS · -1 dBFS peak · peak normalise' },
+  streaming: { gain: -2, norm: 'perceived', note: 'Target: -14 LUFS · -2 dBFS · perceived normalise' },
   dynamic:   { gain:  0, norm: 'off',       note: 'Preserved dynamic range · no normalisation' },
 };
 function applyPreset(btn) {
@@ -6145,22 +6114,6 @@ function transitionConfidence(score) {
 }
 
 /* ── Transition Template Choice ── */
-function chooseTransitionTemplate(outT, inT) {
-  const bpmDiff    = Math.abs((outT.estBpm    || 80) - (inT.estBpm    || 80));
-  const energyDiff = Math.abs((outT.estEnergy ||  5) - (inT.estEnergy ||  5));
-  const sameKey    = outT.estKey === inT.estKey;
-  const introSoft  = (inT.introSoftness    || 0) > 0.55;
-  const outroClean = (outT.outroCleanliness || 0) > 0.55;
-
-  // Equal-power is default for every path — avoids the mid-fade dip of linear
-  if (sameKey && bpmDiff <= 2 && energyDiff <= 1)
-    return { name: 'smooth',  curve: 'equal', overlap: 6,  fadeIn: 2, fadeOut: 2 };
-  if (sameKey && introSoft && outroClean)
-    return { name: 'ambient', curve: 'equal', overlap: 8,  fadeIn: 3, fadeOut: 3 };
-  if (bpmDiff >= 10 || energyDiff >= 4)
-    return { name: 'quick',   curve: 'equal', overlap: 2,  fadeIn: 1, fadeOut: 1 };
-  return   { name: 'outro',   curve: 'equal', overlap: 5,  fadeIn: 2, fadeOut: 2 };
-}
 
 /* ── Auto Cue Placement ── */
 function autoPlaceCues(outT, inT, tpl) {
@@ -6358,6 +6311,8 @@ async function autoMix() {
     btn.textContent = '\u2713 Auto Mix Complete \u2014 Tap to Re-run';
     amLog('\u2713 Auto Mix complete \u2014 review transitions then export.', 'ok head');
     toast('Auto Mix ready \u2014 ' + tracks.length + ' tracks arranged');
+    activeTransitionIdx = 0;
+    setTimeout(() => { if (typeof tlRefresh==='function') tlRefresh(); if (typeof updatePairNavUI==='function') updatePairNavUI(); }, 300);
     // Arm crossfade engine for mix-preview playback
     if (isPlaying) scheduleMixCrossfade();
 
@@ -6369,6 +6324,10 @@ async function autoMix() {
   } finally {
     btn.disabled = false;
   }
+    // Refresh transition editors
+    activeTransitionIdx = 0;
+    setTimeout(() => { if (typeof tlRefresh==='function') tlRefresh(); if (typeof updatePairNavUI==='function') updatePairNavUI(); }, 300);
+
 }
 
 /* ── Stand-alone sub-functions ── */
@@ -6544,17 +6503,6 @@ exportWAV = function() {
    SHOW AUTO MIX HERO when tracks load
 ═══════════════════════════════════════════════════════ */
 // Patch the existing handleFiles wrapper to show the hero
-const _prevHandleFiles = handleFiles;
-handleFiles = function(files) {
-  _prevHandleFiles(files);
-  setTimeout(() => {
-    const hero = document.getElementById('autoMixHero');
-    if (hero && tracks.length) hero.style.display = 'block';
-    // V7: refresh transition editor
-    teRefresh && teRefresh();
-  }, 350);
-};
-
 /* ═══════════════════════════════════════════════════════════════════════
    V5  ·  METRICS ENGINE + PUBLISHING WORKFLOW
 ═══════════════════════════════════════════════════════════════════════ */
@@ -6693,7 +6641,7 @@ const PUBLISH_CARDS = [
       <p><strong>Background type:</strong> Still illustrated scene (recommended) or very slow drift loop — no fast motion. Anime/Ghibli-style art converts best for lo-fi.</p>
       <p><strong>Overlay rules:</strong> Channel name bottom-left, subtle. No cluttered text overlays mid-video. Let the art breathe.</p>
       <p><strong>Export settings:</strong> 1920×1080, 30fps, H.264 at 8–12 Mbps for YouTube upload. Audio: 320kbps AAC stereo.</p>
-      <p><strong>Loudness target:</strong> Mix to −14 LUFS integrated, −1 dBFS peak. YouTube normalises to −14 LUFS so this prevents unwanted gain changes.</p>
+      <p><strong>Loudness target:</strong> Mix to -14 LUFS integrated, -1 dBFS peak. YouTube normalises to -14 LUFS so this prevents unwanted gain changes.</p>
       <p><strong>Length target:</strong> 1–3 hours per video. Anything under 45 minutes performs significantly worse in lo-fi search.</p>
     `
   },
@@ -6770,7 +6718,7 @@ Illustrated lo-fi scene, [setting], warm amber lighting, soft focus, anime/studi
         <li class="checklist-item" onclick="toggleCheck(this)"><div class="checklist-box"></div><span class="checklist-label">Thumbnail uploaded — reads at small size</span></li>
         <li class="checklist-item" onclick="toggleCheck(this)"><div class="checklist-box"></div><span class="checklist-label">Assigned to correct playlist(s)</span></li>
         <li class="checklist-item" onclick="toggleCheck(this)"><div class="checklist-box"></div><span class="checklist-label">Publish time set (not immediate) — schedule for peak hour</span></li>
-        <li class="checklist-item" onclick="toggleCheck(this)"><div class="checklist-box"></div><span class="checklist-label">Audio loudness: −14 LUFS confirmed</span></li>
+        <li class="checklist-item" onclick="toggleCheck(this)"><div class="checklist-box"></div><span class="checklist-label">Audio loudness: -14 LUFS confirmed</span></li>
         <li class="checklist-item" onclick="toggleCheck(this)"><div class="checklist-box"></div><span class="checklist-label">Video resolution: 1920×1080</span></li>
         <li class="checklist-item" onclick="toggleCheck(this)"><div class="checklist-box"></div><span class="checklist-label">Pinned comment queued — post within 15 min of going live</span></li>
         <li class="checklist-item" onclick="toggleCheck(this)"><div class="checklist-box"></div><span class="checklist-label">Shared on community/social immediately after publish</span></li>
@@ -6870,7 +6818,7 @@ if (typeof PAGE_SUBS !== 'undefined') {
   PAGE_SUBS.metrics = 'youtube metrics';
   PAGE_SUBS.growth  = 'channel guidance';
   PAGE_SUBS.prompts = 'prompt generator';
-  PAGE_SUBS.mix     = 'mix creator · v14';
+  PAGE_SUBS.mix     = 'mix creator · v15';
   PAGE_SUBS.plan    = 'upload plan';
 }
 
@@ -7245,61 +7193,12 @@ function teEditKey(outIdx, inIdx) {
 
 /* ── Save button handler ── */
 
-function teSaveMarkers() {
-  const outIdx = currentIdx, inIdx = currentIdx + 1;
-  if (outIdx < 0 || inIdx >= tracks.length) return;
-
-  const key   = teEditKey(outIdx, inIdx);
-  const edits = teLoadEdits();
-  edits[key]  = {
-    cueOut: tracks[outIdx].cueOut,
-    cueIn:  tracks[inIdx].cueIn,
-    ts:     Date.now(),
-  };
-  tePersistEdits(edits);
-
-  // Flash saved badge
-  const badge = document.getElementById('teSavedBadge');
-  if (badge) {
-    badge.classList.add('show');
-    setTimeout(() => badge.classList.remove('show'), 2000);
-  }
-  toast('Transition saved');
-}
 
 /* ── Reset to Auto Mix values ── */
 
-function teResetMarkers() {
-  const outIdx = currentIdx, inIdx = currentIdx + 1;
-  if (outIdx < 0 || inIdx >= tracks.length) return;
-
-  const tpl  = chooseTransitionTemplate(tracks[outIdx], tracks[inIdx]);
-  const cues = autoPlaceCues(tracks[outIdx], tracks[inIdx], tpl);
-
-  tracks[outIdx].cueOut = cues.out;
-  tracks[inIdx].cueIn   = cues.in;
-
-  // Remove from storage too
-  const key   = teEditKey(outIdx, inIdx);
-  const edits = teLoadEdits();
-  delete edits[key];
-  tePersistEdits(edits);
-
-  teRefresh();
-  toast('Markers reset to Auto Mix values');
-}
 
 /* ── Apply saved edits for a transition pair ── */
 
-function teApplySavedEdits(outIdx, inIdx) {
-  if (outIdx < 0 || inIdx >= tracks.length) return;
-  const key   = teEditKey(outIdx, inIdx);
-  const edits = teLoadEdits();
-  const saved = edits[key];
-  if (!saved) return;
-  if (typeof saved.cueOut === 'number') tracks[outIdx].cueOut = saved.cueOut;
-  if (typeof saved.cueIn  === 'number') tracks[inIdx].cueIn   = saved.cueIn;
-}
 
 /* ── Draw a simple waveform on the TE canvas ── */
 
@@ -7357,36 +7256,6 @@ function teUpdateZones() {
 
 /* ── Full editor refresh ── */
 
-function teRefresh() {
-  const data = syncTransitionModelFromMarkers();
-  const card = document.getElementById('teCard');
-  if (!card) return;
-  if (!data) { card.style.display = 'none'; return; }
-
-  const { outT, inT, outDur, inDur, cueOut, cueIn, overlap, style, score } = data;
-  card.style.display = 'block';
-
-  const safeSet = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
-  safeSet('teOutName',    outT.name);
-  safeSet('teInName',     inT.name);
-
-  teDrawWave('teOutCanvas', 'teOutWrap', 'rgba(212,145,74,0.40)');
-  teDrawWave('teInCanvas',  'teInWrap',  'rgba(76,175,125,0.40)');
-
-  tePositionMarker('teOutMarker', cueOut / (outDur || 1));
-  tePositionMarker('teInMarker',  cueIn  / (inDur  || 1));
-
-  safeSet('teOutTip',      fmt(cueOut));
-  safeSet('teInTip',       fmt(cueIn));
-  safeSet('teOutTime',     fmt(cueOut) + ' / ' + fmt(outDur));
-  safeSet('teInTime',      fmt(cueIn)  + ' / ' + fmt(inDur));
-  safeSet('teOverlapVal',  overlap + 's');
-  safeSet('teStyleVal',    style);
-  safeSet('teScoreVal',    score + '%');
-
-  teUpdateZones();
-  drawTopTransitionOverlay();
-}
 
 /* ── Draggable marker logic ── */
 
@@ -7528,27 +7397,7 @@ function teInitDraggables() {
 
 /* ── Patch loadTrack to refresh the editor ── */
 
-const _v7_origLoadTrack = loadTrack;
-loadTrack = function(idx) {
-  stopSecondaryAudio();   // V11: prevent orphaned audio when switching tracks
-  _v7_origLoadTrack(idx);
-  setTimeout(() => {
-    // Apply any saved edits for this transition
-    teApplySavedEdits(idx, idx + 1);
-    teRefresh();
-  }, 120);
-};
-
 /* ── Patch autoMix to refresh the editor after completion ── */
-
-const _v7_origAutoMix = autoMix;
-autoMix = async function() {
-  await _v7_origAutoMix();
-  setTimeout(() => {
-    teApplySavedEdits(currentIdx, currentIdx + 1);
-    teRefresh();
-  }, 300);
-};
 
 /* ── Init draggables after page loads ── */
 
@@ -7575,14 +7424,6 @@ function tlStopTimer() {
   }
 }
 
-function tlGetPair(outIdx = currentIdx, inIdx = currentIdx + 1) {
-  if (outIdx < 0 || inIdx >= tracks.length) return null;
-  const outT = tracks[outIdx];
-  const inT  = tracks[inIdx];
-  const outDur = Math.max(1, (outT.duration || 1) - (outT.trimStart || 0) - (outT.trimEnd || 0));
-  const inDur  = Math.max(1, (inT.duration  || 1) - (inT.trimStart  || 0) - (inT.trimEnd  || 0));
-  return { outT, inT, outDur, inDur, outIdx, inIdx };
-}
 
 function tlInitState() {
   const pair = tlGetPair();
@@ -7894,23 +7735,7 @@ function tlInitBindings() {
 }
 
 /* ── Play buttons for transition editor + transition view ── */
-function tePlayOut() {
-  if (currentIdx < 0 || !tracks[currentIdx]) return;
-  loadTrack(currentIdx);
-  audio.currentTime = Math.max(0, tracks[currentIdx].cueOut || 0);
-  audio.play().catch(() => {});
-  isPlaying = true;
-  document.getElementById('playBtn').textContent = '⏸';
-}
 
-function tePlayIn() {
-  if (currentIdx < 0 || !tracks[currentIdx + 1]) return;
-  loadTrack(currentIdx + 1);
-  audio.currentTime = Math.max(0, tracks[currentIdx].cueIn || 0);
-  audio.play().catch(() => {});
-  isPlaying = true;
-  document.getElementById('playBtn').textContent = '⏸';
-}
 
 function injectSectionPlayButtons() {
   const transCard = document.getElementById('transCard');
@@ -7941,43 +7766,6 @@ function injectSectionPlayButtons() {
   }
 }
 
-/* ── Hook into existing lifecycle ── */
-(function initV13Timeline() {
-  setTimeout(() => {
-    tlInitBindings();
-    injectSectionPlayButtons();
-    tlRefresh();
-  }, 400);
-
-  const _v13LoadTrack = loadTrack;
-  loadTrack = function(idx) {
-    _v13LoadTrack(idx);
-    setTimeout(() => {
-      injectSectionPlayButtons();
-      tlRefresh();
-    }, 140);
-  };
-
-  const _v13PreviewTransition = previewTransition;
-  previewTransition = function() {
-    _v13PreviewTransition();
-    setTimeout(() => tlFollowMainPlayback(), 80);
-  };
-
-  if (typeof autoMix === 'function') {
-    const _v13AutoMix = autoMix;
-    autoMix = async function() {
-      await _v13AutoMix();
-      setTimeout(() => {
-        injectSectionPlayButtons();
-        tlRefresh();
-      }, 250);
-    };
-  }
-
-  const xfade = document.getElementById('xfadeR');
-  if (xfade) xfade.addEventListener('input', () => setTimeout(tlRefresh, 60));
-})();
 
 
 /* ═══════════════════════════════════════════════════════════════
@@ -8265,37 +8053,8 @@ function chooseTransitionTemplate(outT, inT) {
 }
 
 /* ── Sync activeTransitionIdx when loadTrack is called ── */
-const _v14LoadTrack = loadTrack;
-loadTrack = function(idx) {
-  _v14LoadTrack(idx);
-  // Keep activeTransitionIdx pointed at the outgoing track of the loaded position
-  if (idx >= 0 && idx < tracks.length - 1) {
-    activeTransitionIdx = idx;
-  }
-  setTimeout(() => {
-    updatePairNavUI();
-  }, 100);
-};
-
 /* ── Init: set up pair UI when tracks load ── */
-const _v14HandleFiles = handleFiles;
-handleFiles = function(files) {
-  _v14HandleFiles(files);
-  setTimeout(() => {
-    activeTransitionIdx = 0;
-    updatePairNavUI();
-    teRefresh();
-  }, 400);
-};
-
 /* ── Also call updatePairNavUI when clearAllTracks runs ── */
-const _v14ClearAllTracks = clearAllTracks;
-clearAllTracks = function() {
-  _v14ClearAllTracks();
-  activeTransitionIdx = 0;
-  updatePairNavUI();
-};
-
 /* ── Initial call ── */
 setTimeout(updatePairNavUI, 500);
 
