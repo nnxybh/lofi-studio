@@ -79,6 +79,7 @@ a{color:var(--accent);text-decoration:none}
 #topbar{
   position:sticky;top:0;z-index:100;height:var(--topbar-h);
   background:rgba(5,4,5,0.97);
+  -webkit-backdrop-filter:blur(20px) saturate(1.8);
   backdrop-filter:blur(20px) saturate(1.8);
   -webkit-backdrop-filter:blur(20px) saturate(1.8);
   border-bottom:1px solid rgba(255,255,255,0.05);
@@ -105,6 +106,7 @@ a{color:var(--accent);text-decoration:none}
   position:fixed;bottom:0;left:50%;transform:translateX(-50%);
   width:100%;max-width:520px;height:var(--nav-h);
   background:rgba(6,5,6,0.94);
+  -webkit-backdrop-filter:blur(24px) saturate(1.8);
   backdrop-filter:blur(24px) saturate(1.8);
   -webkit-backdrop-filter:blur(24px) saturate(1.8);
   border-top:1px solid rgba(255,255,255,0.06);
@@ -194,23 +196,25 @@ a{color:var(--accent);text-decoration:none}
 textarea.input-field{resize:vertical;min-height:60px;line-height:1.6}
 .select-field{
   background:var(--glass-fill),rgba(12,12,14,0.72);
+  -webkit-backdrop-filter:blur(8px);border:1px solid var(--border);
   backdrop-filter:blur(8px);border:1px solid var(--border);
   border-radius:var(--r);color:var(--text);font-size:12px;
-  padding:7px 28px 7px 10px;outline:none;cursor:pointer;appearance:none;
+  padding:7px 28px 7px 10px;outline:none;cursor:pointer;-webkit-appearance:none; appearance:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%234a4844' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:right 9px center;
   transition:border-color 0.15s;
 }
 .select-field:focus{border-color:rgba(199,22,31,0.38)}
 .select-field.full{width:100%}
-input[type="range"]{-webkit-appearance:none;appearance:none;height:3px;background:rgba(255,255,255,0.10);border-radius:2px;outline:none;cursor:pointer}
-input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg)}
+input[type="range"]{-webkit--webkit-appearance:none; appearance:none;-webkit-appearance:none; appearance:none;height:3px;background:rgba(255,255,255,0.10);border-radius:2px;outline:none;cursor:pointer}
+input[type="range"]::-webkit-slider-thumb{-webkit--webkit-appearance:none; appearance:none;width:14px;height:14px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg)}
 input[type="range"]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg)}
 
 /* ── 7. PILLS · TOGGLES · MODE-TOGGLE ─────────────── */
 .pills{display:flex;flex-wrap:wrap;gap:6px}
 .pill{
   background:var(--glass-fill),rgba(20,20,22,0.50);
+  -webkit-backdrop-filter:blur(8px);border:1px solid var(--border);
   backdrop-filter:blur(8px);border:1px solid var(--border);
   border-radius:20px;padding:5px 12px;font-size:12px;
   color:var(--text2);cursor:pointer;transition:all 0.13s;white-space:nowrap;
@@ -331,6 +335,7 @@ input[type="range"]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;b
 .tpl-btn.on{background:linear-gradient(180deg,rgba(199,22,31,0.14),rgba(199,22,31,0.06));border-color:rgba(199,22,31,0.35)}
 .tpl-name{font-size:12px;font-weight:500;color:var(--text)}
 .tpl-desc{font-size:10px;color:var(--text3);margin-top:1px}
+.automix-hero{background:linear-gradient(135deg,rgba(199,22,31,0.10) 0%,rgba(100,10,15,0.06) 50%,rgba(199,22,31,0.04) 100%);-webkit-backdrop-filter:blur(16px) saturate(1.5);border:1px solid rgba(199,22,31,0.22);box-shadow:0 4px 32px rgba(199,22,31,0.10),inset 0 1px 0 rgba(255,120,120,0.10);border-radius:var(--r-lg);padding:16px;margin-bottom:10px;text-align:center}
 .automix-hero{background:linear-gradient(135deg,rgba(199,22,31,0.10) 0%,rgba(100,10,15,0.06) 50%,rgba(199,22,31,0.04) 100%);backdrop-filter:blur(16px) saturate(1.5);border:1px solid rgba(199,22,31,0.22);box-shadow:0 4px 32px rgba(199,22,31,0.10),inset 0 1px 0 rgba(255,120,120,0.10);border-radius:var(--r-lg);padding:16px;margin-bottom:10px;text-align:center}
 .automix-hero-title{font-size:13px;font-weight:600;color:var(--accent);margin-bottom:3px}
 .automix-hero-sub{font-size:11px;color:var(--text3);margin-bottom:12px}
@@ -487,6 +492,7 @@ input[type="range"]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;b
 .tl-pill strong{color:var(--text)}
 
 /* ── 17. PROMPTS PAGE ──────────────────────────────── */
+.prompt-card{background:rgba(14,14,16,0.64);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;overflow:hidden;animation:slideIn 0.25s ease}
 .prompt-card{background:rgba(14,14,16,0.64);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;overflow:hidden;animation:slideIn 0.25s ease}
 @keyframes slideIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 .prompt-card-header{display:flex;align-items:center;justify-content:space-between;padding:10px 12px 8px;border-bottom:1px solid rgba(255,255,255,0.05)}
@@ -498,7 +504,6 @@ input[type="range"]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;b
 .prompt-note{padding:0 12px 10px;font-size:11px;color:var(--text3);line-height:1.5}
 
 .copy-btn:hover{border-color:var(--accent-dim);color:var(--accent)}
-.copy-btn
 .extras-section{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:var(--r);margin-bottom:8px;overflow:hidden}
 .extras-toggle{width:100%;background:none;border:none;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;color:var(--text2);font-size:12px}
 .extras-toggle:hover{color:var(--text)}
@@ -519,7 +524,8 @@ input[type="range"]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;b
 .regen-btn:hover{background:rgba(199,22,31,0.15);border-color:rgba(199,22,31,0.45)}
 .growth-item-row{display:flex;align-items:flex-start;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:12px;color:var(--text);line-height:1.5}
 .growth-item-row:last-child{border-bottom:none}
-.growth-item-row .copy-btn{margin-left:8px;flex-shrink:0}
+.growth-item-row 
+.growth-item{background:rgba(14,14,16,0.64);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-bottom:8px}
 .growth-item{background:rgba(14,14,16,0.64);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-bottom:8px}
 .growth-header{display:flex;align-items:center;gap:10px;padding:14px;cursor:pointer;transition:background 0.12s}
 .growth-header:hover{background:rgba(255,255,255,0.02)}
@@ -567,6 +573,7 @@ input[type="range"]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;b
 .form-field input,.form-field select,.form-field textarea{width:100%;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:var(--r-sm);color:var(--text);font-size:12px;padding:6px 8px;outline:none;transition:border-color .15s}
 .form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:rgba(199,22,31,0.38)}
 .form-field.full{grid-column:1/-1}
+.publish-card{background:rgba(14,14,16,0.64);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--r-lg);margin-bottom:8px;overflow:hidden}
 .publish-card{background:rgba(14,14,16,0.64);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--r-lg);margin-bottom:8px;overflow:hidden}
 .publish-header{display:flex;align-items:center;gap:10px;padding:13px 14px;cursor:pointer;transition:background .12s}
 .publish-header:hover{background:rgba(255,255,255,0.02)}
@@ -615,6 +622,7 @@ input[type="range"]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;b
 #toast{
   position:fixed;bottom:calc(var(--nav-h) + 14px);
   left:50%;transform:translateX(-50%) translateY(8px);
+  background:rgba(20,20,22,0.92);-webkit-backdrop-filter:blur(16px);
   background:rgba(20,20,22,0.92);backdrop-filter:blur(16px);
   border:1px solid rgba(255,255,255,0.10);border-radius:8px;padding:8px 16px;
   font-size:12px;color:var(--text);opacity:0;transition:all 0.22s cubic-bezier(0.4,0,0.2,1);
@@ -658,6 +666,7 @@ input[type="range"]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;b
   background: linear-gradient(135deg, rgba(199,22,31,0.08) 0%, rgba(100,10,15,0.04) 50%, rgba(199,22,31,0.03) 100%);
   border: 1px solid rgba(199,22,31,0.20);
   border-radius: var(--r-lg); padding: 16px; margin-bottom: 10px;
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
   backdrop-filter: blur(16px) saturate(1.4);
   box-shadow: 0 4px 24px rgba(199,22,31,0.08), inset 0 1px 0 rgba(255,120,120,0.08);
 }
@@ -675,6 +684,7 @@ input[type="range"]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;b
 /* Output sections */
 .growth-output-section {
   background: var(--glass-fill), rgba(14,14,16,0.64);
+  -webkit-backdrop-filter: var(--glass-blur);
   backdrop-filter: var(--glass-blur);
   border: 1px solid var(--border);
   border-radius: var(--r-lg); padding: 14px; margin-bottom: 8px;
@@ -760,6 +770,7 @@ input[type="range"]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;b
   background: linear-gradient(135deg, rgba(199,22,31,0.08), rgba(212,145,74,0.05), rgba(76,175,125,0.04));
   border: 1px solid rgba(199,22,31,0.16);
   border-radius: var(--r-lg); padding: 16px; margin-bottom: 10px;
+  -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
 }
 .plan-hero-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 2px; letter-spacing: -0.3px; }
@@ -1235,6 +1246,7 @@ select option {
   border: 1px solid rgba(255,255,255,0.10);
   color: var(--text3); cursor: pointer;
   transition: all 0.18s cubic-bezier(0.4,0,0.2,1);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   flex-shrink: 0;
 }
@@ -1302,10 +1314,7 @@ select option {
 
 /* ── Premium animation polish ── */
 /* Regen button spin */
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 .regen-btn.spinning span { display: inline-block; animation: spin 0.5s cubic-bezier(0.4,0,0.6,1); }
 
 /* Slide-in for generated cards */
@@ -1355,6 +1364,229 @@ select option {
 
 /* Regen button hover */
 .regen-btn { transition: all 0.16s cubic-bezier(0.4,0,0.2,1); }
+
+/* ═══ SAFARI COMPATIBILITY FIXES ════════════════════════ */
+
+/* Safari needs explicit color-scheme for dark inputs */
+:root { color-scheme: dark; }
+
+/* Fix backdrop-filter fallback for older Safari */
+@supports not (backdrop-filter: blur(1px)) {
+  .card, .player-wrap, .trans-editor-card, .timeline-card,
+  .growth-gen-card, .publish-card, .growth-item, #topbar, #nav {
+    background: rgba(14,14,16,0.97) !important;
+  }
+}
+
+/* Safari: fix input/select background */
+input, select, textarea {
+  -webkit-appearance: none;
+  appearance: none;
+}
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%234a4844' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 9px center;
+}
+
+/* Safari: fix sticky positioning */
+#topbar { position: -webkit-sticky; position: sticky; }
+
+/* Safari: fix canvas rendering */
+canvas { -webkit-transform: translateZ(0); transform: translateZ(0); }
+
+/* Safari: smooth scrolling */
+* { -webkit-overflow-scrolling: touch; }
+
+/* ═══ MOBILE VIEW IMPROVEMENTS ═══════════════════════════ */
+
+/* Tighter topbar on small screens */
+@media (max-width: 400px) {
+  #topbar { padding: 0 12px; }
+  .tb-title { font-size: 14px; }
+  .tb-center { font-size: 12px; letter-spacing: 0.24em; }
+  .tb-badge { font-size: 8px; padding: 1px 5px; }
+  #pages { padding: 10px 12px calc(var(--nav-h) + 14px); }
+}
+
+/* Better touch targets for mobile */
+@media (pointer: coarse) {
+  .pill { padding: 7px 14px; font-size: 12px; }
+  .scene-chip { padding: 7px 13px; }
+  .btn-ghost { padding: 8px 14px; }
+  .nav-btn { padding: 10px 2px; }
+  .checklist-item { padding: 11px 0; }
+  .cue-btn { padding: 7px 12px; font-size: 11px; }
+  .copy-btn { padding: 6px 12px; font-size: 11px; }
+  .track-item { padding: 12px 0; }
+  .tl-mini-btn { padding: 6px 12px; font-size: 11px; }
+  input[type="range"] { height: 5px; }
+  input[type="range"]::-webkit-slider-thumb { width: 20px; height: 20px; }
+}
+
+/* Fix overflow on very small screens */
+.player-wrap, .card, .trans-editor-card, .timeline-card {
+  overflow: hidden;
+  max-width: 100%;
+}
+.te-tracks { overflow: hidden; }
+.tl-stat-row { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; padding-bottom: 4px; }
+.automix-log { max-height: 100px; }
+.tl-actions { flex-wrap: wrap; gap: 4px; }
+
+/* ═══ TIMELINE CLARITY — beginner-friendly visuals ══════ */
+
+/* Stronger overlap band — the crossfade zone */
+.tl-overlap-band {
+  background: linear-gradient(90deg,
+    rgba(212,145,74,0.22),
+    rgba(199,22,31,0.28),
+    rgba(76,175,125,0.22)) !important;
+  border-left:  2px solid rgba(212,145,74,0.70) !important;
+  border-right: 2px solid rgba(76,175,125,0.70) !important;
+  z-index: 3;
+}
+/* Label inside the overlap band */
+.tl-overlap-band::before {
+  content: 'OVERLAP';
+  position: absolute; top: 2px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 7px; font-weight: 700; letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.45); pointer-events: none;
+}
+
+/* Lane colour coding — A=amber, B=green */
+.tl-clip.tail  {
+  background: linear-gradient(180deg,rgba(212,145,74,0.26),rgba(212,145,74,0.10)) !important;
+  border-color: rgba(212,145,74,0.50) !important;
+}
+.tl-clip.intro {
+  background: linear-gradient(180deg,rgba(76,175,125,0.26),rgba(76,175,125,0.10)) !important;
+  border-color: rgba(76,175,125,0.50) !important;
+}
+.tl-lane-label {
+  color: var(--text2) !important;
+  font-weight: 600;
+  font-size: 9px;
+}
+#tlLaneOut .tl-lane-label { color: #d4914a !important; }
+#tlLaneIn  .tl-lane-label { color: #4caf7d !important; }
+
+/* BPM meta cells — more prominent */
+.tl-meta-cell {
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+.tl-meta-label { font-weight: 600; font-size: 9px; letter-spacing: 0.1em; }
+.tl-meta-value { font-size: 13px; font-weight: 500; }
+.tl-bpm-badge {
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 4px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(199,22,31,0.10);
+  border: 1px solid rgba(199,22,31,0.22);
+  color: var(--accent);
+  display: inline-block;
+}
+.tl-lane-hint {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 1px 6px;
+  border-radius: 3px;
+  border: 1px solid currentColor;
+  opacity: 0.9;
+}
+
+/* Pill stat row — bigger, clearer */
+.tl-pill {
+  font-size: 10px;
+  padding: 5px 10px;
+  white-space: nowrap;
+}
+.tl-pill strong { font-size: 11px; color: var(--text); }
+
+/* Timeline stage — more visible background grid */
+.tl-ruler-mark span { color: rgba(255,255,255,0.30) !important; font-size: 9px; }
+.tl-ruler { background: rgba(255,255,255,0.025) !important; }
+
+/* Handle grip lines — more visible */
+.tl-handle::after {
+  background: rgba(255,255,255,0.50) !important;
+  width: 2px !important;
+  height: 18px !important;
+}
+
+/* ═══ PREMIUM ANIMATION OVERRIDES ═══════════════════════ */
+
+/* Smooth page transitions */
+.pg.on { animation: pgFadeIn 0.22s cubic-bezier(0.4,0,0.2,1); }
+@keyframes pgFadeIn { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:translateY(0); } }
+
+/* Card entry */
+.card, .player-wrap { animation: none; } /* suppress individual card animations */
+.growth-output-section { animation: slideIn 0.30s cubic-bezier(0.4,0,0.2,1); }
+.prompt-card { animation: slideIn 0.28s cubic-bezier(0.4,0,0.2,1); }
+@keyframes slideIn { from { opacity:0; transform:translateY(7px); } to { opacity:1; transform:translateY(0); } }
+
+/* Button press */
+.btn-primary:active { transform: scale(0.975); transition: transform 0.08s ease; }
+.regen-btn:active   { transform: scale(0.95); }
+.btn-ghost:active   { transform: scale(0.97); }
+
+/* Toast — spring feel */
+#toast {
+  transition: opacity 0.24s cubic-bezier(0.4,0,0.2,1),
+              transform 0.28s cubic-bezier(0.34,1.4,0.64,1) !important;
+}
+
+/* Checklist box tick */
+.checklist-box {
+  transition: background 0.18s cubic-bezier(0.4,0,0.2,1),
+              border-color 0.18s ease,
+              transform 0.18s cubic-bezier(0.34,1.4,0.64,1);
+}
+.checklist-item.done .checklist-box { transform: scale(1.05); }
+
+/* Scene chip selection pop */
+.scene-chip { transition: all 0.17s cubic-bezier(0.4,0,0.2,1); }
+.scene-chip.on { transform: scale(1.03); }
+
+/* Pill selection */
+.pill { transition: all 0.16s cubic-bezier(0.4,0,0.2,1); }
+.pill.on { transform: none; }
+
+/* Advanced toggle arrow */
+#advancedArrow { transition: transform 0.22s cubic-bezier(0.4,0,0.2,1); }
+
+/* Nav button */
+.nav-btn { transition: color 0.16s ease; }
+
+/* Plan type button */
+.plan-type-btn { transition: all 0.16s cubic-bezier(0.4,0,0.2,1); }
+
+/* Export stage */
+.export-stage { transition: background 0.42s cubic-bezier(0.4,0,0.2,1); }
+
+/* Regen button spin */
+.regen-btn.spinning span { display: inline-block; animation: spin 0.55s cubic-bezier(0.4,0,0.6,1); }
+
+/* Progress fills — smooth */
+.analysis-strip-fill, .progress-fill { transition: width 0.4s cubic-bezier(0.4,0,0.2,1); }
+.lufs-bar-fill { transition: width 0.5s cubic-bezier(0.4,0,0.2,1), background 0.3s ease; }
+
+/* TL clip hover */
+.tl-clip {
+  transition: box-shadow 0.18s ease, transform 0.12s ease;
+  will-change: transform;
+}
+.tl-clip:hover { box-shadow: 0 6px 22px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.12) !important; }
+
+/* Advanced section open/close */
+#tlCard { transition: none; } /* Instant show/hide for clarity */
 </style>
 </head>
 <body>
@@ -1780,17 +2012,20 @@ select option {
       <div class="export-format-field">
         <label>Sample rate</label>
         <select id="exportSampleRate" class="select-field full">
-          <option value="44100" selected>44.1 kHz (standard)</option>
-          <option value="48000">48 kHz (YouTube / video)</option>
+          <option value="44100" selected>44.1 kHz — Standard</option>
+          <option value="48000">48 kHz — YouTube &amp; Video ✓</option>
         </select>
       </div>
       <div class="export-format-field">
         <label>Bit depth</label>
         <select id="exportBitDepth" class="select-field full">
-          <option value="16" selected>16-bit (CD quality)</option>
-          <option value="24">24-bit (studio / YouTube)</option>
+          <option value="16" selected>16-bit — CD quality</option>
+          <option value="24">24-bit — Studio / YouTube ✓</option>
         </select>
       </div>
+    </div>
+    <div style="font-size:10px;color:var(--text3);margin:-4px 0 8px;line-height:1.5;">
+      Recommended for YouTube: 48 kHz · 24-bit
     </div>
     <button class="btn btn-primary" style="margin-top:10px;" id="exportBtn" onclick="exportWAV()">⬇ Export WAV</button>
   </div>
@@ -2032,6 +2267,26 @@ select option {
 <div id="toast"></div>
 
 <script>
+/* ── Canvas roundRect polyfill for Safari < 15.4 ──── */
+if (!CanvasRenderingContext2D.prototype.roundRect) {
+  CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+    if (r > w/2) r = w/2;
+    if (r > h/2) r = h/2;
+    this.beginPath();
+    this.moveTo(x+r, y);
+    this.lineTo(x+w-r, y);
+    this.quadraticCurveTo(x+w, y, x+w, y+r);
+    this.lineTo(x+w, y+h-r);
+    this.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+    this.lineTo(x+r, y+h);
+    this.quadraticCurveTo(x, y+h, x, y+h-r);
+    this.lineTo(x, y+r);
+    this.quadraticCurveTo(x, y, x+r, y);
+    this.closePath();
+    return this;
+  };
+}
+
 'use strict';
 /* ═══════════════════════════════════════════════════════
    SECTION 3 — APP STATE + CONSTANTS + UTILITIES + STORAGE
@@ -2420,6 +2675,7 @@ function buildExtras(p) {
 
 const audio = new Audio();
 audio.volume = 0.8;
+audio.autoplay = false; /* Never autoplay */
 
 /* Dedicated preview audio — never touches the main player state */
 let _previewAudio = null;
@@ -2582,7 +2838,13 @@ function handleFiles(files) {
 
   if (added) {
     showMixCards();
-    if (player.currentIdx < 0) loadTrack(0);
+    if (player.currentIdx < 0) {
+      loadTrack(0);
+      /* Explicitly prevent autoplay — user must press play themselves */
+      audio.pause();
+      player.isPlaying = false;
+      safeSet('playBtn', '▶');
+    }
     renderTrackList();
     updateRuntimeDisplay();
     toast(added + ' track' + (added > 1 ? 's' : '') + ' loaded');
@@ -3331,10 +3593,27 @@ async function exportWAV() {
     setStage(2, 'done'); setStage(3, 'active'); setStat('Encoding WAV…');
     const wavBlob = encodeWAV(rendered, bitDepth);
     const url     = URL.createObjectURL(wavBlob);
-    const a       = document.createElement('a');
-    a.href = url; a.download = 'lofi-mix.wav';
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(url), 5000);
+    /* iOS Safari-compatible download */
+    const isMobileSafari = /iP(hone|ad|od)/.test(navigator.userAgent) ||
+      (navigator.userAgent.includes('Mac') && 'ontouchend' in document);
+    if (isMobileSafari && navigator.share) {
+      /* Use Web Share API on iOS — lets user save to Files or share */
+      try {
+        const file = new File([wavBlob], 'lofi-mix.wav', { type: 'audio/wav' });
+        await navigator.share({ files: [file], title: 'Lofi Mix' });
+        URL.revokeObjectURL(url);
+      } catch (shareErr) {
+        /* Fallback: open in new tab so user can long-press to save */
+        window.open(url, '_blank');
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
+      }
+    } else {
+      const a = document.createElement('a');
+      a.href = url; a.download = 'lofi-mix.wav';
+      a.style.display = 'none';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+    }
     setStage(3, 'done'); setStat('Mix exported ✓');
     toast('WAV exported!');
   } catch (err) {
