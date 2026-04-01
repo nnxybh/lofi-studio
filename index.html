@@ -3544,18 +3544,23 @@ async function exportWAV() {
 
     setStage(0, 'done'); setStage(1, 'active'); setStat('Building mix timeline…');
 
-    /* Cue-driven total duration */
+    /* Calculate total duration by simulating the exact same offset logic as the
+       render loop below — this guarantees total matches what will actually be rendered
+       with no silent tail added. */
     let total = 0;
     APP.tracks.forEach((t, i) => {
-      const srcDur = Math.max(0, (t.duration||0) - (t.trimStart||0) - (t.trimEnd||0));
-      if (i === 0) { total += srcDur; return; }
-      const prev    = APP.tracks[i-1];
-      const prevDur = Math.max(0, (prev.duration||0) - (prev.trimStart||0) - (prev.trimEnd||0));
-      const prevCueOut = typeof prev.cueOut === 'number'
-        ? clamp(prev.cueOut, 0, prevDur)
-        : Math.max(0, prevDur - (prev.transitionOverlap || player.globalXfade));
-      total += Math.max(0, srcDur - (typeof t.cueIn === 'number' ? t.cueIn : 0));
-      total += prevCueOut;
+      const dur        = Math.max(0, (t.duration||0) - (t.trimStart||0) - (t.trimEnd||0));
+      const cueIn      = clamp(typeof t.cueIn  === 'number' ? t.cueIn  : 0, 0, dur);
+      const cueOut     = clamp(typeof t.cueOut === 'number' ? t.cueOut
+        : Math.max(0, dur - (t.transitionOverlap || player.globalXfade)), 0, dur);
+      const playDur    = Math.max(0.1, dur - (i === 0 ? 0 : cueIn));
+      const localCueOut = i < APP.tracks.length - 1
+        ? Math.max(0, cueOut - (i === 0 ? 0 : cueIn))
+        : playDur;
+      /* Mirror the offset += line in the render loop exactly */
+      total += Math.max(0.1, i < APP.tracks.length - 1
+        ? Math.min(playDur, localCueOut)
+        : playDur);
     });
     total = Math.max(1, total);
 
