@@ -1640,6 +1640,62 @@ canvas { -webkit-transform: translateZ(0); transform: translateZ(0); }
   color: var(--text3); font-size: 12px; cursor: pointer;
   padding: 4px 12px; margin-top: 2px;
 }
+
+/* ── Calendar day selection ── */
+.cal-day { cursor: pointer; }
+.cal-day.empty { cursor: default; }
+.cal-day.selected {
+  background: rgba(199,22,31,0.18) !important;
+  border: 2px solid rgba(199,22,31,0.55) !important;
+  color: var(--text) !important;
+  box-shadow: 0 0 0 2px rgba(199,22,31,0.12);
+}
+.cal-day:hover:not(.empty):not(.selected) {
+  background: rgba(255,255,255,0.06);
+}
+/* Day header in list */
+.cal-day-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 0 10px; margin-bottom: 4px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.cal-day-header-title { font-size: 12px; font-weight: 600; color: var(--text2); }
+.cal-day-header-close {
+  font-size: 10px; color: var(--text3); background: none; border: none;
+  cursor: pointer; padding: 2px 6px;
+  border: 1px solid rgba(255,255,255,0.08); border-radius: 4px;
+}
+.cal-day-header-close:hover { color: var(--text2); border-color: rgba(199,22,31,0.25); }
+
+/* ── Plan item action buttons ── */
+.upload-item-inner { position: relative; }
+.plan-item-actions {
+  display: flex; gap: 3px; align-items: center;
+  flex-shrink: 0; margin-left: 4px;
+}
+.plan-item-btn {
+  width: 26px; height: 26px; border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; cursor: pointer; border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03); color: var(--text3);
+  transition: all 0.14s; flex-shrink: 0;
+}
+.plan-item-btn:hover { color: var(--text2); border-color: rgba(255,255,255,0.16); }
+.plan-item-btn.del-btn:hover { color: var(--red); border-color: rgba(199,22,31,0.35); background: rgba(199,22,31,0.06); }
+.plan-item-btn.edit-btn:hover { color: var(--amber); border-color: rgba(212,145,74,0.35); background: rgba(212,145,74,0.06); }
+/* ── Plan section labels ── */
+.plan-section-label {
+  font-size: 9px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.12em; color: var(--text3);
+  padding: 10px 0 5px; display: flex; align-items: center; justify-content: space-between;
+}
+.plan-section-past { color: var(--text4); }
+.plan-past-toggle {
+  font-size: 9px; color: var(--text3); background: none;
+  border: 1px solid rgba(255,255,255,0.08); border-radius: 4px;
+  padding: 2px 8px; cursor: pointer; transition: all 0.14s;
+}
+.plan-past-toggle:hover { color: var(--text2); }
 </style>
 </head>
 <body>
@@ -3662,21 +3718,28 @@ async function exportWAV() {
 
     setStage(2, 'done'); setStage(3, 'active'); setStat('Encoding WAV…');
     const wavBlob = encodeWAV(rendered, bitDepth);
-    const url     = URL.createObjectURL(wavBlob);
     const isMobile = /iP(hone|ad|od)|Android|Mobile/i.test(navigator.userAgent) ||
                      ('ontouchend' in document);
     if (!isMobile) {
-      /* Desktop: standard anchor click download */
+      /* Desktop: blob URL + anchor click — works fine */
+      const url = URL.createObjectURL(wavBlob);
       const a = document.createElement('a');
       a.href = url; a.download = 'lofi-mix.wav';
       a.style.display = 'none';
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
       setTimeout(() => URL.revokeObjectURL(url), 8000);
     } else {
-      /* Mobile: navigator.share and a.click() both fail after async render
-         because the original user gesture has expired by then.
-         Solution: surface a visible tap-to-save link the user taps directly. */
-      showMobileDownloadLink(url, wavBlob, bitDepth);
+      /* Mobile: iOS Safari cannot open blob: URLs at all.
+         Convert to a base64 data URI — works on every mobile browser.
+         The FileReader runs async but the user hasn't tapped yet,
+         so there is no gesture-expiry problem. */
+      setStat('Preparing download…');
+      const reader = new FileReader();
+      reader.onload = function() {
+        const dataUri = reader.result; /* data:audio/wav;base64,... */
+        showMobileDownloadLink(dataUri, wavBlob, bitDepth);
+      };
+      reader.readAsDataURL(wavBlob);
     }
     setStage(3, 'done'); setStat('Mix exported ✓');
     toast('WAV exported!');
@@ -3692,38 +3755,57 @@ async function exportWAV() {
 /* ── Mobile export helper ──────────────────────────────────
    Called after async render — user gesture is gone by now,
    so we show a visible link the user taps directly.        */
-function showMobileDownloadLink(url, blob, bitDepth) {
-  /* Remove any previous link */
+function showMobileDownloadLink(dataUri, blob, bitDepth) {
   const old = document.getElementById('mobileExportLink');
   if (old) old.remove();
-
   const sizeMB = (blob.size / 1024 / 1024).toFixed(1);
   const label  = bitDepth === 24 ? '24-bit WAV' : '16-bit WAV';
 
   const wrap = document.createElement('div');
   wrap.id = 'mobileExportLink';
-  wrap.innerHTML = `
-    <div class="mobile-dl-backdrop" onclick="dismissMobileDownload()"></div>
-    <div class="mobile-dl-sheet">
-      <div class="mobile-dl-title">Mix ready — ${sizeMB} MB</div>
-      <div class="mobile-dl-sub">${label} · Tap the button below to save</div>
-      <a href="${url}" download="lofi-mix.wav" class="mobile-dl-btn"
-         onclick="setTimeout(dismissMobileDownload, 1500)">
-        ⬇ Save Mix to Device
-      </a>
-      <div class="mobile-dl-hint">
-        On iPhone: tap Save to Files or Share → Save to Files<br>
-        On Android: the file saves to your Downloads folder
-      </div>
-      <button class="mobile-dl-close" onclick="dismissMobileDownload()">✕ Close</button>
-    </div>`;
-  document.body.appendChild(wrap);
 
-  /* Revoke after 5 minutes */
-  setTimeout(() => {
-    URL.revokeObjectURL(url);
-    dismissMobileDownload();
-  }, 300000);
+  const backdrop = document.createElement('div');
+  backdrop.className = 'mobile-dl-backdrop';
+  backdrop.addEventListener('click', dismissMobileDownload);
+
+  const sheet = document.createElement('div');
+  sheet.className = 'mobile-dl-sheet';
+
+  const title = document.createElement('div');
+  title.className = 'mobile-dl-title';
+  title.textContent = 'Mix ready — ' + sizeMB + ' MB';
+
+  const sub = document.createElement('div');
+  sub.className = 'mobile-dl-sub';
+  sub.textContent = label + ' · Tap the button below to save';
+
+  const btn = document.createElement('a');
+  btn.href = dataUri;           /* data: URI — works on iOS Safari */
+  btn.download = 'lofi-mix.wav';
+  btn.className = 'mobile-dl-btn';
+  btn.textContent = '⬇ Save Mix to Device';
+  btn.addEventListener('click', function() {
+    setTimeout(dismissMobileDownload, 1800);
+  });
+
+  const hint = document.createElement('div');
+  hint.className = 'mobile-dl-hint';
+  hint.innerHTML = 'On iPhone: tap then choose <strong>Save to Files</strong><br>' +
+                   'On Android: file saves to your Downloads folder';
+
+  const close = document.createElement('button');
+  close.className = 'mobile-dl-close';
+  close.textContent = '✕ Close';
+  close.addEventListener('click', dismissMobileDownload);
+
+  sheet.appendChild(title);
+  sheet.appendChild(sub);
+  sheet.appendChild(btn);
+  sheet.appendChild(hint);
+  sheet.appendChild(close);
+  wrap.appendChild(backdrop);
+  wrap.appendChild(sheet);
+  document.body.appendChild(wrap);
 }
 
 function dismissMobileDownload() {
@@ -4512,6 +4594,29 @@ function calNav(dir) {
 
 const TYPE_COLORS = { upload: 'var(--accent)', draft: 'var(--amber)', idea: 'var(--blue)', rest: 'var(--green)' };
 
+
+/* ── Calendar day selection ─────────────────────────── */
+let _selectedCalDate = null;
+
+function selectCalDay(dateStr, el) {
+  /* Toggle off if already selected */
+  if (_selectedCalDate === dateStr) {
+    _selectedCalDate = null;
+    document.querySelectorAll('.cal-day.selected').forEach(d => d.classList.remove('selected'));
+    renderUploadList();
+    return;
+  }
+  _selectedCalDate = dateStr;
+  /* Mark selected on grid */
+  document.querySelectorAll('.cal-day.selected').forEach(d => d.classList.remove('selected'));
+  el.classList.add('selected');
+  /* Re-render list filtered to this date, then scroll to it */
+  renderUploadList(_selectedCalDate);
+  /* Scroll the schedule section into view */
+  const list = safeEl('uploadList');
+  if (list) setTimeout(() => list.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+}
+
 function buildCalendar() {
   const grid  = safeEl('calGrid');
   const title = safeEl('calMonthTitle');
@@ -4520,31 +4625,36 @@ function buildCalendar() {
   const months = ['January','February','March','April','May','June',
                   'July','August','September','October','November','December'];
   title.textContent = months[m] + ' ' + y;
-  const firstDay   = new Date(y, m, 1).getDay();
+  const firstDay    = new Date(y, m, 1).getDay();
   const daysInMonth = new Date(y, m + 1, 0).getDate();
-  const today      = new Date();
-  const items      = loadPlan();
-  /* Build map: dateStr → [types] */
-  const dateMap = {};
+  const today       = new Date();
+  const items       = loadPlan();
+  const dateMap     = {};
   items.forEach(p => {
     if (!dateMap[p.date]) dateMap[p.date] = [];
     dateMap[p.date].push(p.type || 'upload');
   });
   grid.innerHTML = '';
   for (let i = 0; i < firstDay; i++) {
-    const el = document.createElement('div'); el.className = 'cal-day empty'; grid.appendChild(el);
+    const el = document.createElement('div');
+    el.className = 'cal-day empty';
+    grid.appendChild(el);
   }
   for (let d = 1; d <= daysInMonth; d++) {
     const dateStr = y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
     const isToday = today.getFullYear()===y && today.getMonth()===m && today.getDate()===d;
     const types   = dateMap[dateStr] || [];
-    const el = document.createElement('div');
-    el.className = 'cal-day' + (isToday ? ' today' : '') + (types.length ? ' has-plan' : '');
+    const el      = document.createElement('div');
+    el.className  = 'cal-day' +
+      (isToday      ? ' today'    : '') +
+      (types.length ? ' has-plan' : '');
     el.textContent = d;
-    /* Colour the dot by first type */
+    el.dataset.date = dateStr;
     if (types.length) {
       el.style.setProperty('--dot-color', TYPE_COLORS[types[0]] || 'var(--accent)');
     }
+    /* Click: select day — highlights items in list and scrolls to them */
+    el.addEventListener('click', () => selectCalDay(dateStr, el));
     grid.appendChild(el);
   }
   renderUploadList();
@@ -4569,44 +4679,166 @@ function updatePlanStats() {
   safeSet('planStatStreak',   streak);
 }
 
-function renderUploadList() {
-  const list = safeEl('uploadList');
+function renderUploadList(filterDate) {
+  var list = safeEl('uploadList');
   if (!list) return;
-  const items = loadPlan();
+  var allItems = loadPlan();
+  var today = new Date().toISOString().slice(0,10);
+
+  /* Filter by selected date if any */
+  var items = filterDate
+    ? allItems.filter(function(i){ return i.date === filterDate; })
+    : allItems;
+
+  list.innerHTML = '';
+
+  /* Day header when filtering by date */
+  if (filterDate) {
+    var d0 = new Date(filterDate + 'T12:00:00');
+    var lbl0 = d0.toLocaleDateString('en', { weekday:'long', month:'long', day:'numeric' });
+    var hdr = document.createElement('div');
+    hdr.className = 'cal-day-header';
+    var titleSpan = document.createElement('span');
+    titleSpan.className = 'cal-day-header-title';
+    titleSpan.textContent = lbl0;
+    var closeBtn0 = document.createElement('button');
+    closeBtn0.className = 'cal-day-header-close';
+    closeBtn0.textContent = '✕ Show all';
+    closeBtn0.addEventListener('click', clearCalSelection);
+    hdr.appendChild(titleSpan);
+    hdr.appendChild(closeBtn0);
+    list.appendChild(hdr);
+  }
+
+  /* Empty state */
   if (!items.length) {
-    list.innerHTML = `
-      <div class="plan-empty">
-        <div class="plan-empty-emoji">🗓️</div>
-        <div class="plan-empty-title">Nothing scheduled yet</div>
-        <div class="plan-empty-sub">Tap <strong>+ Schedule</strong> to add an upload, draft, or idea.<br>Stay consistent — even one upload a week compounds fast.</div>
-      </div>`;
+    var empty = document.createElement('div');
+    empty.className = 'plan-empty';
+    empty.style.cssText = 'padding:18px 14px;';
+    if (filterDate) {
+      var d1 = new Date(filterDate + 'T12:00:00');
+      var lbl1 = d1.toLocaleDateString('en', { weekday:'long', month:'long', day:'numeric' });
+      empty.innerHTML = '<div class="plan-empty-emoji" style="font-size:22px;">📭</div>' +
+        '<div class="plan-empty-title">Nothing on ' + lbl1 + '</div>';
+      var addBtn = document.createElement('button');
+      addBtn.className = 'btn-ghost accent';
+      addBtn.style.cssText = 'margin-top:8px;font-size:11px;';
+      addBtn.textContent = '+ Schedule something';
+      addBtn.addEventListener('click', function(){ prefillPlanDate(filterDate); });
+      empty.appendChild(addBtn);
+    } else {
+      empty.innerHTML = '<div class="plan-empty-emoji">🗓️</div>' +
+        '<div class="plan-empty-title">Nothing scheduled yet</div>' +
+        '<div class="plan-empty-sub">Tap <strong>+ Schedule</strong> to plan an upload, draft, or idea.</div>';
+    }
+    list.appendChild(empty);
     return;
   }
-  const today = new Date().toISOString().slice(0,10);
-  const typeIcons = { upload:'📤', draft:'✏️', idea:'💡', rest:'🌿' };
-  list.innerHTML = items.slice(0,12).map(item => {
-    const d       = new Date(item.date + 'T12:00:00');
-    const dayNum  = d.getDate();
-    const dayName = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
-    const isPast  = item.date < today;
-    const isToday = item.date === today;
-    const type    = item.type || 'upload';
-    const statusCls = isPast ? 'status-done' : isToday ? 'status-today' : 'status-soon';
-    const statusLbl = isPast ? 'Published' : isToday ? 'Today' : 'Upcoming';
-    return `
-      <div class="upload-item-inner">
-        <div class="upload-type-dot ${type}"></div>
-        <div class="upload-date-col-v2">
-          <div class="upload-day-num-v2">${dayNum}</div>
-          <div class="upload-day-name-v2">${dayName}</div>
-        </div>
-        <div class="upload-info-v2">
-          <div class="upload-title-v2">${typeIcons[type] || '📤'} ${item.title}<span class="upload-mood-tag ${type}">${type}</span></div>
-          <div class="upload-subtitle-v2">${item.time}${item.notes ? ' · ' + item.notes.slice(0,50) : ''}</div>
-        </div>
-        <span class="upload-status-badge ${statusCls}">${statusLbl}</span>
-      </div>`;
-  }).join('');
+
+  /* Split into upcoming/today + past when showing all */
+  var upcoming = [], past = [];
+  items.forEach(function(item) {
+    if (item.date < today) past.push(item);
+    else upcoming.push(item);
+  });
+
+  var typeIcons = { upload:'📤', draft:'✏️', idea:'💡', rest:'🌿' };
+
+  function makeRow(item) {
+    var d2       = new Date(item.date + 'T12:00:00');
+    var dayNum   = d2.getDate();
+    var dayName  = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d2.getDay()];
+    var isToday2 = item.date === today;
+    var isPast2  = item.date < today;
+    var type     = item.type || 'upload';
+    var statusCls = isPast2 ? 'status-done' : isToday2 ? 'status-today' : 'status-soon';
+    var statusLbl = isPast2 ? 'Done' : isToday2 ? 'Today' : 'Upcoming';
+
+    var row = document.createElement('div');
+    row.className = 'upload-item-inner';
+
+    /* Dot + date */
+    row.innerHTML =
+      '<div class="upload-type-dot ' + type + '"></div>' +
+      '<div class="upload-date-col-v2">' +
+        '<div class="upload-day-num-v2">' + dayNum + '</div>' +
+        '<div class="upload-day-name-v2">' + dayName + '</div>' +
+      '</div>' +
+      '<div class="upload-info-v2">' +
+        '<div class="upload-title-v2">' + (typeIcons[type]||'📤') + ' ' +
+          item.title.replace(/</g,'&lt;') +
+          '<span class="upload-mood-tag ' + type + '">' + type + '</span></div>' +
+        '<div class="upload-subtitle-v2">' + item.time +
+          (item.notes ? ' · ' + item.notes.slice(0,50).replace(/</g,'&lt;') : '') + '</div>' +
+      '</div>' +
+      '<span class="upload-status-badge ' + statusCls + '">' + statusLbl + '</span>';
+
+    /* Action buttons: edit + delete */
+    var actions = document.createElement('div');
+    actions.className = 'plan-item-actions';
+
+    var editBtn = document.createElement('button');
+    editBtn.className = 'plan-item-btn edit-btn';
+    editBtn.title = 'Edit';
+    editBtn.textContent = '✏';
+    editBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      openEditPlanItem(item.id);
+    });
+
+    var delBtn = document.createElement('button');
+    delBtn.className = 'plan-item-btn del-btn';
+    delBtn.title = 'Delete';
+    delBtn.textContent = '✕';
+    delBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      deletePlanItem(item.id);
+    });
+
+    actions.appendChild(editBtn);
+    actions.appendChild(delBtn);
+    row.appendChild(actions);
+    return row;
+  }
+
+  /* Render upcoming/today first */
+  if (upcoming.length) {
+    if (!filterDate && past.length) {
+      var upHdr = document.createElement('div');
+      upHdr.className = 'plan-section-label';
+      upHdr.textContent = 'Upcoming';
+      list.appendChild(upHdr);
+    }
+    upcoming.slice(0,8).forEach(function(item){ list.appendChild(makeRow(item)); });
+  }
+
+  /* Then past */
+  if (past.length) {
+    var pastHdr = document.createElement('div');
+    pastHdr.className = 'plan-section-label plan-section-past';
+    pastHdr.innerHTML = 'Past';
+    if (!filterDate) {
+      /* Collapsible past section */
+      var toggle = document.createElement('button');
+      toggle.className = 'plan-past-toggle';
+      toggle.textContent = 'Show ' + past.length;
+      var pastList = document.createElement('div');
+      pastList.className = 'plan-past-list';
+      pastList.style.display = 'none';
+      toggle.addEventListener('click', function() {
+        var open = pastList.style.display !== 'none';
+        pastList.style.display = open ? 'none' : 'block';
+        toggle.textContent = open ? 'Show ' + past.length : 'Hide';
+      });
+      past.slice(0,20).forEach(function(item){ pastList.appendChild(makeRow(item)); });
+      pastHdr.appendChild(toggle);
+      list.appendChild(pastHdr);
+      list.appendChild(pastList);
+    } else {
+      list.appendChild(pastHdr);
+      past.forEach(function(item){ list.appendChild(makeRow(item)); });
+    }
+  }
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -5199,6 +5431,80 @@ function tlSaveTransition() {
     btn.classList.add('saved');
     setTimeout(() => { btn.textContent = '✓ Save'; btn.classList.remove('saved'); }, 2000);
   }
+}
+
+function clearCalSelection() {
+  _selectedCalDate = null;
+  document.querySelectorAll('.cal-day.selected').forEach(d => d.classList.remove('selected'));
+  renderUploadList();
+}
+
+function prefillPlanDate(dateStr) {
+  /* Open the add form pre-filled with the selected date */
+  const form = safeEl('planAddForm');
+  if (!form) return;
+  form.classList.add('open');
+  const d = safeEl('planDate');
+  if (d) d.value = dateStr;
+  form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+/* ── Plan item actions ─────────────────────────── */
+function deletePlanItem(id) {
+  var items = loadPlan().filter(function(i){ return i.id !== id; });
+  savePlan(items);
+  buildCalendar();
+}
+
+function openEditPlanItem(id) {
+  var items = loadPlan();
+  var item  = items.find(function(i){ return i.id === id; });
+  if (!item) return;
+  /* Store editing id */
+  _editingPlanId = id;
+  /* Open add form and populate */
+  var form = safeEl('planAddForm');
+  if (form) form.classList.add('open');
+  var d = safeEl('planDate');    if (d) d.value = item.date;
+  var t = safeEl('planTime');    if (t) t.value = item.time || '18:00';
+  var ti = safeEl('planTitle'); if (ti) ti.value = item.title;
+  var n = safeEl('planNotes');   if (n) n.value  = item.notes || '';
+  /* Set type button */
+  var btn = document.querySelector('.plan-type-btn[data-type="' + (item.type||'upload') + '"]');
+  if (btn) setPlanType(item.type||'upload', btn);
+  /* Change Save button label */
+  var saveBtn = document.querySelector('#planAddForm .btn-primary');
+  if (saveBtn) { saveBtn.textContent = 'Update'; saveBtn.onclick = function(){ updatePlanItem(); }; }
+  /* Scroll to form */
+  if (form) form.scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+var _editingPlanId = null;
+
+function updatePlanItem() {
+  if (!_editingPlanId) { addPlanItem(); return; }
+  var date  = safeEl('planDate')?.value;
+  var time  = safeEl('planTime')?.value || '18:00';
+  var title = safeEl('planTitle')?.value?.trim();
+  var notes = safeEl('planNotes')?.value?.trim() || '';
+  var type  = safeEl('planItemType')?.value || 'upload';
+  if (!date || !title) { toast('Date and title required'); return; }
+  var items = loadPlan().map(function(i) {
+    return i.id === _editingPlanId
+      ? { id: i.id, date, time, title, notes, type }
+      : i;
+  });
+  items.sort(function(a,b){ return a.date.localeCompare(b.date); });
+  savePlan(items);
+  _editingPlanId = null;
+  togglePlanForm();
+  /* Reset Save button */
+  var saveBtn = document.querySelector('#planAddForm .btn-primary');
+  if (saveBtn) { saveBtn.textContent = 'Save'; saveBtn.onclick = function(){ addPlanItem(); }; }
+  safeEl('planTitle').value = '';
+  safeEl('planNotes').value = '';
+  buildCalendar();
+  toast('Updated ✓');
 }
 </script>
 </body>
