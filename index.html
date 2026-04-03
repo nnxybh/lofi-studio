@@ -4007,7 +4007,7 @@ function showDesktopDownloadLink(file){
   sub.textContent='Click the button below to save your WAV file';
   const btn=document.createElement('a');
   btn.href=url;
-  btn.download=blob.name||'lofi-mix.wav';
+  btn.download=file.name||'lofi-mix.wav';
   btn.type='audio/wav';
   btn.className='mobile-dl-btn automix-btn';
   btn.style.cssText='display:block;text-align:center;text-decoration:none;padding:14px;';
