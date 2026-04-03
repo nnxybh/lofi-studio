@@ -1975,7 +1975,7 @@ canvas { -webkit-transform: translateZ(0); transform: translateZ(0); }
         <label>Track order</label>
         <select id="mixSortMode" class="select-field full" onchange="applyMixSort(this.value)">
           <option value="">Keep current order</option>
-          <option value="bpm">Sort by tempo</option>
+          <option value="bpm" selected>Sort by tempo</option>
           <option value="energy">Sort by energy</option>
           <option value="harmonic">Sort by key</option>
           <option value="shuffle">Shuffle</option>
@@ -2957,6 +2957,12 @@ function handleFiles(files) {
       safeSet('playBtn', '▶');
     }
     renderTrackList();
+    /* Auto-apply tempo sort when new tracks are added */
+    if (APP.tracks.length >= 2) {
+      const sortSel = safeEl('mixSortMode');
+      const sortMode = sortSel ? sortSel.value : 'bpm';
+      if (sortMode) applyMixSort(sortMode);
+    }
     updateRuntimeDisplay();
     toast(added + ' track' + (added > 1 ? 's' : '') + ' loaded');
   }
@@ -3637,6 +3643,13 @@ async function autoMix() {
 /* ── WAV Export ────────────────────────────────────── */
 async function exportWAV() {
   if (!APP.tracks.length) { toast('No tracks to export'); return; }
+  /* Block export if any track has not loaded yet */
+  const stubTracks = APP.tracks.filter(t => t.isStub || t.duration === 0);
+  if (stubTracks.length > 0) {
+    const names = stubTracks.slice(0,3).map(t => t.name).join(', ') + (stubTracks.length > 3 ? '...' : '');
+    toast('Cannot export — ' + stubTracks.length + ' track' + (stubTracks.length > 1 ? 's have' : ' has') + ' not loaded: ' + names, 8000);
+    return;
+  }
   const btn = safeEl('exportBtn');
   if (btn) btn.disabled = true;
   const stages = ['es1','es2','es3','es4'].map(id => safeEl(id));
@@ -3655,36 +3668,12 @@ async function exportWAV() {
 
     setStage(0, 'done'); setStage(1, 'active'); setStat('Building mix timeline…');
 
-    /* Calculate total duration by simulating the exact same offset logic as the
-       render loop below — this guarantees total matches what will actually be rendered
-       with no silent tail added. */
+    /* Build render plan: list of {bufIdx, offset, sourceStart, playDur, gains[]} */
     let total = 0;
+    const plan = [];
     APP.tracks.forEach((t, i) => {
-      const dur        = Math.max(0, (t.duration||0) - (t.trimStart||0) - (t.trimEnd||0));
-      const cueIn      = clamp(typeof t.cueIn  === 'number' ? t.cueIn  : 0, 0, dur);
-      const cueOut     = clamp(typeof t.cueOut === 'number' ? t.cueOut
-        : Math.max(0, dur - (t.transitionOverlap || player.globalXfade)), 0, dur);
-      const playDur    = Math.max(0.1, dur - (i === 0 ? 0 : cueIn));
-      const localCueOut = i < APP.tracks.length - 1
-        ? Math.max(0, cueOut - (i === 0 ? 0 : cueIn))
-        : playDur;
-      /* Mirror the offset += line in the render loop exactly */
-      total += Math.max(0.1, i < APP.tracks.length - 1
-        ? Math.min(playDur, localCueOut)
-        : playDur);
-    });
-    total = Math.max(1, total);
-
-    const renderCtx = new OfflineAudioContext(2, Math.ceil(total * targetSR), targetSR);
-    let offset = 0;
-
-    buffers.forEach((buf, i) => {
+      const buf       = buffers[i];
       if (!buf) return;
-      const t         = APP.tracks[i];
-      const src       = renderCtx.createBufferSource();
-      src.buffer      = buf;
-      const gn        = renderCtx.createGain();
-      const tGain     = Math.pow(10, ((t.gain||0) + player.masterGainDb) / 20);
       const dur       = Math.max(0, buf.duration - (t.trimStart||0) - (t.trimEnd||0));
       const cueIn     = clamp(typeof t.cueIn  === 'number' ? t.cueIn  : 0, 0, dur);
       const cueOut    = clamp(typeof t.cueOut === 'number' ? t.cueOut
@@ -3692,36 +3681,135 @@ async function exportWAV() {
       const fadeInLen  = Math.max(0.1, t.fadeIn  || 2);
       const sourceStart = i === 0 ? (t.trimStart||0) : (t.trimStart||0) + cueIn;
       const playDur     = Math.max(0.1, dur - (i === 0 ? 0 : cueIn));
-      const localCueOut = i < APP.tracks.length-1 ? Math.max(0, cueOut-(i===0?0:cueIn)) : playDur;
-      gn.gain.setValueAtTime(i === 0 ? tGain : 0.0001, offset);
-      if (i > 0) gn.gain.linearRampToValueAtTime(tGain, offset + fadeInLen);
-      /* Final track: dramatic medium outro — 4s fade starting 4s before end */
-      const isLastTrack = (i === APP.tracks.length - 1);
-      const outroDur    = isLastTrack ? Math.min(4.0, playDur * 0.5) : 0;
-      const outroStart  = isLastTrack ? offset + Math.max(fadeInLen, playDur - outroDur) : 0;
-      const foStart = offset + Math.max(fadeInLen, Math.min(playDur, localCueOut));
-      if (isLastTrack) {
-        /* Hold at full volume until outro begins, then sweep to silence */
-        gn.gain.setValueAtTime(tGain, outroStart);
-        gn.gain.linearRampToValueAtTime(0.0001, offset + playDur);
-      } else {
-        gn.gain.setValueAtTime(tGain, foStart);
-        gn.gain.linearRampToValueAtTime(0.0001, offset + playDur);
-      }
-      src.connect(gn); gn.connect(renderCtx.destination);
-      src.start(offset, sourceStart, playDur);
-      offset += Math.max(0.1, i < APP.tracks.length-1 ? Math.min(playDur, localCueOut) : playDur);
+      const localCueOut = i < APP.tracks.length - 1
+        ? Math.max(0, cueOut - (i === 0 ? 0 : cueIn))
+        : playDur;
+      const tGain       = Math.pow(10, ((t.gain||0) + player.masterGainDb) / 20);
+      const isLast      = i === APP.tracks.length - 1;
+      const outroDur    = isLast ? Math.min(4.0, playDur * 0.5) : 0;
+      plan.push({ buf, t, i, offset: total, sourceStart, playDur, localCueOut,
+                  fadeInLen, tGain, isLast, outroDur });
+      total += Math.max(0.1, i < APP.tracks.length - 1
+        ? Math.min(playDur, localCueOut) : playDur);
     });
+    total = Math.max(1, total);
 
-    setStage(1, 'done'); setStage(2, 'active'); setStat('Rendering mix…');
-    const rendered = await renderCtx.startRendering();
+    setStage(1, 'done'); setStage(2, 'active');
+
+    /* Chunked rendering: max 20 minutes per OfflineAudioContext
+       to avoid "Array buffer allocation failed" on long mixes */
+    const CHUNK_SECS = 20 * 60;  /* 20 minutes per chunk */
+    const numChunks  = Math.ceil(total / CHUNK_SECS);
+    const bps        = bitDepth === 24 ? 3 : 2;
+    const totalSamp  = Math.ceil(total * targetSR);
+    const pcmBytes   = new Uint8Array(totalSamp * 2 * bps);  /* stereo */
+    let   writeCursor = 0;
+
+    for (let chunk = 0; chunk < numChunks; chunk++) {
+      const chunkStart = chunk * CHUNK_SECS;
+      const chunkEnd   = Math.min(chunkStart + CHUNK_SECS, total);
+      const chunkLen   = chunkEnd - chunkStart;
+      setStat('Rendering chunk ' + (chunk + 1) + ' of ' + numChunks + '…');
+
+      const ctx = new OfflineAudioContext(2, Math.ceil(chunkLen * targetSR), targetSR);
+
+      plan.forEach(p => {
+        /* Does this track overlap this chunk at all? */
+        const trackEnd = p.offset + p.playDur;
+        if (trackEnd <= chunkStart || p.offset >= chunkEnd) return;
+
+        const src = ctx.createBufferSource();
+        src.buffer = p.buf;
+        const gn   = ctx.createGain();
+
+        /* Time within this chunk */
+        const localOffset = Math.max(0, p.offset - chunkStart);
+        /* Where in the source to start reading (accounting for trim and cue) */
+        const srcSeek = p.sourceStart + Math.max(0, chunkStart - p.offset);
+
+        /* Gain automation — translate absolute times to chunk-relative */
+        const abs2rel = t => Math.max(0, t - chunkStart);
+        const fadeEnd  = p.offset + p.fadeInLen;
+        const foStart  = p.offset + Math.max(p.fadeInLen, Math.min(p.playDur, p.localCueOut));
+        const trackFadeOutEnd = p.offset + p.playDur;
+
+        gn.gain.setValueAtTime(0.0001, 0);
+        if (p.i === 0 || p.offset >= chunkStart) {
+          /* fade in */
+          gn.gain.setValueAtTime(p.i === 0 ? p.tGain : 0.0001, abs2rel(p.offset));
+          if (p.i > 0) gn.gain.linearRampToValueAtTime(p.tGain, abs2rel(fadeEnd));
+        } else {
+          gn.gain.setValueAtTime(p.tGain, 0);
+        }
+        if (p.isLast) {
+          const outroStart = p.offset + Math.max(p.fadeInLen, p.playDur - p.outroDur);
+          if (outroStart < chunkEnd) {
+            gn.gain.setValueAtTime(p.tGain, abs2rel(Math.max(p.offset, outroStart)));
+            gn.gain.linearRampToValueAtTime(0.0001, abs2rel(trackFadeOutEnd));
+          }
+        } else {
+          if (foStart < chunkEnd) {
+            gn.gain.setValueAtTime(p.tGain, abs2rel(Math.max(p.offset, foStart)));
+            gn.gain.linearRampToValueAtTime(0.0001, abs2rel(trackFadeOutEnd));
+          }
+        }
+
+        src.connect(gn); gn.connect(ctx.destination);
+        src.start(localOffset, srcSeek,
+          Math.min(p.playDur, chunkEnd - Math.max(chunkStart, p.offset)));
+      });
+
+      const rendered = await ctx.startRendering();
+
+      /* Write PCM samples into the pre-allocated buffer */
+      const ch0 = rendered.getChannelData(0);
+      const ch1 = rendered.getChannelData(1);
+      for (let i = 0; i < rendered.length; i++) {
+        const s0 = Math.max(-1, Math.min(1, ch0[i]));
+        const s1 = Math.max(-1, Math.min(1, ch1[i]));
+        if (bitDepth === 24) {
+          const v0 = Math.round(s0 < 0 ? s0*0x800000 : s0*0x7FFFFF);
+          const v1 = Math.round(s1 < 0 ? s1*0x800000 : s1*0x7FFFFF);
+          pcmBytes[writeCursor++] = v0 & 0xFF;
+          pcmBytes[writeCursor++] = (v0>>8) & 0xFF;
+          pcmBytes[writeCursor++] = (v0>>16) & 0xFF;
+          pcmBytes[writeCursor++] = v1 & 0xFF;
+          pcmBytes[writeCursor++] = (v1>>8) & 0xFF;
+          pcmBytes[writeCursor++] = (v1>>16) & 0xFF;
+        } else {
+          const i0 = Math.round(s0 < 0 ? s0*0x8000 : s0*0x7FFF);
+          const i1 = Math.round(s1 < 0 ? s1*0x8000 : s1*0x7FFF);
+          pcmBytes[writeCursor++] = i0 & 0xFF;
+          pcmBytes[writeCursor++] = (i0>>8) & 0xFF;
+          pcmBytes[writeCursor++] = i1 & 0xFF;
+          pcmBytes[writeCursor++] = (i1>>8) & 0xFF;
+        }
+      }
+    }
 
     setStage(2, 'done'); setStage(3, 'active'); setStat('Encoding WAV…');
-    const wavBlob = encodeWAV(rendered, bitDepth);
+
+    /* Build WAV header around the collected PCM data */
+    const dataLen   = writeCursor;
+    const wavHeader = new ArrayBuffer(44);
+    const view      = new DataView(wavHeader);
+    const str = (off, s) => { for (let i=0;i<s.length;i++) view.setUint8(off+i, s.charCodeAt(i)); };
+    str(0,'RIFF'); view.setUint32(4, 36 + dataLen, true);
+    str(8,'WAVE'); str(12,'fmt ');
+    view.setUint32(16, 16, true);
+    view.setUint16(20, 1, true);   /* PCM */
+    view.setUint16(22, 2, true);   /* stereo */
+    view.setUint32(24, targetSR, true);
+    view.setUint32(28, targetSR * 2 * bps, true);
+    view.setUint16(32, 2 * bps, true);
+    view.setUint16(34, bitDepth, true);
+    str(36,'data'); view.setUint32(40, dataLen, true);
+
+    const wavBlob = new Blob([wavHeader, pcmBytes.slice(0, dataLen)], { type:'audio/wav' });
+
     const isMobile = /iP(hone|ad|od)|Android|Mobile/i.test(navigator.userAgent) ||
                      ('ontouchend' in document);
     if (!isMobile) {
-      /* Desktop: blob URL + anchor click — works fine */
       const url = URL.createObjectURL(wavBlob);
       const a = document.createElement('a');
       a.href = url; a.download = 'lofi-mix.wav';
@@ -3729,14 +3817,10 @@ async function exportWAV() {
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
       setTimeout(() => URL.revokeObjectURL(url), 8000);
     } else {
-      /* Mobile: iOS Safari cannot open blob: URLs at all.
-         Convert to a base64 data URI — works on every mobile browser.
-         The FileReader runs async but the user hasn't tapped yet,
-         so there is no gesture-expiry problem. */
       setStat('Preparing download…');
       const reader = new FileReader();
       reader.onload = function() {
-        const dataUri = reader.result; /* data:audio/wav;base64,... */
+        const dataUri = reader.result;
         showMobileDownloadLink(dataUri, wavBlob, bitDepth);
       };
       reader.readAsDataURL(wavBlob);
@@ -3746,6 +3830,7 @@ async function exportWAV() {
   } catch (err) {
     setStat('Export failed: ' + err.message);
     toast('Export failed: ' + err.message);
+    console.error('Export error:', err);
   } finally {
     if (btn) btn.disabled = false;
   }
@@ -5400,9 +5485,9 @@ document.addEventListener('DOMContentLoaded', init);
 function applyMixSort(mode) {
   if (!mode || APP.tracks.length < 2) return;
   autoArrange(mode);
-  /* Reset the dropdown after applying */
+  /* Keep bpm selected in dropdown after applying */
   const sel = safeEl('mixSortMode');
-  if (sel) setTimeout(() => sel.value = '', 800);
+  if (sel && !sel.value) sel.value = 'bpm';
 }
 
 function toggleAdvanced() {
