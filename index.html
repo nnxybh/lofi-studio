@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Lofi Studio v15</title>
+<title>Lofi Studio</title>
 <style>
 /* ═══════════════════════════════════════════════════════
-   LOFI STUDIO v15  ·  Clean consolidated build
+   LOFI STUDIO Lofi Studio · Clean consolidated build
    CSS sections:
    1.  Tokens
    2.  Reset & base
@@ -289,6 +289,23 @@ input[type="range"]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;b
 .track-name{font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .track-meta{font-size:10px;color:var(--text3);margin-top:1px;display:flex;gap:8px;flex-wrap:wrap}
 .track-badge{font-size:9px;border:1px solid rgba(255,255,255,0.08);border-radius:3px;padding:1px 5px;color:var(--text3);font-variant-numeric:tabular-nums}
+
+/* ── Track status warnings ─────────────────────────────────────────── */
+.track-status-warn {
+  font-size: 11px;
+  color: #ff6b6b;
+  margin-top: 2px;
+  line-height: 1.3;
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+}
+.track-status-info {
+  font-size: 11px;
+  color: #888;
+  margin-top: 2px;
+}
+
 .track-badge.ok{border-color:rgba(76,175,125,0.4);color:var(--green)}
 .track-badge.warn{border-color:rgba(212,145,74,0.4);color:var(--amber)}
 .track-badge.bad{border-color:rgba(196,90,90,0.4);color:var(--red)}
@@ -1710,7 +1727,7 @@ canvas { -webkit-transform: translateZ(0); transform: translateZ(0); }
     </div>
   </div>
   <div class="tb-center">NANA</div>
-  <div class="tb-badge">v15</div>
+  <div class="tb-badge" id="appVersionBadge">v15</div>
 </header>
 
 <!-- ══ PAGES ═══════════════════════════════════════════ -->
@@ -1975,7 +1992,7 @@ canvas { -webkit-transform: translateZ(0); transform: translateZ(0); }
         <label>Track order</label>
         <select id="mixSortMode" class="select-field full" onchange="applyMixSort(this.value)">
           <option value="">Keep current order</option>
-          <option value="bpm">Sort by tempo</option>
+          <option value="bpm" selected>Sort by tempo</option>
           <option value="energy">Sort by energy</option>
           <option value="harmonic">Sort by key</option>
           <option value="shuffle">Shuffle</option>
@@ -2378,6 +2395,33 @@ canvas { -webkit-transform: translateZ(0); transform: translateZ(0); }
 <div id="toast"></div>
 
 <script>
+/* ── Dynamic version tracking ─────────────────────────────────────────
+   Each new app load increments the version counter stored in localStorage.
+   The badge shows the current version (e.g. v16, v17 …).
+   Version is stored globally so other parts of the app can read it.   */
+const _VER_KEY = 'lofiStudio_appVersion';
+(function initVersion() {
+  let ver = parseInt(localStorage.getItem(_VER_KEY) || '15', 10);
+  /* Only increment when the page is loading fresh (not a hot reload) */
+  if (!window._lofiVersionInit) {
+    window._lofiVersionInit = true;
+    /* Don't auto-increment — just read. User can bump via new export cycle. */
+  }
+  window.APP_VERSION = ver;
+  const badge = document.getElementById('appVersionBadge');
+  if (badge) badge.textContent = 'v' + ver;
+})();
+
+/* ── Bump version: called once per export success ────────────────────── */
+function bumpAppVersion() {
+  const next = (parseInt(localStorage.getItem(_VER_KEY) || '15', 10)) + 1;
+  localStorage.setItem(_VER_KEY, String(next));
+  window.APP_VERSION = next;
+  const badge = document.getElementById('appVersionBadge');
+  if (badge) badge.textContent = 'v' + next;
+}
+
+
 /* ── Canvas roundRect polyfill for Safari < 15.4 ──── */
 if (!CanvasRenderingContext2D.prototype.roundRect) {
   CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
@@ -2446,9 +2490,9 @@ const PAGE_SUBS = {
 };
 
 const STORAGE_KEYS = {
-  transitions: 'lofiStudio_v15_transitions',
-  plan:        'lofiStudio_v15_plan',
-  checklist:   'lofiStudio_v15_checklist',
+  transitions: 'lofiStudio_transitions',
+  plan:        'lofiStudio_plan',
+  checklist:   'lofiStudio_checklist',
 };
 
 /* ── Utility helpers ───────────────────────────────── */
@@ -2915,8 +2959,15 @@ function handleFiles(files) {
     if (existing.has(name)) return;
 
     const url = URL.createObjectURL(file);
+
+    /* iCloud stub detection: file exists in Finder but data is not local yet */
+    const isStub = file.size === 0;
+
     const t = {
       name, url, file,
+      status: isStub ? 'unavailable' : 'loading',
+      statusMsg: isStub ? 'Not downloaded from iCloud yet — open iCloud Drive and download this file first' : null,
+      isStub,
       duration: 0,
       estBpm:    inferBpm(file.name),
       estKey:    inferKey(file.name),
@@ -2932,13 +2983,33 @@ function handleFiles(files) {
       introSoftness: Math.random(), outroCleanliness: Math.random(),
     };
 
+    if (isStub) {
+      /* Don't attempt to load stub — mark immediately */
+      APP.tracks.push(t);
+      added++;
+      existing.add(name);
+      return;
+    }
+
     /* Load duration asynchronously */
     const tmp = new Audio(url);
     tmp.addEventListener('loadedmetadata', () => {
       t.duration = tmp.duration;
+      if (t.duration > 0) {
+        t.status = 'ready';
+        t.statusMsg = null;
+      } else {
+        t.status = 'unavailable';
+        t.statusMsg = 'File loaded but reported zero duration — may be corrupted or still downloading';
+      }
       renderTrackList();
       updateRuntimeDisplay();
       updateQCEstimates();
+    });
+    tmp.addEventListener('error', () => {
+      t.status = 'decode_failed';
+      t.statusMsg = 'Could not read this audio file — it may be corrupted or unsupported';
+      renderTrackList();
     });
     tmp.load();
 
@@ -2951,14 +3022,26 @@ function handleFiles(files) {
     showMixCards();
     if (player.currentIdx < 0) {
       loadTrack(0);
-      /* Explicitly prevent autoplay — user must press play themselves */
       audio.pause();
       player.isPlaying = false;
       safeSet('playBtn', '▶');
     }
     renderTrackList();
+    /* Auto-apply tempo sort when new tracks are added */
+    if (APP.tracks.length >= 2) {
+      const sortSel = safeEl('mixSortMode');
+      const sortMode = sortSel ? sortSel.value : 'bpm';
+      if (sortMode) applyMixSort(sortMode);
+    }
     updateRuntimeDisplay();
-    toast(added + ' track' + (added > 1 ? 's' : '') + ' loaded');
+
+    /* Show stub warning if any files are iCloud placeholders */
+    const stubs = APP.tracks.filter(t => t.isStub || t.status === 'unavailable').length;
+    if (stubs > 0) {
+      toast(stubs + ' track' + (stubs > 1 ? 's are' : ' is') + ' not downloaded from iCloud — download them first', 6000);
+    } else {
+      toast(added + ' track' + (added > 1 ? 's' : '') + ' loaded');
+    }
   }
 }
 
@@ -3101,6 +3184,9 @@ function renderTrackList() {
       <div class="track-icon">${active ? '▶' : '♪'}</div>
       <div class="track-info" onclick="loadTrack(${i})">
         <div class="track-name">${t.name}</div>
+        ${(t.status === 'unavailable' || t.isStub) ? `<div class="track-status-warn">⚠ Not downloaded from iCloud — open iCloud Drive and download this file, then re-add it</div>` : ''}
+        ${t.status === 'decode_failed' ? `<div class="track-status-warn">⚠ Could not read this file — it may be corrupted</div>` : ''}
+        ${t.status === 'loading' && t.duration === 0 ? `<div class="track-status-info">↻ Loading…</div>` : ''}
         <div class="track-meta">
           <span>${fmt(t.duration)}</span>
           ${t.estBpm ? `<span>~${t.estBpm} bpm</span>` : ''}
@@ -3637,116 +3723,240 @@ async function autoMix() {
 /* ── WAV Export ────────────────────────────────────── */
 async function exportWAV() {
   if (!APP.tracks.length) { toast('No tracks to export'); return; }
+
+  /* Block if any track is a stub, unavailable, or failed to decode */
+  const badTracks = APP.tracks.filter(t =>
+    t.isStub || t.status === 'unavailable' || t.status === 'decode_failed' || t.duration === 0
+  );
+  if (badTracks.length > 0) {
+    const names = badTracks.slice(0, 3).map(t => t.name).join(', ') + (badTracks.length > 3 ? '…' : '');
+    toast('Cannot export — ' + badTracks.length + ' track' + (badTracks.length > 1 ? 's are' : ' is') +
+          ' not ready: ' + names, 8000);
+    safeSet('exportStat', 'Export blocked — fix unavailable tracks first');
+    return;
+  }
+
   const btn = safeEl('exportBtn');
   if (btn) btn.disabled = true;
   const stages = ['es1','es2','es3','es4'].map(id => safeEl(id));
   const setStage = (n, st) => { if (stages[n]) stages[n].className = 'export-stage ' + st; };
   const setStat  = s => safeSet('exportStat', s);
 
+  /* Single shared AudioContext for all decoding — avoids leaking one per track */
+  let decodeCtx = null;
+
   try {
     setStage(0, 'active'); setStat('Decoding audio…');
-    const targetSR = parseInt(safeEl('exportSampleRate')?.value || '44100', 10);
-    const bitDepth  = parseInt(safeEl('exportBitDepth')?.value   || '16', 10);
-    const buffers = await Promise.all(APP.tracks.map(async t => {
-      const res = await fetch(t.url);
-      const arr = await res.arrayBuffer();
-      return new AudioContext().decodeAudioData(arr).catch(() => null);
-    }));
+    const targetSR = parseInt(safeEl('exportSampleRate')?.value || '48000', 10);
+    const bitDepth  = parseInt(safeEl('exportBitDepth')?.value   || '24', 10);
+    const bps = bitDepth === 24 ? 3 : 2;
+
+    /* Shared decode context — lower overhead than one per file */
+    decodeCtx = new AudioContext({ sampleRate: targetSR });
+
+    const buffers = [];
+    for (let i = 0; i < APP.tracks.length; i++) {
+      const t = APP.tracks[i];
+      setStat('Decoding ' + (i + 1) + ' / ' + APP.tracks.length + ' — ' + t.name + '…');
+      try {
+        const res = await fetch(t.url);
+        if (!res.ok) throw new Error('Fetch failed (HTTP ' + res.status + ')');
+        const arr = await res.arrayBuffer();
+        if (arr.byteLength === 0) throw new Error('File is empty or not downloaded from iCloud');
+        const decoded = await decodeCtx.decodeAudioData(arr);
+        buffers.push(decoded);
+      } catch (decErr) {
+        /* Mark the track and abort export with a clear message */
+        t.status = 'decode_failed';
+        t.statusMsg = decErr.message;
+        renderTrackList();
+        throw new Error('Could not decode "' + t.name + '": ' + decErr.message +
+                        '\nRemove or replace this track and try again.');
+      }
+    }
 
     setStage(0, 'done'); setStage(1, 'active'); setStat('Building mix timeline…');
 
-    /* Calculate total duration by simulating the exact same offset logic as the
-       render loop below — this guarantees total matches what will actually be rendered
-       with no silent tail added. */
+    /* Build render plan mirroring the live playback offset logic exactly */
     let total = 0;
+    const plan = [];
     APP.tracks.forEach((t, i) => {
-      const dur        = Math.max(0, (t.duration||0) - (t.trimStart||0) - (t.trimEnd||0));
-      const cueIn      = clamp(typeof t.cueIn  === 'number' ? t.cueIn  : 0, 0, dur);
-      const cueOut     = clamp(typeof t.cueOut === 'number' ? t.cueOut
+      const buf      = buffers[i];
+      const dur      = Math.max(0, buf.duration - (t.trimStart||0) - (t.trimEnd||0));
+      const cueIn    = clamp(typeof t.cueIn  === 'number' ? t.cueIn  : 0, 0, dur);
+      const cueOut   = clamp(typeof t.cueOut === 'number' ? t.cueOut
         : Math.max(0, dur - (t.transitionOverlap || player.globalXfade)), 0, dur);
-      const playDur    = Math.max(0.1, dur - (i === 0 ? 0 : cueIn));
+      const fadeInLen   = Math.max(0.1, t.fadeIn || 2);
+      const srcStart    = i === 0 ? (t.trimStart||0) : (t.trimStart||0) + cueIn;
+      const playDur     = Math.max(0.1, dur - (i === 0 ? 0 : cueIn));
       const localCueOut = i < APP.tracks.length - 1
-        ? Math.max(0, cueOut - (i === 0 ? 0 : cueIn))
-        : playDur;
-      /* Mirror the offset += line in the render loop exactly */
+        ? Math.max(0, cueOut - (i === 0 ? 0 : cueIn)) : playDur;
+      const tGain       = Math.pow(10, ((t.gain||0) + player.masterGainDb) / 20);
+      const isLast      = i === APP.tracks.length - 1;
+      const outroDur    = isLast ? Math.min(4.0, playDur * 0.5) : 0;
+      plan.push({ buf, t, i, offset: total, srcStart, playDur,
+                  localCueOut, fadeInLen, tGain, isLast, outroDur });
       total += Math.max(0.1, i < APP.tracks.length - 1
-        ? Math.min(playDur, localCueOut)
-        : playDur);
+        ? Math.min(playDur, localCueOut) : playDur);
     });
     total = Math.max(1, total);
 
-    const renderCtx = new OfflineAudioContext(2, Math.ceil(total * targetSR), targetSR);
-    let offset = 0;
+    /* Close the decode context now — no longer needed */
+    decodeCtx.close().catch(() => {});
+    decodeCtx = null;
 
-    buffers.forEach((buf, i) => {
-      if (!buf) return;
-      const t         = APP.tracks[i];
-      const src       = renderCtx.createBufferSource();
-      src.buffer      = buf;
-      const gn        = renderCtx.createGain();
-      const tGain     = Math.pow(10, ((t.gain||0) + player.masterGainDb) / 20);
-      const dur       = Math.max(0, buf.duration - (t.trimStart||0) - (t.trimEnd||0));
-      const cueIn     = clamp(typeof t.cueIn  === 'number' ? t.cueIn  : 0, 0, dur);
-      const cueOut    = clamp(typeof t.cueOut === 'number' ? t.cueOut
-        : Math.max(0, dur - (t.transitionOverlap || player.globalXfade)), 0, dur);
-      const fadeInLen  = Math.max(0.1, t.fadeIn  || 2);
-      const sourceStart = i === 0 ? (t.trimStart||0) : (t.trimStart||0) + cueIn;
-      const playDur     = Math.max(0.1, dur - (i === 0 ? 0 : cueIn));
-      const localCueOut = i < APP.tracks.length-1 ? Math.max(0, cueOut-(i===0?0:cueIn)) : playDur;
-      gn.gain.setValueAtTime(i === 0 ? tGain : 0.0001, offset);
-      if (i > 0) gn.gain.linearRampToValueAtTime(tGain, offset + fadeInLen);
-      /* Final track: dramatic medium outro — 4s fade starting 4s before end */
-      const isLastTrack = (i === APP.tracks.length - 1);
-      const outroDur    = isLastTrack ? Math.min(4.0, playDur * 0.5) : 0;
-      const outroStart  = isLastTrack ? offset + Math.max(fadeInLen, playDur - outroDur) : 0;
-      const foStart = offset + Math.max(fadeInLen, Math.min(playDur, localCueOut));
-      if (isLastTrack) {
-        /* Hold at full volume until outro begins, then sweep to silence */
-        gn.gain.setValueAtTime(tGain, outroStart);
-        gn.gain.linearRampToValueAtTime(0.0001, offset + playDur);
-      } else {
-        gn.gain.setValueAtTime(tGain, foStart);
-        gn.gain.linearRampToValueAtTime(0.0001, offset + playDur);
+    setStage(1, 'done'); setStage(2, 'active');
+
+    /* ── Chunked rendering ────────────────────────────────────────────
+       Render in 15-minute chunks to avoid "Array buffer allocation failed"
+       on long mixes. Each chunk produces a small Uint8Array of PCM bytes
+       which is pushed to a list and only concatenated at the very end.
+       This avoids pre-allocating one giant buffer for the full mix.     */
+    const CHUNK_SECS=8*60;
+    const numChunks  = Math.ceil(total / CHUNK_SECS);
+    const pcmChunks  = [];   /* list of Uint8Array — concatenated at end */
+
+    for (let chunk = 0; chunk < numChunks; chunk++) {
+      const chStart = chunk * CHUNK_SECS;
+      const chEnd   = Math.min(chStart + CHUNK_SECS, total);
+      const chLen   = chEnd - chStart;
+      setStat('Rendering ' + (chunk + 1) + ' of ' + numChunks + '…');
+
+      const rCtx = new OfflineAudioContext(2, Math.ceil(chLen * targetSR), targetSR);
+
+      plan.forEach(p => {
+        const trackEnd = p.offset + p.playDur;
+        if (trackEnd <= chStart || p.offset >= chEnd) return;
+
+        const src = rCtx.createBufferSource();
+        src.buffer = p.buf;
+        const gn   = rCtx.createGain();
+
+        const abs2rel = t => Math.max(0, t - chStart);
+        const fadeEnd  = p.offset + p.fadeInLen;
+        const foStart  = p.offset + Math.max(p.fadeInLen, Math.min(p.playDur, p.localCueOut));
+        const fadeOutEnd = p.offset + p.playDur;
+
+        gn.gain.setValueAtTime(0.0001, 0);
+        if (p.i === 0 || p.offset >= chStart) {
+          gn.gain.setValueAtTime(p.i === 0 ? p.tGain : 0.0001, abs2rel(p.offset));
+          if (p.i > 0) gn.gain.linearRampToValueAtTime(p.tGain, abs2rel(fadeEnd));
+        } else {
+          gn.gain.setValueAtTime(p.tGain, 0);
+        }
+        if (p.isLast) {
+          const outroStart = p.offset + Math.max(p.fadeInLen, p.playDur - p.outroDur);
+          if (outroStart < chEnd) {
+            gn.gain.setValueAtTime(p.tGain, abs2rel(Math.max(p.offset, outroStart)));
+            gn.gain.linearRampToValueAtTime(0.0001, abs2rel(fadeOutEnd));
+          }
+        } else {
+          if (foStart < chEnd) {
+            gn.gain.setValueAtTime(p.tGain, abs2rel(Math.max(p.offset, foStart)));
+            gn.gain.linearRampToValueAtTime(0.0001, abs2rel(fadeOutEnd));
+          }
+        }
+
+        src.connect(gn); gn.connect(rCtx.destination);
+        src.start(abs2rel(Math.max(p.offset, chStart)),
+          p.srcStart + Math.max(0, chStart - p.offset),
+          Math.min(p.playDur, chEnd - Math.max(chStart, p.offset)));
+      });
+
+      const rendered = await rCtx.startRendering();
+
+      /* Encode this chunk's samples to PCM bytes immediately and release the buffer */
+      const ch0 = rendered.getChannelData(0);
+      const ch1 = rendered.getChannelData(1);
+      const nSamp = rendered.length;
+      const chunkBytes = new Uint8Array(nSamp * 2 * bps);
+      let off = 0;
+      for (let s = 0; s < nSamp; s++) {
+        const s0 = Math.max(-1, Math.min(1, ch0[s]));
+        const s1 = Math.max(-1, Math.min(1, ch1[s]));
+        if (bitDepth === 24) {
+          const v0 = Math.round(s0 < 0 ? s0*0x800000 : s0*0x7FFFFF);
+          const v1 = Math.round(s1 < 0 ? s1*0x800000 : s1*0x7FFFFF);
+          chunkBytes[off++]=v0&0xFF; chunkBytes[off++]=(v0>>8)&0xFF; chunkBytes[off++]=(v0>>16)&0xFF;
+          chunkBytes[off++]=v1&0xFF; chunkBytes[off++]=(v1>>8)&0xFF; chunkBytes[off++]=(v1>>16)&0xFF;
+        } else {
+          const i0 = Math.round(s0 < 0 ? s0*0x8000 : s0*0x7FFF);
+          const i1 = Math.round(s1 < 0 ? s1*0x8000 : s1*0x7FFF);
+          chunkBytes[off++]=i0&0xFF; chunkBytes[off++]=(i0>>8)&0xFF;
+          chunkBytes[off++]=i1&0xFF; chunkBytes[off++]=(i1>>8)&0xFF;
+        }
       }
-      src.connect(gn); gn.connect(renderCtx.destination);
-      src.start(offset, sourceStart, playDur);
-      offset += Math.max(0.1, i < APP.tracks.length-1 ? Math.min(playDur, localCueOut) : playDur);
-    });
-
-    setStage(1, 'done'); setStage(2, 'active'); setStat('Rendering mix…');
-    const rendered = await renderCtx.startRendering();
+      pcmChunks.push(chunkBytes);
+      /* rendered buffer goes out of scope here — GC can free it */
+    }
 
     setStage(2, 'done'); setStage(3, 'active'); setStat('Encoding WAV…');
-    const wavBlob = encodeWAV(rendered, bitDepth);
-    const isMobile = /iP(hone|ad|od)|Android|Mobile/i.test(navigator.userAgent) ||
-                     ('ontouchend' in document);
-    if (!isMobile) {
-      /* Desktop: blob URL + anchor click — works fine */
-      const url = URL.createObjectURL(wavBlob);
-      const a = document.createElement('a');
-      a.href = url; a.download = 'lofi-mix.wav';
-      a.style.display = 'none';
-      document.body.appendChild(a); a.click(); document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(url), 8000);
-    } else {
-      /* Mobile: iOS Safari cannot open blob: URLs at all.
-         Convert to a base64 data URI — works on every mobile browser.
-         The FileReader runs async but the user hasn't tapped yet,
-         so there is no gesture-expiry problem. */
-      setStat('Preparing download…');
-      const reader = new FileReader();
-      reader.onload = function() {
-        const dataUri = reader.result; /* data:audio/wav;base64,... */
-        showMobileDownloadLink(dataUri, wavBlob, bitDepth);
-      };
-      reader.readAsDataURL(wavBlob);
+
+    const totalPCM=pcmChunks.reduce((acc,c)=>acc+c.byteLength,0);
+    if(totalPCM<=44) throw new Error('Rendered output was too small — export aborted');
+
+    const pcmAll=new Uint8Array(totalPCM);
+    let cursor=0;
+    for(const chunk of pcmChunks){
+      pcmAll.set(chunk,cursor);
+      cursor+=chunk.byteLength;
     }
-    setStage(3, 'done'); setStat('Mix exported ✓');
-    toast('WAV exported!');
+
+    const wavHdr=new ArrayBuffer(44);
+    const view=new DataView(wavHdr);
+    const wStr=(o,s)=>{for(let i=0;i<s.length;i++) view.setUint8(o+i,s.charCodeAt(i));};
+    wStr(0,'RIFF');
+    view.setUint32(4,36+totalPCM,true);
+    wStr(8,'WAVE');
+    wStr(12,'fmt ');
+    view.setUint32(16,16,true);
+    view.setUint16(20,1,true);
+    view.setUint16(22,2,true);
+    view.setUint32(24,targetSR,true);
+    view.setUint32(28,targetSR*2*bps,true);
+    view.setUint16(32,2*bps,true);
+    view.setUint16(34,bitDepth,true);
+    wStr(36,'data');
+    view.setUint32(40,totalPCM,true);
+
+    const wavFile=new File([wavHdr,pcmAll],'lofi-mix.wav',{type:'audio/wav'});
+    const isSafari=/^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    const isMobile=/iP(hone|ad|od)|Android|Mobile/i.test(navigator.userAgent)||('ontouchend' in document);
+
+    if(isSafari){
+      setStat('Export ready — use the save button below');
+      showDesktopDownloadLink(wavFile);
+    }else if(!isMobile){
+      const url=URL.createObjectURL(wavFile);
+      const a=document.createElement('a');
+      a.href=url;
+      a.download=wavFile.name;
+      a.type='audio/wav';
+      a.style.display='none';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(()=>{
+        try{document.body.removeChild(a)}catch{}
+        URL.revokeObjectURL(url);
+      },1500);
+    }else{
+      setStat('Preparing download…');
+      const reader=new FileReader();
+      reader.onload=function(){showMobileDownloadLink(reader.result,wavFile,bitDepth)};
+      reader.readAsDataURL(wavFile);
+    }
+
+    setStage(3,'done');
+    toast('Mix exported!');
+    bumpAppVersion()
+
   } catch (err) {
     setStat('Export failed: ' + err.message);
-    toast('Export failed: ' + err.message);
+    toast('Export failed — ' + err.message, 6000);
+    console.error('Export error:', err);
+    stages.forEach(s => { if (s && s.className.includes('active')) s.className = 'export-stage'; });
   } finally {
+    if (decodeCtx) { decodeCtx.close().catch(() => {}); decodeCtx = null; }
     if (btn) btn.disabled = false;
   }
 }
@@ -3755,6 +3965,45 @@ async function exportWAV() {
 /* ── Mobile export helper ──────────────────────────────────
    Called after async render — user gesture is gone by now,
    so we show a visible link the user taps directly.        */
+function showDesktopDownloadLink(file){
+  const old=document.getElementById('mobileExportLink');
+  if(old) old.remove();
+  const wrap=document.createElement('div');
+  wrap.id='mobileExportLink';
+  const backdrop=document.createElement('div');
+  backdrop.className='mobile-dl-backdrop';
+  backdrop.addEventListener('click',dismissMobileDownload);
+  const sheet=document.createElement('div');
+  sheet.className='mobile-dl-sheet';
+  const title=document.createElement('div');
+  title.className='mobile-dl-title';
+  title.textContent='Export ready';
+  const sub=document.createElement('div');
+  sub.className='mobile-dl-sub';
+  sub.textContent='Safari needs a manual save link for larger WAV files';
+  const url=URL.createObjectURL(file);
+  const btn=document.createElement('a');
+  btn.href=url;
+  btn.download=file.name;
+  btn.className='mobile-dl-btn';
+  btn.textContent='⬇ Save WAV File';
+  btn.addEventListener('click',function(){setTimeout(()=>{URL.revokeObjectURL(url);dismissMobileDownload();},3000)});
+  const hint=document.createElement('div');
+  hint.className='mobile-dl-hint';
+  hint.innerHTML='If Safari still adds <strong>.download</strong>, use <strong>Right click → Download Linked File As…</strong> and save it as <strong>lofi-mix.wav</strong>.';
+  const close=document.createElement('button');
+  close.className='mobile-dl-close';
+  close.textContent='✕ Close';
+  close.addEventListener('click',function(){URL.revokeObjectURL(url);dismissMobileDownload();});
+  sheet.appendChild(title);
+  sheet.appendChild(sub);
+  sheet.appendChild(btn);
+  sheet.appendChild(hint);
+  sheet.appendChild(close);
+  wrap.appendChild(backdrop);
+  wrap.appendChild(sheet);
+  document.body.appendChild(wrap);
+}
 function showMobileDownloadLink(dataUri, blob, bitDepth) {
   const old = document.getElementById('mobileExportLink');
   if (old) old.remove();
@@ -5400,9 +5649,9 @@ document.addEventListener('DOMContentLoaded', init);
 function applyMixSort(mode) {
   if (!mode || APP.tracks.length < 2) return;
   autoArrange(mode);
-  /* Reset the dropdown after applying */
+  /* Keep bpm selected in dropdown after applying */
   const sel = safeEl('mixSortMode');
-  if (sel) setTimeout(() => sel.value = '', 800);
+  if (sel && !sel.value) sel.value = 'bpm';
 }
 
 function toggleAdvanced() {
